@@ -27,7 +27,7 @@ Needs Node.js 22.13 or later. There's no native build step: the database is Node
 
 ```bash
 npm install
-cp .env.example .env        # optional for local dev; REQUIRED values are marked for production
+cp docs/env-example.txt .env        # optional for local dev; REQUIRED values are marked for production
 npm run setup               # creates DB, loads area gazetteer, imports data/source/*.xlsx, creates admin (prints password)
 npm start                   # http://localhost:3000   admin: http://localhost:3000/admin/
 ```

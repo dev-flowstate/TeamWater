@@ -3,7 +3,8 @@
 // and temporary, so on each cold start the database is rebuilt from the bundled spreadsheet and
 // gazetteer. Search and browsing work fully; reports and admin edits last only as long as the
 // instance. For durable data, run `npm start` on a host with a persistent disk (see README).
-process.env.DATA_DIR = process.env.DATA_DIR || '/tmp/teamwater';
+// Only /tmp is writable on Vercel, so ignore any DATA_DIR setting there.
+process.env.DATA_DIR = process.env.VERCEL ? '/tmp/teamwater' : process.env.DATA_DIR || '/tmp/teamwater';
 
 const { getDb } = require('../server/lib/db');
 const { createApp } = require('../server/app');
