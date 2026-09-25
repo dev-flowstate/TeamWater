@@ -20,9 +20,9 @@ function normalizeSearch(input) {
 function slug(input) {
   return String(input || '')
     .normalize('NFKD')
-    .replace(/[̀-ͯ]/g, '')
+    .replace(/\p{M}/gu, '')
     .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/[^\p{L}\p{N}]+/gu, '-') // keep non-Latin letters so Urdu-only names don't collide
     .replace(/^-+|-+$/g, '');
 }
 

@@ -32,7 +32,8 @@ function scrub(value, depth = 0) {
   if (depth > 8 || value === null || typeof value !== 'object') return value;
   if (Array.isArray(value)) return value.map((v) => scrub(v, depth + 1));
   const out = {};
-  for (const [k, v] of Object.entries(value)) out[k] = SENSITIVE_KEYS.has(k.toLowerCase()) ? '[redacted]' : scrub(v, depth + 1);
+  // Sensitive keys are dropped entirely (not masked), so neither the value nor the field name is echoed.
+  for (const [k, v] of Object.entries(value)) if (!SENSITIVE_KEYS.has(k.toLowerCase())) out[k] = scrub(v, depth + 1);
   return out;
 }
 

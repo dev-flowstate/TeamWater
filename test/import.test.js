@@ -51,6 +51,24 @@ test('import: unit rules', async (t) => {
     assert.equal(alt.opening_hours_text, 'Timings');
     assert.equal(alt.collection_limit, 'Per Person Limit');
     assert.equal(suggestMapping(['Longitude', 'x']).longitude, 'Longitude');
+
+    // The improved template recommended in docs/DATA_AUDIT.md must auto-map completely.
+    const template = ['Plant ID', 'Plant Name', 'Town/Tehsil', 'Area', 'Union Council', 'Address', 'Landmark', 'Latitude', 'Longitude',
+      'Location Method', 'Operator Type', 'Operator Name', 'Public Phone', 'Water Source', 'Filtration Technology',
+      'Capacity (US gallons per hour)', 'Collection Limit (litres per visit)', 'Opening Hours', 'Status', 'Status Date', 'Accessibility',
+      'Last Verified', 'Test Date', 'Laboratory', 'pH', 'TDS (mg/L)', 'Turbidity (NTU)', 'E. coli (MPN/100 mL)', 'Arsenic (µg/L)',
+      'Nitrate (mg/L)', 'Fluoride (mg/L)', 'Source URL', 'Notes'];
+    const tm = suggestMapping(template);
+    assert.deepEqual(Object.entries(tm).filter(([, h]) => h === null).map(([k]) => k), ['neighborhood'], 'only neighbourhood is left for the admin');
+    assert.equal(tm.area_raw, 'Area');
+    assert.equal(tm.capacity, 'Capacity (US gallons per hour)');
+    assert.equal(tm.collection_limit, 'Collection Limit (litres per visit)');
+    assert.deepEqual(['param:pH', 'param:TDS', 'param:Turbidity', 'param:E. coli', 'param:Arsenic', 'param:Nitrate', 'param:Fluoride'].map((k) => tm[k]),
+      ['pH', 'TDS (mg/L)', 'Turbidity (NTU)', 'E. coli (MPN/100 mL)', 'Arsenic (µg/L)', 'Nitrate (mg/L)', 'Fluoride (mg/L)']);
+    const cap = n.parseCapacity(5000, tm.capacity);
+    assert.deepEqual([cap.unit, cap.gallonType], ['gallons_per_hour', 'us']);
+    const lim = n.parseCollectionLimit(20, tm.collection_limit);
+    assert.deepEqual([lim.unit, lim.period], ['litres', 'per_visit']);
   });
 
   await t.test('capacity parsing: units, header fallback, conflicts, plausibility', () => {

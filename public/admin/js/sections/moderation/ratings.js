@@ -1,6 +1,6 @@
 // #/ratings — experience ratings awaiting moderation.
 import {
-  el, fill, icon, field, selectEl, notice, pageHeader, loadingState, errorState, emptyState, errorText, userText, setBusy, pager,
+  el, agoText, fill, icon, field, selectEl, notice, pageHeader, loadingState, errorState, emptyState, errorText, userText, setBusy, pager,
   riskBadge, riskReasonsList, yesNo, plantOf, plantCell, pick, truthy, listOf, formatAge, stars, cleanQuery, humanize, safeDate,
 } from './_util.js';
 
@@ -65,7 +65,7 @@ export default {
           riskBadge(pick(r, 'riskLevel', 'risk_level'))),
         el('dl', { class: 'mod-dl mod-dl--compact' },
           el('dt', {}, 'Plant'), el('dd', {}, plantCell(ctx, plantOf(r))),
-          el('dt', {}, 'Submitted'), el('dd', {}, el('time', { datetime: created || '', title: created ? safeDate(ctx, created) : '' }, created ? `${formatAge(created)} ago` : 'Not provided')),
+          el('dt', {}, 'Submitted'), el('dd', {}, el('time', { datetime: created || '', title: created ? safeDate(ctx, created) : '' }, created ? agoText(created) : 'Not provided')),
           reporter ? [
             el('dt', {}, 'Reporter'), el('dd', {},
               userText('span', pick(reporter, 'alias', 'publicAlias') || 'Unknown'),

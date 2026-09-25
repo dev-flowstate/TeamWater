@@ -227,6 +227,12 @@ export function formatAge(iso, now = Date.now()) {
   return `${Math.floor(days / 30)} mo`;
 }
 
+/** '3 h ago' / 'Just now'. */
+export function agoText(iso) {
+  const a = formatAge(iso);
+  return a === 'Just now' || a === 'Unknown' ? a : `${a} ago`;
+}
+
 export function formatDistance(m) {
   const n = Number(m);
   if (!Number.isFinite(n)) return null;

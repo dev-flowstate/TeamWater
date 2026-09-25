@@ -8,6 +8,8 @@
 // configured external provider (config.geocoder.provider: nominatim | google | none). External results
 // outside the Faisalabad bounds are dropped. If the provider is down we say so (providers.external =
 // 'unavailable') and still return gazetteer results — nothing is invented.
+// providers.external: 'ok' | 'unavailable' | 'disabled' (no provider configured) | 'skipped' (suggest mode
+// or a query shorter than 3 characters: the provider was deliberately not asked).
 //
 // The gazetteer module (owned by the Geo workstream) is feature-detected: search(q,{limit}),
 // nearestArea(lat,lng,{maxKm}), isUsable(area). When a function is missing or throws we fall back to
@@ -21,6 +23,7 @@ const nominatim = require('./providers/nominatim');
 const googleGeocode = require('./providers/google-geocode');
 
 const MIN_QUERY = 2;
+const MIN_EXTERNAL_QUERY = 3; // two-letter queries are answered from the gazetteer only
 const MAX_QUERY = 200;
 const GAZ_LIMIT = 8;
 const EXT_LIMIT = 8;
@@ -85,8 +88,11 @@ function matchQuality(text, nq) {
   return 0;
 }
 
+/** Gazetteer relevance (0–100: exact 100, prefix ≥76, token/substring ≥52, fuzzy below) on the same 0–3 scale. */
+const scoreQuality = (score) => (typeof score !== 'number' ? 0 : score >= 96 ? 3 : score >= 76 ? 2 : score >= 52 ? 1 : 0);
+
 function resultQuality(r, nq) {
-  return Math.max(matchQuality(r.label, nq), r.matchedAlias ? matchQuality(r.matchedAlias, nq) : 0);
+  return Math.max(matchQuality(r.label, nq), r.matchedAlias ? matchQuality(r.matchedAlias, nq) : 0, scoreQuality(r.score));
 }
 
 /** Fallback gazetteer search: direct SQL over `areas` + JS matching with the shared normaliser. */
@@ -131,11 +137,13 @@ function normalizeGazResult(r, counts) {
     const area = db.prepare('SELECT * FROM areas WHERE id = ?').get(areaId);
     // Never expose a position the contract does not consider usable (matched|manual with lat/lng).
     if (!area || !isAreaUsable(area)) { lat = null; lng = null; }
-    if (plantCount === null && area) plantCount = area.kind === 'town' ? counts.byTown.get(normalizeSearch(area.name)) || 0 : counts.byArea.get(area.id) || 0;
+    // Same counting rule as the text list (/api/plants?area= excludes closed plants by default).
+    if (area) plantCount = area.kind === 'town' ? counts.byTown.get(normalizeSearch(area.name)) || 0 : counts.byArea.get(area.id) || 0;
   }
   if (lat === null || lng === null || !isValidLatLng(lat, lng)) { lat = null; lng = null; }
   return {
-    id: r.id != null ? String(r.id) : areaId !== null ? `area:${areaId}` : `gazetteer:${normalizeSearch(r.label)}`,
+    id: areaId !== null ? `area:${areaId}` : r.id != null ? String(r.id) : `gazetteer:${normalizeSearch(r.label)}`,
+    score: numOrNull(r.score), // internal (gazetteer relevance 0–100); stripped from the public result
     label: r.label,
     sublabel: r.sublabel ?? null,
     lat, lng,
@@ -196,15 +204,23 @@ function isAmbiguous(results, nq) {
 const PUBLIC_FIELDS = ['id', 'label', 'sublabel', 'lat', 'lng', 'kind', 'precision', 'source', 'bbox', 'matchedAlias', 'plantCount', 'areaId'];
 const publicResult = (r) => Object.fromEntries(PUBLIC_FIELDS.map((k) => [k, r[k] === undefined ? null : r[k]]));
 
-async function search(q, { lang = 'en' } = {}) {
+/**
+ * @param {string} q
+ * @param {{ lang?: 'en'|'ur', suggest?: boolean }} opts  suggest=true → gazetteer only (for as-you-type
+ *   suggestions). Nominatim's usage policy forbids autocomplete, so external providers are only queried
+ *   for submitted searches; providers.external is then 'skipped'.
+ */
+async function search(q, { lang = 'en', suggest = false } = {}) {
   const query = String(q || '').trim().slice(0, MAX_QUERY);
   const nq = normalizeSearch(query);
+  const skipped = !externalProvider() ? 'disabled' : 'skipped';
   if (query.length < MIN_QUERY || !nq) {
-    return { query, results: [], ambiguous: false, providers: { gazetteer: 'ok', external: externalProvider() ? 'ok' : 'disabled' } };
+    return { query, results: [], ambiguous: false, providers: { gazetteer: 'ok', external: skipped } };
   }
+  const callExternal = !suggest && nq.length >= MIN_EXTERNAL_QUERY;
   const [gaz, ext] = await Promise.all([
     gazetteerSearch(query, { limit: GAZ_LIMIT, lang }).then((results) => ({ status: 'ok', results }), () => ({ status: 'unavailable', results: [] })),
-    externalSearch(query, { lang, limit: EXT_LIMIT }),
+    callExternal ? externalSearch(query, { lang, limit: EXT_LIMIT }) : Promise.resolve({ status: skipped, results: [] }),
   ]);
   const merged = [...gaz.results];
   for (const r of ext.results) {

@@ -1,6 +1,6 @@
 // #/appeals — corrections, appeals and deletion requests from the public.
 import {
-  el, fill, icon, field, selectEl, notice, pageHeader, loadingState, errorState, emptyState, errorText, userText, setBusy, pager,
+  el, agoText, fill, icon, field, selectEl, notice, pageHeader, loadingState, errorState, emptyState, errorText, userText, setBusy, pager,
   plantOf, pick, listOf, formatAge, cleanQuery, humanize, safeDate, truthy, timeEl,
 } from './_util.js';
 
@@ -92,7 +92,7 @@ export default {
           el('span', { class: `mod-badge mod-kind mod-kind--${a.kind}` }, isDeletion ? icon('lock') : icon('file'), kind.label),
           el('span', { class: 'mod-ref' }, pick(a, 'reference') || `#${a.id}`),
           el('span', { class: `mod-badge mod-astatus mod-astatus--${status}` }, STATUS[status] || humanize(status)),
-          el('span', { class: 'mod-muted' }, el('time', { datetime: created || '', title: created ? safeDate(ctx, created) : '' }, created ? `${formatAge(created)} ago` : ''))),
+          el('span', { class: 'mod-muted' }, el('time', { datetime: created || '', title: created ? safeDate(ctx, created) : '' }, created ? agoText(created) : ''))),
         el('dl', { class: 'mod-dl mod-dl--compact' },
           reportId !== undefined && reportId !== null
             ? [el('dt', {}, 'Report'), el('dd', {}, el('a', { href: `#/reports/${encodeURIComponent(reportId)}`, class: 'mod-ref' }, reportRef || `#${reportId}`))]

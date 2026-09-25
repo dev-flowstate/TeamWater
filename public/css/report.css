@@ -72,6 +72,10 @@ body.twr {
   background: var(--tw-demo-100); color: var(--tw-demo); font-weight: 600; font-size: 0.92rem; text-align: center;
 }
 
+/* Safety net while /css/app.css is missing or loading: keep shell icons from rendering at intrinsic size. */
+#tw-header svg, #tw-footer svg { max-width: 40px; max-height: 40px; }
+#tw-footer img { max-width: 220px; height: auto; }
+
 /* ── Shoreline motif (sand · foam · water) ── */
 .twr-shore { height: 44px; overflow: hidden; line-height: 0; }
 .twr-shore svg { width: 100%; height: 100%; display: block; }
@@ -123,7 +127,7 @@ fieldset.twr-card { min-inline-size: 0; }
   margin: 0 0 var(--tw-space-3); padding: 0; font: 400 1.4rem/1.2 var(--tw-font-display); color: var(--twr-ink);
 }
 [dir='rtl'] .twr-legend { float: right; line-height: 1.9; font-size: 1.2rem; }
-.twr-legend + * { clear: both; }
+fieldset.twr-card > :not(legend), .twr-card > .twr-legend ~ * { clear: both; }
 .twr-step {
   display: inline-grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; flex: none;
   background: var(--tw-cobalt-100); color: var(--tw-primary); font: 700 0.95rem/1 var(--tw-font-body);
@@ -468,7 +472,7 @@ input[type='date'].twr-input, input[type='time'].twr-input { appearance: none; -
 @media (min-width: 960px) {
   .twr-status-layout { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); align-items: start; gap: var(--tw-space-5); }
   .twr-status-layout > .twr-lookup { position: sticky; top: var(--tw-space-4); }
-  .twr-status-layout > .twr-wide { grid-column: 1 / -1; }
+  .twr-status-layout:has(> .twr-result:not([hidden])) > .twr-wide { grid-column: 1 / -1; }
 }
 .twr-lookup .twr-form { gap: var(--tw-space-3); }
 .twr-input--ref { font-size: 1.15rem; letter-spacing: 0.06em; text-transform: uppercase; font-variant-numeric: tabular-nums; }

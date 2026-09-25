@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 160" width="120" height="160">
+  <!-- Decorative periwinkle heron (reference 5, duotone print feel). -->
+  <defs>
+    <pattern id="h" width="4" height="4" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r=".75" fill="#fff" opacity=".35"/></pattern>
+    <path id="b" d="M110 30 86 25.5C84 20 78 17.5 74 19.5 71 21 70 24 70.5 27L55 26 69.5 30.5C66 38 64 46 66.5 53 68 58 67 61 63 64 52 67 38 76 28 92L17 105C30 104.5 44 104 56 101 72 97 84 88 84.5 77 85 70 80 66 77 58 74 50 76 43 80 38 82 36 83.5 34 84 32 92 31 100 30.5 110 30Z"/>
+    <clipPath id="c"><use href="#b"/></clipPath>
+  </defs>
+  <g stroke="#7f8ce0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <path d="M55 100 53 124 51 148M61 99 63.5 123 61.5 148.5"/>
+    <path d="M51 148 44 150.5M51 148 57.5 150M61.5 148.5 55.5 151M61.5 148.5 68.5 150.5" stroke-width="1.6"/>
+  </g>
+  <use href="#b" fill="#7f8ce0"/>
+  <g clip-path="url(#c)">
+    <path d="M63 65C52 68 38 77 28 92L18 104C34 99 50 92 62 84 70 78 72 70 63 65Z" fill="#6c79d4"/>
+    <path d="M55 26 69.5 30.5 70.5 27Z" fill="#5d6bc9"/>
+    <rect width="120" height="160" fill="url(#h)"/>
+  </g>
+  <circle cx="79" cy="23.5" r="1.3" fill="#f6f1e7"/>
+  <path d="M30 154c6-2.5 12-2.5 18 0s12 2.5 18 0 12-2.5 18 0M40 159c5-2 10-2 15 0s10 2 15 0" fill="none" stroke="#a9b2ec" stroke-width="1.6" stroke-linecap="round"/>
+</svg>

@@ -38,8 +38,7 @@
   margin: 0;
   color: var(--tw-navy-900);
 }
-.mod-title:focus { outline: none; }
-.mod-title:focus-visible { outline: 3px solid var(--tw-focus); }
+.mod-title:focus, .mod-title:focus-visible { outline: none; } /* focused programmatically after navigation; not interactive */
 .mod-title .mod-ref { font-size: 0.7em; font-weight: 600; color: var(--tw-navy-700); }
 .mod-subtitle { color: var(--tw-text-muted); margin-block-start: var(--tw-space-1); max-inline-size: 70ch; }
 .mod-badges { display: flex; flex-wrap: wrap; gap: var(--tw-space-2); margin-block-start: var(--tw-space-2); }
@@ -250,7 +249,6 @@ textarea.mod-input { resize: vertical; min-block-size: 80px; line-height: 1.45; 
 .mod-detail__main, .mod-detail__side { display: flex; flex-direction: column; gap: var(--tw-space-4); min-width: 0; }
 @media (min-width: 1040px) {
   .mod-detail__grid { grid-template-columns: minmax(0, 1fr) minmax(300px, 360px); }
-  .mod-detail__side { position: sticky; top: var(--tw-space-4); }
 }
 .mod-dl { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 6px var(--tw-space-4); margin: 0; }
 .mod-dl dt { font-weight: 600; color: var(--tw-text-muted); font-size: 0.9rem; }

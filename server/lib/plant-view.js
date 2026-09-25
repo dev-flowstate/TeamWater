@@ -218,9 +218,29 @@ function waterTestsFor(plantId, { includeUnpublished = false } = {}) {
   }));
 }
 
+/**
+ * Public report counts for a plant. Prefers the Reports workstream's moderation.plantReportsSummary()
+ * (single source of truth for which reports are public-countable). The fallback excludes reports held in
+ * the review queue (review_queue = 1: honeypot / flagged) from the unverified and under-review counts.
+ */
 function reportsSummary(plantId, now = nowIso()) {
+  let moderation = null;
+  try { moderation = require('./moderation'); } catch { /* Reports module not present */ }
+  if (moderation && typeof moderation.plantReportsSummary === 'function') {
+    const r = moderation.plantReportsSummary(plantId);
+    if (r && typeof r === 'object') {
+      return {
+        unverifiedOpen: Number(r.unverifiedOpen) || 0,
+        underReview: Number(r.underReview) || 0,
+        confirmedOpenIssues: Array.isArray(r.confirmedOpenIssues)
+          ? r.confirmedOpenIssues.map((c) => ({ category: c.category, confirmedAt: c.confirmedAt ?? null, publicNote: c.publicNote ?? null }))
+          : [],
+        resolvedLast90d: Number(r.resolvedLast90d) || 0,
+      };
+    }
+  }
   const db = getDb();
-  const counts = Object.fromEntries(db.prepare('SELECT status, COUNT(*) AS n FROM reports WHERE plant_id = ? GROUP BY status').all(plantId).map((r) => [r.status, r.n]));
+  const counts = Object.fromEntries(db.prepare('SELECT status, COUNT(*) AS n FROM reports WHERE plant_id = ? AND review_queue = 0 GROUP BY status').all(plantId).map((r) => [r.status, r.n]));
   const confirmed = db.prepare(`
     SELECT r.category, r.updated_at,
       (SELECT e.created_at FROM report_events e WHERE e.report_id = r.id AND e.to_status = 'confirmed' ORDER BY e.created_at DESC, e.id DESC LIMIT 1) AS confirmed_at,

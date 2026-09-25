@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 90" width="200" height="90">
+  <!-- Decorative: white gulls with dark wingtips (reference 2). Reads best on blue/navy; a faint slate underside keeps them visible on light backgrounds. -->
+  <defs>
+    <symbol id="g" viewBox="-20 -10 40 20" overflow="visible">
+      <path d="M0 1.5C-3 -3 -8 -6.5 -18.5 -5.5C-12 -3.5 -6.5 -0.5 -1.8 4.2ZM0 1.5C3 -3 8 -6.5 18.5 -5.5C12 -3.5 6.5 -0.5 1.8 4.2Z" fill="#fff" stroke="#a5b5c1" stroke-width=".6" stroke-linejoin="round"/>
+      <path d="M-18.5 -5.5C-15.5 -5.6 -13.2 -5 -11.5 -4.2L-13.2 -3.1C-14.8 -4 -16.6 -4.8 -18.5 -5.5ZM18.5 -5.5C15.5 -5.6 13.2 -5 11.5 -4.2L13.2 -3.1C14.8 -4 16.6 -4.8 18.5 -5.5Z" fill="#0a1a33"/>
+      <ellipse cx="0" cy="2" rx="2.1" ry="4.6" fill="#fff" stroke="#a5b5c1" stroke-width=".6"/>
+      <circle cx="0" cy="-2.2" r="1.7" fill="#fff"/>
+      <path d="M0 -3.9l.7 -1.6.1 1.6Z" fill="#f3d08a"/>
+    </symbol>
+  </defs>
+  <use href="#g" x="18" y="14" width="40" height="20" transform="rotate(-12 38 24)"/>
+  <use href="#g" x="96" y="4" width="34" height="17" transform="rotate(8 113 12)"/>
+  <use href="#g" x="140" y="40" width="44" height="22" transform="rotate(-4 162 51)"/>
+  <use href="#g" x="58" y="50" width="28" height="14" transform="rotate(14 72 57)"/>
+</svg>

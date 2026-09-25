@@ -203,6 +203,7 @@
   "st.title": "Check a report",
   "st.hand": "Follow up on what you reported",
   "st.intro": "Enter your reference number and the last 4 digits of the phone number you used. We never show your full number.",
+  "st.lookupTitle": "Find your report",
   "st.ref.label": "Reference number",
   "st.ref.hint": "It looks like TW-XXXX-XXXX.",
   "st.last4.label": "Last 4 digits of your phone number",

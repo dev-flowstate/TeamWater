@@ -1,6 +1,6 @@
 // #/reports/:id — full moderation view of one report.
 import {
-  el, fill, icon, uid, field, notice, panel, loadingState, errorState, emptyState, errorText, userText, timeEl, setBusy,
+  el, agoText, fill, icon, uid, field, notice, panel, loadingState, errorState, emptyState, errorText, userText, timeEl, setBusy,
   riskBadge, severityBadge, statusBadge, flaggedBadge, yesNo, demoBadge, riskReasonsList, plantOf, pick, truthy,
   formatDistance, formatLocalObserved, formatAge, humanize, labelFor, listOf,
   CATEGORY_LABELS, STATUS_LABELS, DECISIONS, ALLOWED_DECISIONS, EVENT_LABELS, RISK_NOTE, OFFICIAL_STATUS_NOTE,
@@ -155,7 +155,7 @@ export default {
           dt('Category'), el('dd', {}, labelFor(CATEGORY_LABELS, d.category)),
           dt('Severity'), el('dd', {}, severityBadge(d.severity)),
           dt('Observed'), el('dd', {}, formatLocalObserved(d.observedAt)),
-          dt('Submitted'), el('dd', {}, timeEl(ctx, d.createdAt), el('span', { class: 'mod-muted' }, ` (${formatAge(d.createdAt)} ago)`)),
+          dt('Submitted'), el('dd', {}, timeEl(ctx, d.createdAt), el('span', { class: 'mod-muted' }, ` (${agoText(d.createdAt)})`)),
           dt('Phone verified'), el('dd', {}, yesNo(d.phoneVerified, { yes: 'Verified by SMS code', no: 'Not verified' }))),
         el('h3', { class: 'mod-subhead' }, 'Description'),
         d.redactedAt
@@ -209,7 +209,7 @@ export default {
             s.status ? statusBadge(s.status) : null,
             el('span', { class: 'mod-muted' },
               [sp.code && sp.code !== d.plant.code ? sp.code : null, s.category ? labelFor(CATEGORY_LABELS, s.category) : null,
-                pick(s, 'createdAt', 'created_at') ? `${formatAge(pick(s, 'createdAt', 'created_at'))} ago` : null].filter(Boolean).join(' · ')));
+                pick(s, 'createdAt', 'created_at') ? agoText(pick(s, 'createdAt', 'created_at')) : null].filter(Boolean).join(' · ')));
         })),
         el('p', { class: 'mod-field__hint' }, 'Similar text can mean a coordinated campaign, or several people seeing the same real problem.'));
     }
@@ -386,10 +386,11 @@ export default {
       if (status !== 'rejected') buttons.push(btnReject);
 
       card.append(el('div', { class: 'mod-photo__mod' },
-        el('fieldset', { class: 'mod-checklist' },
-          el('legend', {}, 'Moderation checklist'),
-          checks.map((c, k) => el('label', { class: 'mod-checklabel' }, c, el('span', {}, labels[k])))),
-        gateMsg,
+        buttons.includes(btnPublic) ? [
+          el('fieldset', { class: 'mod-checklist' },
+            el('legend', {}, 'Moderation checklist'),
+            checks.map((c, k) => el('label', { class: 'mod-checklabel' }, c, el('span', {}, labels[k])))),
+          gateMsg] : null,
         noteField,
         el('div', { class: 'mod-actions' }, buttons)));
       return card;

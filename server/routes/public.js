@@ -28,6 +28,7 @@ const FILE_EXT = { 'application/pdf': 'pdf', 'image/jpeg': 'jpg', 'image/png': '
 
 const RATE = {
   geo: { bucket: 'public:geo', windowMs: 60e3, max: 60 },
+  suggest: { bucket: 'public:suggest', windowMs: 60e3, max: 240 }, // gazetteer-only, as-you-type
   route: { bucket: 'public:route', windowMs: 60e3, max: 60 },
   search: { bucket: 'public:search', windowMs: 60e3, max: 120 },
 };
@@ -120,13 +121,17 @@ router.get('/config', (req, res) => {
   });
 });
 
-// ── GET /api/geocode ──
-router.get('/geocode', rateLimit('geo'), async (req, res) => {
+// ── GET /api/geocode?q=&lang=&suggest=1 ──
+// suggest=1 (additive): gazetteer only, for as-you-type suggestions — external geocoders are only queried
+// for submitted searches (Nominatim's usage policy forbids autocomplete).
+const isSuggest = (req) => /^(1|true)$/.test(String(req.query.suggest || ''));
+router.get('/geocode', (req, res, next) => rateLimit(isSuggest(req) ? 'suggest' : 'geo')(req, res, next), async (req, res) => {
   const v = validate(req.query, {
     q: str({ min: geocoder.MIN_QUERY, max: geocoder.MAX_QUERY }),
     lang: oneOf(['en', 'ur'], { optional: true }),
+    suggest: bool({ optional: true }),
   });
-  res.json(await geocoder.search(v.q, { lang: v.lang || 'en' }));
+  res.json(await geocoder.search(v.q, { lang: v.lang || 'en', suggest: !!v.suggest }));
 });
 
 // ── GET /api/reverse ──
