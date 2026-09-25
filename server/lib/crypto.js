@@ -32,10 +32,14 @@ function loadKeys() {
     enc = enc || stored.phoneEncKey;
     hmac = hmac || stored.hmacKey;
   }
-  if (!/^[0-9a-f]{64}$/i.test(enc) || !/^[0-9a-f]{64}$/i.test(hmac)) {
-    throw new Error('PHONE_ENC_KEY and HMAC_KEY must be 64 hex characters (32 bytes).');
-  }
-  keys = { enc: Buffer.from(enc, 'hex'), hmac: Buffer.from(hmac, 'hex') };
+  // 64 hex chars are used as-is; any other secret of 32+ characters (e.g. a host-generated
+  // base64 value) is stretched to 32 bytes with SHA-256.
+  const toKey = (v, name) => {
+    if (/^[0-9a-f]{64}$/i.test(v)) return Buffer.from(v, 'hex');
+    if (String(v).length >= 32) return crypto.createHash('sha256').update(String(v)).digest();
+    throw new Error(`${name} must be 64 hex characters or a random secret of at least 32 characters.`);
+  };
+  keys = { enc: toKey(enc, 'PHONE_ENC_KEY'), hmac: toKey(hmac, 'HMAC_KEY') };
   return keys;
 }
 

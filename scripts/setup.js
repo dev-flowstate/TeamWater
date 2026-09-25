@@ -10,14 +10,15 @@ const { getDb } = require('../server/lib/db');
 const { loadKeys } = require('../server/lib/crypto');
 const { createAdmin } = require('./create-admin');
 
-async function main() {
+async function runSetup({ quiet = false } = {}) {
+  const log = quiet ? () => {} : console.log;
   loadKeys();
   const db = getDb();
-  console.log('Database:', config.dbPath);
+  log('Database:', config.dbPath);
 
   // 1. Area gazetteer (approximate area positions + search aliases)
   const gaz = require('../server/lib/gazetteer');
-  if (typeof gaz.syncAreasToDb === 'function') console.log('Gazetteer:', JSON.stringify(gaz.syncAreasToDb()));
+  if (typeof gaz.syncAreasToDb === 'function') log('Gazetteer:', JSON.stringify(gaz.syncAreasToDb()));
 
   // 2. Source spreadsheet
   const srcDir = path.join(config.root, 'data', 'source');
@@ -25,21 +26,25 @@ async function main() {
   const pipeline = require('../server/import/pipeline');
   if (file && typeof pipeline.importFromFile === 'function') {
     const summary = await pipeline.importFromFile({ filePath: file, actorLabel: 'setup' });
-    console.log('Import summary:', JSON.stringify(summary));
+    log('Import summary:', JSON.stringify(summary));
   }
 
   // 3. Demonstration data (off by default)
   const demo = require('../server/lib/demo');
-  if (typeof demo.syncDemoData === 'function') console.log('Demo data:', JSON.stringify(demo.syncDemoData(config.demoData)));
+  if (typeof demo.syncDemoData === 'function') log('Demo data:', JSON.stringify(demo.syncDemoData(config.demoData)));
 
   // 4. Administrator
   const count = db.prepare('SELECT COUNT(*) AS n FROM admin_users').get().n;
-  if (count === 0) {
+  if (count === 0 && quiet && !process.env.ADMIN_PASSWORD) {
+    console.warn('[setup] No ADMIN_PASSWORD set — admin account not created.');
+  } else if (count === 0) {
     const r = createAdmin(process.env.ADMIN_USERNAME || 'admin', 'admin', process.env.ADMIN_PASSWORD || null);
-    console.log(`Created administrator "${r.username}".`);
-    if (r.generated) console.log(`Generated password (shown once, store it safely): ${r.password}`);
+    log(`Created administrator "${r.username}".`);
+    if (r.generated) log(`Generated password (shown once, store it safely): ${r.password}`);
   }
-  console.log('Setup complete.');
+  log('Setup complete.');
 }
 
-main().catch((err) => { console.error(err); process.exit(1); });
+if (require.main === module) runSetup().catch((err) => { console.error(err); process.exit(1); });
+
+module.exports = { runSetup };

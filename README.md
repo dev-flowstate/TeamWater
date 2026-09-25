@@ -43,6 +43,17 @@ npm test                                   # unit/API tests (node:test)
 npm run test:e2e                           # browser tests (Playwright + Chromium)
 ```
 
+## Deploy (live link)
+
+**Vercel (quick demo link):** import `dev-flowstate/TeamWater` at vercel.com/new. Framework preset: **Other**. No build command is needed. Add these environment variables:
+
+- `PHONE_ENC_KEY` and `HMAC_KEY`: any random strings of 32+ characters, e.g. from `openssl rand -base64 32`
+- `ADMIN_PASSWORD`: 12+ characters; the admin username is `admin`
+
+Vercel's disk is temporary. On each cold start the database is rebuilt from the bundled spreadsheet, so search and browsing always work, but **reports and admin edits don't persist**. Use it for demos only.
+
+**Durable hosting:** any Node 22 host with a persistent disk, e.g. Render (`render.yaml` included; paid plan plus disk), Railway, Fly.io, or a VPS. Run `npm ci && npm run setup && npm start`, with `DATA_DIR` on the persistent disk.
+
 ## What the supplied data supports
 
 `data/source/Filter_palnts_in_Faisalabad_1000_1.xlsx` contains 1,000 plants in 8 columns: ID, town, area, operator type, water source, technology, capacity, and status. It has **no coordinates, names, addresses, hours, contacts or test results.** So:

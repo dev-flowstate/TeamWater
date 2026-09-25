@@ -1,0 +1,37 @@
+# One-click deploy to Render: https://render.com/deploy?repo=https://github.com/dev-flowstate/TeamWater
+# Free plan note: the free web service has no persistent disk, so the database is rebuilt from the
+# spreadsheet on every start (reports and admin edits are lost on restart/redeploy). For real use,
+# switch to a paid plan and uncomment the disk block so DATA_DIR survives.
+services:
+  - type: web
+    name: team-water
+    runtime: node
+    plan: free
+    buildCommand: npm ci --omit=dev
+    startCommand: npm run setup && npm start
+    healthCheckPath: /api/config
+    envVars:
+      - key: NODE_VERSION
+        value: 22.22.0
+      - key: NODE_ENV
+        value: production
+      - key: TRUST_PROXY
+        value: "1"
+      - key: PHONE_ENC_KEY
+        generateValue: true
+      - key: HMAC_KEY
+        generateValue: true
+      - key: ADMIN_USERNAME
+        value: admin
+      - key: ADMIN_PASSWORD
+        sync: false          # Render asks you for this during deploy (12+ characters)
+      - key: GEOCODER_USER_AGENT
+        value: TeamWater-FaisalabadWaterFinder/1.0 (Render deployment)
+      - key: SMS_PROVIDER
+        value: none
+      - key: DEMO_DATA
+        value: "0"
+    # disk:
+    #   name: team-water-data
+    #   mountPath: /opt/render/project/src/data/runtime
+    #   sizeGB: 1
