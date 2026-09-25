@@ -239,11 +239,12 @@ router.post('/reports',
         do { ref = reference('TW'); } while (db.prepare('SELECT 1 FROM reports WHERE reference = ?').get(ref));
         const reportId = Number(db.prepare(`INSERT INTO reports (reference, plant_id, reporter_id, category, description, observed_at,
               consent_contact, phone_verified, status, severity, risk_score, risk_reasons_json, review_queue, proximity_shared,
-              proximity_distance_m, text_fingerprint, lang, created_at, updated_at, retention_until)
-            VALUES (?, ?, ?, ?, ?, ?, 1, ?, 'pending', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
+              proximity_distance_m, proximity_basis, text_fingerprint, lang, created_at, updated_at, retention_until)
+            VALUES (?, ?, ?, ?, ?, ?, 1, ?, 'pending', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
           .run(ref, plant.id, reporter.id, v.category, v.description, observed.local, verified ? 1 : 0, severity,
             assessment.score, JSON.stringify(assessment.reasons), assessment.reviewQueue ? 1 : 0, v.shareProximity ? 1 : 0,
-            proximity ? proximity.distanceM : null, assessment.fingerprint, lang, now, now, addDays(now, config.retention.reportDays))
+            proximity ? proximity.distanceM : null,
+            proximity ? (proximity.basis === 'exact' ? 'plant' : 'area_centre') : null, assessment.fingerprint, lang, now, now, addDays(now, config.retention.reportDays))
           .lastInsertRowid);
         for (const s of stored) {
           const fileId = db.prepare(`INSERT INTO files (kind, storage_path, original_name, mime, size_bytes, sha256, metadata_stripped, created_at)

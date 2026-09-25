@@ -29,6 +29,7 @@ const { toCsv } = require('./csv');
 
 const MIME = { xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', csv: 'text/csv' };
 const MAX_GEOCODE_PER_COMMIT = 250;
+const GEOCODE_BUDGET_MS = 60000; // keep a commit request bounded even if the provider is slow
 const DUPLICATE_RADIUS_M = 25;
 const NAME_SIMILARITY_MIN = 0.75;
 const IMPORTER_CODES = new Set(Object.keys(DATA_ISSUES));
@@ -210,14 +211,14 @@ function findLikelyDuplicates(subjects, others) {
     }
   }
   const pairs = new Map();
-  const add = (a, b, reason, score) => {
+  const add = (a, b, reason, detail, score) => {
     if (a.code === b.code) return;
     const key = [a.code, b.code].sort().join('\u0000');
-    if (!pairs.has(key)) pairs.set(key, { a: a.code, b: b.code, reason, score: Math.round(score * 100) / 100 });
+    if (!pairs.has(key)) pairs.set(key, { a: a.code, b: b.code, reason, detail, score: Math.round(score * 100) / 100 });
   };
   for (const s of subjects) {
     if (!s.name) continue;
-    if (s.areaKey) for (const o of byNameArea.get(`${normalizeSearch(s.name)}|${s.areaKey}`) || []) add(s, o, `Same name and area as ${o.code}.`, 1);
+    if (s.areaKey) for (const o of byNameArea.get(`${normalizeSearch(s.name)}|${s.areaKey}`) || []) add(s, o, 'same_name_and_area', `Same name and area as ${o.code}.`, 1);
     if (s.lat === null || s.lat === undefined) continue;
     const [ci, cj] = [Math.floor(s.lat * 1000), Math.floor(s.lng * 1000)];
     for (let di = -1; di <= 1; di++) for (let dj = -1; dj <= 1; dj++) {
@@ -225,7 +226,7 @@ function findLikelyDuplicates(subjects, others) {
         if (o.code === s.code) continue;
         const d = haversineM(s.lat, s.lng, o.lat, o.lng);
         const sim = nameSimilarity(s.name, o.name);
-        if (d <= DUPLICATE_RADIUS_M && sim >= NAME_SIMILARITY_MIN) add(s, o, `Within ${Math.round(d)} m of ${o.code} with a similar name.`, sim);
+        if (d <= DUPLICATE_RADIUS_M && sim >= NAME_SIMILARITY_MIN) add(s, o, 'nearby_position', `Within ${Math.round(d)} m of ${o.code} with a similar name.`, sim);
       }
     }
   }
@@ -285,7 +286,7 @@ function evaluateSheet(ws, columns, { sourceFile, updateExisting = true }) {
       const row = byCode.get(self);
       if (!row) continue;
       row.entry.likelyDuplicates = [...(row.entry.likelyDuplicates || []), { code: other, reason: pair.reason, score: pair.score }];
-      row.entry.warnings.push({ field: 'name', code: 'possible_duplicate', message: `Possible duplicate of ${other}: ${pair.reason} It will be imported and queued for duplicate review.`, value: other });
+      row.entry.warnings.push({ field: 'name', code: 'possible_duplicate', message: `Possible duplicate of ${other} (${pair.reason === 'nearby_position' ? 'nearby, similar name' : 'same name and area'}). It will be imported and queued for duplicate review.`, value: other });
     }
   }
   return { rows, summary: summarise(rows, { sourceFile, sheet: ws.name }) };
@@ -443,16 +444,19 @@ function loadGeocoder() {
 
 /** Interpret whatever the geocoder returns; only a usable, in-bounds point is accepted. */
 function interpretGeocode(res) {
-  if (!res || res.available === false) return { unavailable: !!(res && res.available === false) };
+  if (!res) return null;
+  if (res.available === false) return { unavailable: true };
   const list = Array.isArray(res) ? res : Array.isArray(res.results) ? res.results : [res];
   const num = (v) => (v === null || v === undefined || v === '' ? NaN : Number(v));
   const cands = list.map((c) => ({ ...c, lat: num(c.lat ?? c.latitude), lng: num(c.lng ?? c.lon ?? c.longitude) }))
     .filter((c) => Number.isFinite(c.lat) && Number.isFinite(c.lng) && inBounds(c.lat, c.lng, 0));
   if (!cands.length) return null;
   const best = cands[0];
+  // An area-level match (or a gazetteer centroid) is not a plant position: never store it as one (§0.4).
+  const source = String(best.source || best.provider || res.provider || 'geocoder').slice(0, 100);
+  if (best.precision === 'area' || best.kind === 'area' || best.kind === 'town' || source === 'gazetteer') return null;
   return {
-    lat: best.lat, lng: best.lng,
-    source: String(best.source || best.provider || res.provider || 'geocoder').slice(0, 100),
+    lat: best.lat, lng: best.lng, source, ref: best.ref ? String(best.ref).slice(0, 200) : null,
     label: best.label || best.displayName || best.display_name || null,
     ambiguous: res.ambiguous === true || (res.ambiguous !== false && cands.length > 1),
     approximate: best.approximate === true || (best.precision !== undefined && best.precision !== 'exact'),
@@ -463,7 +467,7 @@ function applyGeocode(target, g, reasons) {
   Object.assign(target, {
     latitude: g.lat, longitude: g.lng, coord_status: 'geocoded_pending', coord_accuracy_m: null,
     coord_source: `Geocoded from address (${g.source})`,
-    coord_note: `Address match awaiting administrator verification${g.label ? `: ${String(g.label).slice(0, 300)}` : ''}.`,
+    coord_note: `Address match awaiting administrator verification${g.label ? `: ${String(g.label).slice(0, 300)}` : ''}${g.ref ? ` (${g.ref})` : ''}.`,
     needs_review: 1,
   });
   reasons.add('geocoded_location_unverified');
@@ -553,10 +557,11 @@ async function commitBatch(batchId, { userId = null, req = null, actorLabel = nu
   // 2. Optional address geocoding (outside the transaction; results stay hidden until an administrator verifies them).
   const geocodeAddress = geocoder === undefined ? loadGeocoder() : geocoder;
   let geocodeCalls = 0, geocoderDown = false;
+  const geocodeDeadline = Date.now() + GEOCODE_BUDGET_MS;
   if (geocodeAddress) {
     for (const p of plan) {
       const g = p.r.entry.geocode;
-      if (!g || geocoderDown || geocodeCalls >= MAX_GEOCODE_PER_COMMIT) continue;
+      if (!g || geocoderDown || geocodeCalls >= MAX_GEOCODE_PER_COMMIT || Date.now() > geocodeDeadline) continue;
       if (p.action === 'update' && (p.merge.exact || ['verified', 'geocoded_pending'].includes(p.existing.coord_status))) continue;
       if (p.action !== 'new' && p.action !== 'update') continue;
       geocodeCalls++;
@@ -636,8 +641,7 @@ async function commitBatch(batchId, { userId = null, req = null, actorLabel = nu
       const target = findPlant.get(p.r.entry.code);
       const targetId = target ? target.id : null;
       if (openSame.get(targetId, p.r.raw_json)) continue;
-      insCand.run(batch.id, p.r.id, targetId, null,
-        `Plant ID '${p.r.entry.code}' appears more than once in '${batch.source_filename}' (first at row ${p.r.entry.duplicateOfRow}); row ${p.r.row_number} was not imported.`, 1);
+      insCand.run(batch.id, p.r.id, targetId, null, 'duplicate_plant_code', 1);
     }
 
     // Likely duplicates under different codes (named plants only)

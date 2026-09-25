@@ -69,10 +69,11 @@ function recommend(c, agg, { mode, now, group }) {
   const proximity = c.durationS !== null && c.durationS !== undefined
     ? Math.exp(-c.durationS / (TIME_SCALE_S[mode] || TIME_SCALE_S.driving))
     : Math.exp(-dist / DIST_SCALE_M);
-  if (dist <= NEARBY_M) { reasons.push('nearby'); text.push('Nearby'); }
-  else if (dist > FARTHER_M) { reasons.push('farther'); text.push(group === 'area' ? `Farther away (about ${formatKm(dist)} km to the area centre)` : `Farther away (about ${formatKm(dist)} km)`); }
-  else text.push(group === 'area' ? `About ${formatKm(dist)} km to the area centre` : `About ${formatKm(dist)} km away`);
-  if (group === 'area') { reasons.push('location_approximate'); text.push("exact site not recorded (distance is to the area centre)"); }
+  const area = group === 'area';
+  if (dist <= NEARBY_M) { reasons.push('nearby'); text.push(area ? 'The listed area is nearby' : 'Nearby'); }
+  else if (dist > FARTHER_M) { reasons.push('farther'); text.push(area ? `Farther away (about ${formatKm(dist)} km to the area centre)` : `Farther away (about ${formatKm(dist)} km)`); }
+  else text.push(area ? `About ${formatKm(dist)} km to the area centre` : `About ${formatKm(dist)} km away`);
+  if (area) { reasons.push('location_approximate'); text.push('exact site not recorded'); }
 
   // Operating status
   let status;

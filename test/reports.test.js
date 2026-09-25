@@ -471,12 +471,57 @@ test('reports, ratings, verification & moderation', async (t) => {
     await submit({ category: 'other' });
     assert.equal((await detail(a.body.reference)).severity, 'serious');
     assert.equal((await detail(b.body.reference)).severity, 'serious');
-    const list = await (await moderator.fetch('/api/admin/reports?status=pending&pageSize=200')).json();
+    const list = await (await moderator.fetch('/api/admin/reports?status=pending&sort=priority&pageSize=200')).json();
     const firstNormal = list.items.findIndex((x) => x.severity === 'normal');
     const lastSerious = list.items.map((x) => x.severity).lastIndexOf('serious');
-    assert.ok(lastSerious < firstNormal, 'serious open reports come first');
+    assert.ok(lastSerious < firstNormal, 'serious open reports come first with sort=priority');
     const serious = await (await moderator.fetch('/api/admin/reports?severity=serious')).json();
     assert.ok(serious.items.every((x) => x.severity === 'serious') && serious.total >= 2);
+  });
+
+  await t.test('admin list: proximityBasis, Karachi date filters, priority sort', async () => {
+    // proximityBasis: exact plant position vs approximate area centre
+    const now = new Date().toISOString();
+    const areaId = Number(s.db.prepare(`INSERT INTO areas (area_key, name, town, latitude, longitude, radius_m, geocode_status, updated_at)
+                                        VALUES ('basis-area|t', 'Basis Area', 'T', 31.45, 73.12, 1500, 'matched', ?)`).run(now).lastInsertRowid);
+    const areaPlant = s.insertPlant({ area_id: areaId });
+    const exactPlant = s.insertPlant({ latitude: 31.41, longitude: 73.08, coord_status: 'verified' });
+    const a = await submit({ plantCode: areaPlant.plant_code, shareProximity: 'true', proximityLat: '31.451', proximityLng: '73.121' });
+    const e = await submit({ plantCode: exactPlant.plant_code, shareProximity: 'true', proximityLat: '31.4101', proximityLng: '73.0801' });
+    const n = await submit({ plantCode: exactPlant.plant_code });
+    assert.equal((await detail(a.body.reference)).proximityBasis, 'area_centre');
+    assert.equal((await detail(e.body.reference)).proximityBasis, 'plant');
+    assert.equal((await detail(n.body.reference)).proximityBasis, null);
+
+    // from/to are Asia/Karachi calendar dates; `to` is inclusive
+    const late = await submit({});
+    const early = await submit({});
+    s.db.prepare('UPDATE reports SET created_at = ? WHERE reference = ?').run('2026-01-10T18:30:00.000Z', late.body.reference); // 23:30 PKT on the 10th
+    s.db.prepare('UPDATE reports SET created_at = ? WHERE reference = ?').run('2026-01-10T19:30:00.000Z', early.body.reference); // 00:30 PKT on the 11th
+    const refs = async (qs) => (await (await moderator.fetch('/api/admin/reports?' + qs)).json()).items.map((x) => x.reference);
+    assert.deepEqual(await refs('from=2026-01-10&to=2026-01-10'), [late.body.reference]);
+    assert.deepEqual(await refs('from=2026-01-11&to=2026-01-11'), [early.body.reference]);
+    assert.deepEqual((await refs('from=2026-01-01&to=2026-01-31')).sort(), [late.body.reference, early.body.reference].sort());
+    assert.equal((await moderator.fetch('/api/admin/reports?from=2026-13-01')).status, 400);
+    assert.equal((await moderator.fetch('/api/admin/reports?sort=random')).status, 400);
+
+    // sort=priority: serious → review queue → pending/under_review → oldest first; default is newest first
+    const pp = s.insertPlant();
+    const mk = async (fields, minutesAgo) => {
+      const r = await submit({ plantCode: pp.plant_code, ...fields });
+      s.db.prepare('UPDATE reports SET created_at = ? WHERE reference = ?').run(new Date(Date.now() - minutesAgo * 60e3).toISOString(), r.body.reference);
+      return r.body.reference;
+    };
+    const clar = await mk({}, 500);
+    await decide(clar, { action: 'request_clarification', reason: 'Need detail', publicNote: 'Which tap?' });
+    const oldPending = await mk({}, 300);
+    const newPending = await mk({}, 100);
+    const queued = await mk({ website: 'http://bot.example' }, 50);
+    const serious = await mk({ category: 'no_water' }, 10);
+    assert.deepEqual(await refs(`plantCode=${pp.plant_code}&sort=priority`), [serious, queued, oldPending, newPending, clar]);
+    const def = await (await moderator.fetch(`/api/admin/reports?plantCode=${pp.plant_code}`)).json();
+    assert.equal(def.sort, 'newest');
+    assert.deepEqual(def.items.map((x) => x.reference), [serious, queued, newPending, oldPending, clar]);
   });
 
   let decided;

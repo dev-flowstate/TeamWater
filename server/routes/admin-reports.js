@@ -9,7 +9,7 @@
 // logs and the default CSV export never contain a phone number.
 const express = require('express');
 const { getDb, tx, parseJson } = require('../lib/db');
-const { HttpError, validate, str, int, oneOf, bool, paginate } = require('../lib/http');
+const { HttpError, validate, str, int, oneOf, bool, date, paginate } = require('../lib/http');
 const { requirePermission, can } = require('../lib/auth');
 const { audit, diff } = require('../lib/audit');
 const { nowIso, addDays } = require('../lib/time');
@@ -33,6 +33,25 @@ function plantRef(row) {
 const PLANT_COLS = 'p.plant_code, p.name AS plant_name, p.town AS plant_town, p.area_raw AS plant_area_raw, p.is_demo AS plant_is_demo';
 
 // ───────────────────────── Reports ─────────────────────────
+// newest (default): most recent first. priority: serious first, then risk review queue, then pending/under_review,
+// then oldest first (longest-waiting at the top).
+const SORTS = {
+  newest: 'r.created_at DESC, r.id DESC',
+  priority: `(r.severity = 'serious') DESC, r.review_queue DESC, (r.status IN ('pending', 'under_review')) DESC, r.created_at ASC, r.id ASC`,
+};
+
+/** UTC ISO instant of local midnight in Asia/Karachi for 'YYYY-MM-DD' (+ plusDays). */
+const karachiFmt = new Intl.DateTimeFormat('en-GB', {
+  timeZone: 'Asia/Karachi', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23',
+});
+function karachiDayStartUtc(ymd, plusDays = 0) {
+  const [y, m, d] = ymd.split('-').map(Number);
+  const wall = Date.UTC(y, m - 1, d + plusDays);
+  const probe = wall - 5 * 3600e3;
+  const p = Object.fromEntries(karachiFmt.formatToParts(new Date(probe)).map((x) => [x.type, x.value]));
+  const offset = Date.UTC(+p.year, +p.month - 1, +p.day, +p.hour, +p.minute, +p.second) - probe;
+  return new Date(wall - offset).toISOString();
+}
 router.get('/reports', requirePermission('reports:read'), (req, res) => {
   const q = req.query;
   const where = [];
@@ -47,15 +66,19 @@ router.get('/reports', requirePermission('reports:read'), (req, res) => {
   if (q.plantCode) { where.push('p.plant_code = ? COLLATE NOCASE'); args.push(String(q.plantCode).trim()); }
   if (q.reporterId) { where.push('r.reporter_id = ?'); args.push(Number(q.reporterId)); }
   if (q.reference) { where.push('r.reference = ?'); args.push(String(q.reference).trim().toUpperCase()); }
+  // from/to are calendar dates in Asia/Karachi; `to` is inclusive (up to the end of that local day).
+  if (q.from) { where.push('r.created_at >= ?'); args.push(karachiDayStartUtc(date()(q.from, 'from'))); }
+  if (q.to) { where.push('r.created_at < ?'); args.push(karachiDayStartUtc(date()(q.to, 'to'), 1)); }
+  const sort = q.sort ? oneOf(['newest', 'priority'])(q.sort, 'sort') : 'newest';
   const w = where.length ? 'WHERE ' + where.join(' AND ') : '';
   const { page, pageSize, limit, offset } = paginate(q, { defaultSize: 25, maxSize: 200 });
   const db = getDb();
   const total = db.prepare(`SELECT COUNT(*) AS n FROM reports r JOIN plants p ON p.id = r.plant_id ${w}`).get(...args).n;
   const rows = db.prepare(`SELECT r.*, ${PLANT_COLS}, (SELECT COUNT(*) FROM report_photos rp WHERE rp.report_id = r.id) AS photo_count
                            FROM reports r JOIN plants p ON p.id = r.plant_id ${w}
-                           ORDER BY (r.severity = 'serious' AND r.status IN ('pending','under_review','needs_clarification')) DESC,
-                                    r.created_at DESC, r.id DESC LIMIT ? OFFSET ?`).all(...args, limit, offset);
+                           ORDER BY ${SORTS[sort]} LIMIT ? OFFSET ?`).all(...args, limit, offset);
   res.json({
+    sort,
     items: rows.map((r) => ({
       id: r.id, reference: r.reference, plant: plantRef(r), category: r.category, severity: r.severity, status: r.status,
       riskScore: r.risk_score, riskLevel: risk.riskLevel(r.risk_score), reviewQueue: Boolean(r.review_queue),
@@ -108,6 +131,7 @@ router.get('/reports/:id', requirePermission('reports:read'), (req, res) => {
     reviewQueue: Boolean(r.review_queue),
     proximityShared: Boolean(r.proximity_shared),
     proximityDistanceM: r.proximity_distance_m,
+    proximityBasis: r.proximity_basis ?? null, // 'plant' (exact position) | 'area_centre' (approximate) | null
     createdAt: r.created_at,
     updatedAt: r.updated_at,
     retentionUntil: r.retention_until,
@@ -508,3 +532,4 @@ router.get('/export/reports.csv', requirePermission('export:reports'), (req, res
 
 module.exports = router;
 module.exports.csvCell = csvCell;
+module.exports.karachiDayStartUtc = karachiDayStartUtc;
