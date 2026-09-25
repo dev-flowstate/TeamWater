@@ -1,0 +1,108 @@
+/* Team Water — design tokens (shared by the public site and the admin dashboard).
+   Palette drawn from the brief's reference images:
+   sand + foam (top-down beach), deep navy + cyan (storm sea with gulls), luminous cave blues,
+   calm slate greys (#A5B5C1 #D2D6DB #7E97A6 #4E6A7A) and the cobalt-on-cream studio look.
+   All text/background pairs listed under "Text" meet WCAG AA (4.5:1) on --tw-bg and --tw-surface. */
+
+@font-face { font-family: 'DM Serif Display'; font-style: normal; font-weight: 400; font-display: swap;
+  src: url('/vendor/fontsource/dm-serif-display/files/dm-serif-display-latin-400-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Gochi Hand'; font-style: normal; font-weight: 400; font-display: swap;
+  src: url('/vendor/fontsource/gochi-hand/files/gochi-hand-latin-400-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Inter'; font-style: normal; font-weight: 400; font-display: swap;
+  src: url('/vendor/fontsource/inter/files/inter-latin-400-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Inter'; font-style: normal; font-weight: 600; font-display: swap;
+  src: url('/vendor/fontsource/inter/files/inter-latin-600-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Inter'; font-style: normal; font-weight: 700; font-display: swap;
+  src: url('/vendor/fontsource/inter/files/inter-latin-700-normal.woff2') format('woff2'); }
+/* Urdu font is only downloaded when Urdu glyphs are rendered (unicode-range). */
+@font-face { font-family: 'Noto Nastaliq Urdu'; font-style: normal; font-weight: 400; font-display: swap;
+  src: url('/vendor/fontsource/noto-nastaliq-urdu/files/noto-nastaliq-urdu-arabic-400-normal.woff2') format('woff2');
+  unicode-range: U+0600-06FF, U+0750-077F, U+0870-088E, U+0890-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC; }
+
+:root {
+  /* Sea — primary brand */
+  --tw-navy-900: #0a1a33;   /* deep storm sea */
+  --tw-navy-800: #0f2a4f;
+  --tw-navy-700: #163a6b;
+  --tw-cobalt-600: #2240c4; /* studio cobalt — primary action */
+  --tw-cobalt-500: #3556e0;
+  --tw-cobalt-100: #e3e8fb;
+  --tw-teal-700: #0a6d80;   /* accessible teal text/icons */
+  --tw-teal-500: #13a3bf;   /* bright cyan wave */
+  --tw-teal-200: #a9d9e6;   /* shallow water */
+  --tw-teal-100: #d6eef4;   /* foam-blue */
+  --tw-periwinkle: #7f8ce0; /* heron silhouette tint */
+
+  /* Shore */
+  --tw-cream: #f6f1e7;      /* page background */
+  --tw-foam: #ffffff;
+  --tw-sand-300: #f3d08a;
+  --tw-sand-100: #faedcf;
+  --tw-rock: #9a8f84;
+
+  /* Calm slate (reference palette) */
+  --tw-slate-100: #d2d6db;
+  --tw-slate-300: #a5b5c1;
+  --tw-slate-500: #7e97a6;
+  --tw-slate-700: #4e6a7a;
+
+  /* Signals — never colour-only; always pair with text/icon */
+  --tw-starfish: #c4541f;   /* warnings / temporary closure (AA on cream) */
+  --tw-starfish-100: #fbe3d6;
+  --tw-danger: #b3261e;
+  --tw-danger-100: #f9dedc;
+  --tw-success: #1e7a4c;
+  --tw-success-100: #d9f0e3;
+  --tw-unknown: #5d6b78;    /* unknown / not verified */
+  --tw-unknown-100: #e6eaee;
+  --tw-demo: #7a3fb0;       /* demonstration data banner */
+  --tw-demo-100: #efe3fa;
+
+  /* Semantic */
+  --tw-bg: var(--tw-cream);
+  --tw-surface: var(--tw-foam);
+  --tw-surface-2: #fbf8f2;
+  --tw-text: var(--tw-navy-900);
+  --tw-text-muted: #45566b;
+  --tw-border: #d9d3c6;
+  --tw-primary: var(--tw-cobalt-600);
+  --tw-primary-contrast: #ffffff;
+  --tw-accent: var(--tw-teal-700);
+  --tw-focus: #ffb000;      /* high-visibility focus ring */
+
+  /* Type */
+  --tw-font-display: 'DM Serif Display', Georgia, 'Times New Roman', serif;
+  --tw-font-hand: 'Gochi Hand', 'Comic Sans MS', cursive;
+  --tw-font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --tw-font-urdu: 'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', 'Urdu Typesetting', serif;
+
+  /* Shape & depth */
+  --tw-radius-sm: 8px;
+  --tw-radius: 14px;
+  --tw-radius-lg: 22px;
+  --tw-radius-pill: 999px;
+  --tw-shadow-sm: 0 1px 2px rgba(10, 26, 51, 0.08);
+  --tw-shadow: 0 6px 20px rgba(10, 26, 51, 0.12);
+  --tw-shadow-lg: 0 16px 40px rgba(10, 26, 51, 0.18);
+
+  /* Touch & spacing */
+  --tw-touch: 48px;         /* minimum touch target */
+  --tw-space-1: 4px;
+  --tw-space-2: 8px;
+  --tw-space-3: 12px;
+  --tw-space-4: 16px;
+  --tw-space-5: 24px;
+  --tw-space-6: 32px;
+  --tw-space-7: 48px;
+
+  --tw-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --tw-duration: 220ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --tw-duration: 0ms; }
+}
+
+:lang(ur), [dir='rtl'] { --tw-font-body: var(--tw-font-urdu); --tw-font-display: var(--tw-font-urdu); }
+
+*:focus-visible { outline: 3px solid var(--tw-focus); outline-offset: 2px; }

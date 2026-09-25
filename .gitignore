@@ -1,0 +1,6 @@
+node_modules/
+data/runtime/
+.env
+*.log
+test-results/
+.DS_Store
