@@ -8,6 +8,10 @@ const { runRetention } = require('./lib/retention');
 loadKeys(); // fail fast if production secrets are missing
 getDb(); // opens + applies schema
 
+// Demo plants exist only while DEMO_DATA=1; turning it off removes them on the next start.
+const demo = require('./lib/demo');
+if (typeof demo.syncDemoData === 'function') console.log('[demo]', JSON.stringify(demo.syncDemoData(config.demoData)));
+
 const app = createApp();
 const server = app.listen(config.port, () => {
   console.log(`Team Water listening on http://localhost:${config.port} (${config.env})`);

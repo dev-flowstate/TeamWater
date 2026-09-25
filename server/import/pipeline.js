@@ -20,7 +20,7 @@ const config = require('../config');
 const { getDb, tx, parseJson } = require('../lib/db');
 const { HttpError } = require('../lib/http');
 const { audit } = require('../lib/audit');
-const { nowIso } = require('../lib/time');
+const { nowIso, karachiParts } = require('../lib/time');
 const { areaKey, normalizeSearch } = require('../lib/text');
 const { TARGET_FIELDS, TARGET_KEYS, DATA_ISSUES, PARAM_PREFIX, suggestMapping, isParamKey } = require('./fields');
 const { detectFileType, parseWorkbook } = require('./parse');
@@ -238,8 +238,9 @@ function evaluateSheet(ws, columns, { sourceFile, updateExisting = true }) {
   const db = getDb();
   const existingByCode = new Map(db.prepare('SELECT * FROM plants').all().map((p) => [p.plant_code, p]));
   const firstRowByCode = new Map();
+  const today = karachiParts().date;
   const rows = ws.rows.map((r) => {
-    const entry = normalizeRow(r.values, columns, { sourceFile, sheet: ws.name, rowNumber: r.rowNumber });
+    const entry = normalizeRow(r.values, columns, { sourceFile, sheet: ws.name, rowNumber: r.rowNumber, today });
     let outcome, changes = [], duplicateOfRow = null, plantId = null;
     if (entry.errors.length) outcome = 'rejected';
     else if (firstRowByCode.has(entry.code)) {

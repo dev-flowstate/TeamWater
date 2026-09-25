@@ -60,7 +60,11 @@ export default {
     const mapEl = h('div', { class: 'map map-lg', role: 'application', 'aria-label': 'Map of area circles. Select an area in the table to edit it.' });
     const mapWrap = h('div', { class: 'map-wrap' }, mapEl);
     const editorBox = h('div');
-    el.append(summary, toolbar, h('div', { class: 'split-wide' }, h('div', null, tableBox), h('div', null, card('Map', h('p', { class: 'card-sub' }, 'Circles show approximate area extents. Grey outline: Faisalabad district.'), mapWrap), editorBox)));
+    const placeholder = () => card('Edit an area', h('p', { class: 'muted' }, canEdit
+      ? 'Choose “Edit” in the table below, or click a circle on the map. Areas that are ambiguous or not found are listed first and highlighted.'
+      : 'Choose “Show” in the table below, or click a circle on the map, to see an area’s details.'));
+    editorBox.append(placeholder());
+    el.append(summary, h('div', { class: 'split' }, card('Map', h('p', { class: 'card-sub' }, 'Circles show approximate area extents (never plant positions). Dashed grey outline: Faisalabad district.'), mapWrap), editorBox), toolbar, tableBox);
 
     toolbar.addEventListener('submit', (e) => e.preventDefault());
     fq.control.addEventListener('input', () => { filt.q = fq.control.value.trim().toLowerCase(); drawTable(); });
@@ -93,7 +97,7 @@ export default {
         caption: `Areas (${formatNumber(rows.length)} of ${formatNumber(areas.length)})`,
         rowAttrs: (a) => ({ class: String(A.id(a)) === selectedId ? 'row-selected' : ATTENTION.has(A.status(a)) ? 'row-highlight' : null }),
         columns: [
-          { key: 'name', label: 'Area', rowHeader: true, render: (a) => h('span', null, h('span', { dir: 'auto' }, A.name(a) || '—'), A.ur(a) ? h('span', { class: 'muted', lang: 'ur', dir: 'rtl' }, ` · ${A.ur(a)}`) : null, A.aliases(a).length ? h('span', { class: 'small muted', style: 'display:block' }, 'Aliases: ', h('span', { dir: 'auto' }, A.aliases(a).join(', '))) : null) },
+          { key: 'name', label: 'Area', rowHeader: true, render: (a) => h('span', null, h('span', { dir: 'auto' }, A.name(a) || '—'), A.ur(a) ? h('span', { class: 'muted', lang: 'ur', dir: 'rtl', style: 'display:block' }, A.ur(a)) : null, A.aliases(a).length ? h('span', { class: 'small muted', style: 'display:block' }, 'Aliases: ', h('span', { dir: 'auto' }, A.aliases(a).join(', '))) : null) },
           { key: 'town', label: 'Town', render: (a) => A.town(a) || '—' },
           { key: 'status', label: 'Geocode status', render: (a) => { const s = STATUS[A.status(a)] || { label: A.status(a), tone: 'neutral' }; return badge(s.label, s.tone); } },
           { key: 'source', label: 'Source & note', render: (a) => h('span', { class: 'small' }, A.source(a) || h('span', { class: 'np' }, 'No source'), A.note(a) ? h('span', { style: 'display:block', dir: 'auto' }, A.note(a)) : null) },
@@ -135,11 +139,11 @@ export default {
       layers.forEach((l, k) => l.setStyle({ weight: k === id ? 4 : 2 }));
       const a = areas.find((x) => String(A.id(x)) === id);
       clearEditLayers();
-      if (!a) { editorBox.replaceChildren(); return; }
+      if (!a) { editorBox.replaceChildren(placeholder()); return; }
       editorBox.replaceChildren(editor(a));
       if (base && A.lat(a) !== null) base.map.setView([A.lat(a), A.lng(a)], 14);
       if (focusForm) editorBox.querySelector('h2')?.setAttribute('tabindex', '-1');
-      if (focusForm) { editorBox.scrollIntoView({ block: 'nearest' }); editorBox.querySelector('h2')?.focus({ preventScroll: true }); }
+      if (focusForm) { editorBox.scrollIntoView({ block: 'start' }); editorBox.querySelector('h2')?.focus({ preventScroll: true }); }
     }
 
     function editor(a) {
@@ -168,7 +172,7 @@ export default {
         h('div', { class: 'form-grid' }, fLat, fLng, fRad), fUr, fAl, fReason,
         h('div', { class: 'form-actions' },
           h('button', { type: 'submit', class: 'btn btn-primary' }, 'Save & mark reviewed'),
-          h('button', { type: 'button', class: 'btn btn-secondary', onClick: () => { selectedId = null; ctx.setQuery({ status: filt.status }); clearEditLayers(); editorBox.replaceChildren(); drawTable(); } }, 'Close')),
+          h('button', { type: 'button', class: 'btn btn-secondary', onClick: () => { selectedId = null; ctx.setQuery({ status: filt.status }); clearEditLayers(); editorBox.replaceChildren(placeholder()); drawTable(); } }, 'Close')),
         h('p', { class: 'hint' }, 'Tip: drag the round handle on the map, or click the map, to move the centre.'));
 
       // Live map editing

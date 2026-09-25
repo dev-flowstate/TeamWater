@@ -184,7 +184,7 @@ No other stages are inferred. The diagram says "Illustrative treatment diagram. 
 | 6.10 | Capacity of 25,000 GPH is unusually high for a community filtration point (section 9) | 216 | FSD-WFP-0003, 0010, 0014, 0024 | `capacity_unusually_high` |
 | 6.11 | `Town/Tehsil` mixes city towns and tehsils; the Faisalabad City and Sadar tehsils are absent | 1,000 | — | dataset observation (no code) |
 | 6.12 | Header says "Union Council", but no union councils are given | 1,000 | — | dataset observation |
-| 6.13 | `Chalk 224 RB` (a rural *chak*) is filed under the city town `Jinnah Town` | 26 | FSD-WFP-0158 | dataset observation |
+| 6.13 | `Chalk 224 RB`, a *chak* (village), is filed under the city town `Jinnah Town`. This is plausible: the gazetteer places Chak 224 RB inside Faisalabad City tehsil (see `docs/MAP_SOURCES.md`). | 26 | FSD-WFP-0158 | dataset observation |
 | 6.14 | Saline-treatment plants appear outside the saline zones, including in city towns | 28 | FSD-WFP-0012, 0032, 0092, 0096, 0099 | dataset observation |
 | 6.15 | Rows identical in every column except Plant ID, including the sector: 28 pairs, 56 rows | 56 | FSD-WFP-0004/0068, 0017/0049, 0025/0290, 0045/0724 | dataset observation (**not** queued as duplicates; see below) |
 | 6.16 | File name typo "palnts" | — | — | kept verbatim in `source_file` |
