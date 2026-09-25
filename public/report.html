@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Report a problem · Team Water</title>
+  <meta name="description" content="Report a problem at a water filtration plant in Faisalabad. Staff review every report.">
+  <meta name="theme-color" content="#f6f1e7">
+  <link rel="preload" href="/vendor/fontsource/dm-serif-display/files/dm-serif-display-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/css/app.css">
+  <link rel="stylesheet" href="/css/report.css">
+  <script type="module" src="/js/report-form.js"></script>
+</head>
+<body class="twr">
+  <header id="tw-header"></header>
+
+  <main id="main" class="twr-main" tabindex="-1">
+    <div class="twr-shore" aria-hidden="true">
+      <svg viewBox="0 0 1200 90" preserveAspectRatio="none" focusable="false">
+        <path class="twr-shore-water" d="M0 0H1200V38C1100 60 1010 30 900 46S700 70 600 52 420 22 300 44 110 66 0 40Z"/>
+        <path class="twr-shore-foam" d="M0 40C110 66 190 38 300 44S480 76 600 52 780 34 900 46 1100 60 1200 38V50C1100 74 1000 46 900 58S720 82 600 64 430 36 300 56 110 80 0 52Z"/>
+        <g class="twr-shore-bubbles"><circle cx="140" cy="20" r="3"/><circle cx="420" cy="14" r="2.5"/><circle cx="690" cy="26" r="3.5"/><circle cx="960" cy="16" r="2.5"/><circle cx="1110" cy="30" r="2"/><circle cx="250" cy="30" r="2"/></g>
+      </svg>
+    </div>
+
+    <div class="twr-wrap">
+      <section class="twr-hero" aria-labelledby="page-title">
+        <p class="twr-kicker" data-i18n="report.kicker">Community reports</p>
+        <h1 id="page-title" class="twr-title" data-i18n="report.title">Report a problem</h1>
+        <p class="twr-hand" data-i18n="report.hand">Tell us what you saw — a person will check it.</p>
+        <p class="twr-lede" data-i18n="report.intro">Tell us about a problem at this water plant. Staff review every report. A report on its own never changes the plant's official status.</p>
+      </section>
+
+      <div class="twr-layout">
+        <aside class="twr-aside">
+          <section id="plant-card" class="twr-plant" aria-live="polite" aria-busy="true" aria-labelledby="plant-card-title">
+            <h2 id="plant-card-title" class="twr-plant-kicker" data-i18n="report.plant.heading">You are reporting on</h2>
+            <div id="plant-body">
+              <p class="twr-muted twr-loading"><span class="twr-spinner" aria-hidden="true"></span><span data-i18n="report.plant.loading">Loading plant details…</span></p>
+            </div>
+          </section>
+
+          <section class="twr-how" aria-labelledby="how-title">
+            <h2 id="how-title" class="twr-how-title" data-i18n="report.how.title">How reports work</h2>
+            <ul class="twr-ticks">
+              <li data-i18n="report.how.1">A person on our staff reads every report.</li>
+              <li data-i18n="report.how.2">Reports alone never change a plant's official status.</li>
+              <li data-i18n="report.how.3">Your phone number is never shown publicly.</li>
+              <li data-i18n="report.how.4">You get a reference number to follow up.</li>
+            </ul>
+            <p class="twr-how-links">
+              <a href="/status.html" data-i18n="report.how.status">Already reported? Check its status</a>
+              <a href="/status.html#appeal" id="how-appeal" data-i18n="report.how.appeal">Plant details wrong? Request a correction</a>
+            </p>
+          </section>
+        </aside>
+
+        <div class="twr-col">
+          <section id="plant-error" class="twr-card twr-state" hidden tabindex="-1" aria-labelledby="plant-error-title">
+            <div class="twr-state-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M12 3s-6 7-6 11a6 6 0 0 0 12 0c0-4-6-11-6-11z"/><path d="M12 10v4M12 17h.01"/></svg>
+            </div>
+            <h2 id="plant-error-title" class="twr-h2"></h2>
+            <p id="plant-error-body"></p>
+            <p class="twr-actions">
+              <a class="twr-btn" href="/" data-i18n="report.backToSearch">Search for a plant</a>
+              <button type="button" class="twr-btn twr-btn--ghost" id="plant-retry" hidden data-i18n="report.retry">Try again</button>
+            </p>
+          </section>
+
+          <form id="report-form" class="twr-form" novalidate hidden aria-labelledby="page-title">
+            <div id="error-summary" class="twr-summary" tabindex="-1" hidden aria-labelledby="error-summary-title">
+              <h2 id="error-summary-title" class="twr-summary-title" data-i18n="report.errors.title">There is a problem</h2>
+              <ul id="error-summary-list" class="twr-summary-list"></ul>
+            </div>
+
+            <div id="photo-failure" class="twr-alert twr-alert--warn" tabindex="-1" hidden aria-labelledby="photo-failure-title">
+              <h2 id="photo-failure-title" class="twr-alert-title" data-i18n="report.photos.failed.title">Your photo could not be uploaded</h2>
+              <p id="photo-failure-body" data-i18n="report.photos.failed.body">Everything else you entered is still here.</p>
+              <p class="twr-actions"><button type="button" class="twr-btn twr-btn--ghost" id="send-without-photos" data-i18n="report.photos.failed.without">Send without photos</button></p>
+            </div>
+
+            <!-- 1 · Category -->
+            <fieldset class="twr-card" id="category-group">
+              <legend class="twr-legend"><span class="twr-step" aria-hidden="true">1</span><span data-i18n="report.step.category">What is the problem?</span> <span class="twr-tag" data-i18n="report.required">Required</span></legend>
+              <p class="twr-field-error" id="category-error" hidden></p>
+              <div class="twr-cats" id="category-options"></div>
+              <p class="twr-note twr-note--warn" id="safety-note" hidden data-i18n="report.cat.safety">If the water looks, smells or tastes wrong, don't drink it.</p>
+            </fieldset>
+
+            <!-- 2 · When -->
+            <fieldset class="twr-card" id="when-group" aria-describedby="when-hint">
+              <legend class="twr-legend"><span class="twr-step" aria-hidden="true">2</span><span data-i18n="report.step.when">When did you see it?</span> <span class="twr-tag" data-i18n="report.required">Required</span></legend>
+              <p class="twr-hint" id="when-hint" data-i18n="report.when.hint">Pakistan time. It can't be in the future or more than 90 days ago.</p>
+              <p class="twr-field-error" id="observed-error" hidden></p>
+              <div class="twr-row">
+                <div class="twr-field">
+                  <label class="twr-label" for="observed-date" data-i18n="report.date.label">Date</label>
+                  <input class="twr-input" type="date" id="observed-date" name="observedDate" required dir="ltr" aria-describedby="when-hint">
+                </div>
+                <div class="twr-field">
+                  <label class="twr-label" for="observed-time" data-i18n="report.time.label">Approximate time</label>
+                  <input class="twr-input" type="time" id="observed-time" name="observedTime" required dir="ltr" aria-describedby="when-hint">
+                </div>
+              </div>
+            </fieldset>
+
+            <!-- 3 · Description -->
+            <div class="twr-card">
+              <h2 class="twr-legend"><span class="twr-step" aria-hidden="true">3</span><span data-i18n="report.step.details">Describe what happened</span> <span class="twr-tag" data-i18n="report.required">Required</span></h2>
+              <div class="twr-field">
+                <label class="twr-label" for="description" data-i18n="report.desc.label">Description</label>
+                <p class="twr-hint" id="description-hint" data-i18n="report.desc.hint">What did you see?</p>
+                <p class="twr-field-error" id="description-error" hidden></p>
+                <textarea class="twr-input twr-textarea" id="description" name="description" rows="5" required aria-describedby="description-hint description-counter"></textarea>
+                <p class="twr-counter" id="description-counter"></p>
+              </div>
+            </div>
+
+            <!-- 4 · Photos -->
+            <div class="twr-card" id="photos-card">
+              <h2 class="twr-legend"><span class="twr-step" aria-hidden="true">4</span><span data-i18n="report.step.photos">Photos</span> <span class="twr-tag twr-tag--soft" data-i18n="report.optional">Optional</span></h2>
+              <p class="twr-note" id="photos-guidance" data-i18n="report.photos.guidance">Photos are optional.</p>
+              <p class="twr-field-error" id="photos-error" hidden></p>
+              <ul class="twr-photos" id="photo-list"></ul>
+              <div class="twr-photo-add" id="photo-add">
+                <label class="twr-btn twr-btn--ghost twr-file">
+                  <input type="file" id="photos" class="twr-sr" accept="image/jpeg,image/png,image/webp" multiple aria-describedby="photos-hint photos-guidance">
+                  <svg class="twr-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>
+                  <span data-i18n="report.photos.add">Add a photo</span>
+                </label>
+                <p class="twr-hint" id="photos-hint"></p>
+              </div>
+              <p class="twr-sr" id="photo-status" aria-live="polite"></p>
+            </div>
+
+            <!-- 5 · Rating -->
+            <fieldset class="twr-card" id="rating-group" aria-describedby="rating-hint">
+              <legend class="twr-legend"><span class="twr-step" aria-hidden="true">5</span><span data-i18n="report.step.rating">Rate your experience</span> <span class="twr-tag twr-tag--soft" data-i18n="report.optional">Optional</span></legend>
+              <p class="twr-label" id="rating-legend-text" data-i18n="report.rating.legend">How was your experience at this plant?</p>
+              <p class="twr-hint" id="rating-hint" data-i18n="report.rating.hint">Your rating is saved separately from your problem report. A complaint does not lower the rating automatically.</p>
+              <p class="twr-field-error" id="rating-error" hidden></p>
+              <div class="twr-stars-row">
+                <div class="twr-stars" id="stars" role="radiogroup" aria-labelledby="rating-legend-text">
+                  <label class="twr-star"><input type="radio" name="rating" value="1" class="twr-sr"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.2l2.7 5.5 6 .9-4.4 4.2 1.1 6-5.4-2.9-5.4 2.9 1.1-6-4.4-4.2 6-.9z"/></svg><span class="twr-sr" data-i18n="report.rating.star1">1 star</span></label>
+                  <label class="twr-star"><input type="radio" name="rating" value="2" class="twr-sr"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.2l2.7 5.5 6 .9-4.4 4.2 1.1 6-5.4-2.9-5.4 2.9 1.1-6-4.4-4.2 6-.9z"/></svg><span class="twr-sr" data-i18n="report.rating.star2">2 stars</span></label>
+                  <label class="twr-star"><input type="radio" name="rating" value="3" class="twr-sr"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.2l2.7 5.5 6 .9-4.4 4.2 1.1 6-5.4-2.9-5.4 2.9 1.1-6-4.4-4.2 6-.9z"/></svg><span class="twr-sr" data-i18n="report.rating.star3">3 stars</span></label>
+                  <label class="twr-star"><input type="radio" name="rating" value="4" class="twr-sr"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.2l2.7 5.5 6 .9-4.4 4.2 1.1 6-5.4-2.9-5.4 2.9 1.1-6-4.4-4.2 6-.9z"/></svg><span class="twr-sr" data-i18n="report.rating.star4">4 stars</span></label>
+                  <label class="twr-star"><input type="radio" name="rating" value="5" class="twr-sr"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.2l2.7 5.5 6 .9-4.4 4.2 1.1 6-5.4-2.9-5.4 2.9 1.1-6-4.4-4.2 6-.9z"/></svg><span class="twr-sr" data-i18n="report.rating.star5">5 stars</span></label>
+                </div>
+                <p class="twr-star-label" id="rating-text" aria-hidden="true"></p>
+                <button type="button" class="twr-link-btn" id="rating-clear" hidden data-i18n="report.rating.clear">Clear rating</button>
+              </div>
+            </fieldset>
+
+            <!-- 6 · Location -->
+            <div class="twr-card">
+              <h2 class="twr-legend"><span class="twr-step" aria-hidden="true">6</span><span data-i18n="report.step.location">Location evidence</span> <span class="twr-tag twr-tag--soft" data-i18n="report.optional">Optional</span></h2>
+              <div class="twr-switch-row">
+                <input type="checkbox" role="switch" id="share-location" class="twr-switch" aria-describedby="loc-hint loc-status">
+                <label for="share-location" class="twr-switch-label" data-i18n="report.loc.toggle">Share my current location as evidence</label>
+              </div>
+              <p class="twr-hint" id="loc-hint" data-i18n="report.loc.hint">Only the distance between you and the plant is kept.</p>
+              <p class="twr-status" id="loc-status" aria-live="polite"></p>
+              <p class="twr-field-error" id="location-error" hidden></p>
+            </div>
+
+            <!-- 7 · Phone -->
+            <div class="twr-card" id="contact-card">
+              <h2 class="twr-legend"><span class="twr-step" aria-hidden="true">7</span><span data-i18n="report.step.contact">Your phone number</span> <span class="twr-tag" data-i18n="report.required">Required</span></h2>
+              <div class="twr-field">
+                <label class="twr-label" for="phone" data-i18n="report.phone.label">Phone number</label>
+                <p class="twr-hint" id="phone-hint" data-i18n="report.phone.hint">Pakistani number, for example 03XX-XXXXXXX</p>
+                <p class="twr-field-error" id="phone-error" hidden></p>
+                <input class="twr-input twr-input--phone" type="tel" id="phone" name="phone" dir="ltr" inputmode="tel" autocomplete="tel" maxlength="20" placeholder="03XX-XXXXXXX" required aria-describedby="phone-hint phone-privacy">
+                <p class="twr-privacy" id="phone-privacy">
+                  <svg class="twr-ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+                  <span data-i18n="report.phone.privacy">Your number is private. Only authorised staff can see it. It is never shown publicly.</span>
+                </p>
+              </div>
+
+              <div class="twr-verify" id="verify-box" aria-labelledby="verify-title">
+                <h3 class="twr-h3" id="verify-title" data-i18n="report.verify.title">Verify your number (recommended)</h3>
+                <p class="twr-hint" id="verify-explain" data-i18n="report.verify.explain">Verifying proves you control this number; it does not decide whether a report is true.</p>
+                <p class="twr-note" id="verify-disabled" hidden data-i18n="report.verify.disabled">Phone verification is not available right now; staff will review your report.</p>
+                <div id="verify-controls" hidden>
+                  <div class="twr-verify-row" id="verify-send-row">
+                    <button type="button" class="twr-btn twr-btn--ghost" id="verify-send" data-i18n="report.verify.send">Send code</button>
+                  </div>
+                  <div class="twr-verify-row" id="verify-code-row" hidden>
+                    <div class="twr-field twr-field--code">
+                      <label class="twr-label" for="verify-code" data-i18n="report.verify.codeLabel">6-digit code</label>
+                      <p class="twr-field-error" id="code-error" hidden></p>
+                      <input class="twr-input twr-input--code" id="verify-code" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" dir="ltr">
+                    </div>
+                    <button type="button" class="twr-btn" id="verify-confirm" data-i18n="report.verify.confirm">Confirm code</button>
+                  </div>
+                  <p class="twr-verified" id="verify-done" hidden><svg class="twr-ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.5 2.5L16 9.5"/></svg><span data-i18n="report.verify.done">Verified ✓</span></p>
+                  <p class="twr-dev" id="verify-dev" hidden></p>
+                </div>
+                <p class="twr-status" id="verify-status" aria-live="polite"></p>
+              </div>
+
+              <div class="twr-check-row" id="consent-row">
+                <p class="twr-field-error" id="consent-error" hidden></p>
+                <label class="twr-check">
+                  <input type="checkbox" id="consent" name="consent" value="true" required>
+                  <span class="twr-check-box" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 12.5l4 4L18 8"/></svg></span>
+                  <span class="twr-check-text" data-i18n="report.consent.label">I agree that Team Water may use this number to verify my report or follow up with me.</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Honeypot: must stay empty. Hidden from people and assistive tech. -->
+            <div class="twr-hp" aria-hidden="true">
+              <label for="website" data-i18n="report.hp.label">Leave this field empty</label>
+              <input type="text" id="website" name="website" tabindex="-1" autocomplete="off" value="">
+            </div>
+
+            <div class="twr-card twr-submit">
+              <p class="twr-hint" data-i18n="report.submit.note">By sending, you confirm the report is honest to the best of your knowledge.</p>
+              <button type="submit" class="twr-btn twr-btn--lg" id="submit-btn">
+                <span class="twr-spinner twr-spinner--light" aria-hidden="true" hidden id="submit-spinner"></span>
+                <span id="submit-label" data-i18n="report.submit">Send report</span>
+              </button>
+              <div class="twr-progress" id="submit-progress" hidden>
+                <progress id="submit-progress-bar" max="100" value="0" aria-labelledby="submit-progress-text"></progress>
+                <p class="twr-hint" id="submit-progress-text"></p>
+              </div>
+              <p class="twr-status" id="submit-status" aria-live="polite"></p>
+            </div>
+          </form>
+
+          <section id="confirmation" class="twr-done" hidden tabindex="-1" aria-labelledby="done-title">
+            <div class="twr-done-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 12.5l4 4L18 8"/></svg></div>
+            <h2 id="done-title" class="twr-done-title" data-i18n="report.done.title">Thank you — your report was sent</h2>
+            <div class="twr-ticket">
+              <p class="twr-ticket-label" id="done-ref-label" data-i18n="report.done.refLabel">Your reference number</p>
+              <p class="twr-ticket-ref" dir="ltr" id="done-ref" aria-labelledby="done-ref-label done-ref"></p>
+              <button type="button" class="twr-btn twr-btn--ghost twr-btn--sm" id="done-copy">
+                <svg class="twr-ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/></svg>
+                <span data-i18n="report.done.copy">Copy</span>
+              </button>
+              <p class="twr-status" id="done-copy-status" aria-live="polite"></p>
+            </div>
+            <p class="twr-save" data-i18n="report.done.save">Save this reference.</p>
+            <dl class="twr-done-meta">
+              <div><dt data-i18n="report.done.statusLabel">Status</dt><dd id="done-status"></dd></div>
+            </dl>
+            <ul class="twr-done-notes" id="done-notes"></ul>
+            <p class="twr-actions">
+              <a class="twr-btn" id="done-status-link" href="/status.html" data-i18n="report.done.checkStatus">Check report status</a>
+              <a class="twr-btn twr-btn--ghost" id="done-plant-link" href="/" data-i18n="report.plant.back">Back to this plant</a>
+            </p>
+            <section class="twr-next" aria-labelledby="next-title">
+              <h3 id="next-title" class="twr-h3" data-i18n="report.done.next.title">What happens next</h3>
+              <ol class="twr-next-list">
+                <li data-i18n="report.done.next.1">Staff review every report.</li>
+                <li data-i18n="report.done.next.2">Unverified reports never change a plant's official status.</li>
+                <li data-i18n="report.done.next.3">Reports that look unusual are checked by a person.</li>
+                <li data-i18n="report.done.next.4">If staff need more information, the status changes to “Needs clarification”.</li>
+              </ol>
+            </section>
+          </section>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer id="tw-footer"></footer>
+</body>
+</html>

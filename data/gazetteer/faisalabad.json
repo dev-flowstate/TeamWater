@@ -1,0 +1,1316 @@
+{
+  "generatedAt": "2026-09-25",
+  "description": "Approximate positions and search aliases for the areas, towns/tehsils and a few landmarks named in the Faisalabad water-filtration-plant spreadsheet. Positions are area-level references for browsing and are NEVER a plant's location. Only geocodeStatus \"matched\" (or an administrator's \"manual\" edit in the database) is usable for public ranking.",
+  "license": "Compilation © Team Water contributors. Coordinates come from Who's On First (original work CC0; this subset carries GeoNames data under CC BY and Wikidata data under CC0; see sources). Tehsil membership was checked against geoBoundaries PAK ADM3 (ODbL 1.0; used for verification only, no geometry copied). Aliases and Urdu transliterations are original work.",
+  "attribution": "Place positions: Who's On First (https://whosonfirst.org/docs/licenses/), incl. data from GeoNames (CC BY, https://www.geonames.org/) and Wikidata (CC0).",
+  "bounds": [
+    [
+      30.75,
+      72.6
+    ],
+    [
+      31.85,
+      73.65
+    ]
+  ],
+  "keyRules": {
+    "area": "areaKey(name, town)",
+    "town": "areaKey(name, null) → \"town:<slug>\"",
+    "landmark": "\"landmark:<slug(name)>\""
+  },
+  "nameUrSourceValues": {
+    "wof": "Urdu label published in the Who's On First record (name:urd_x_preferred)",
+    "transliteration": "careful transliteration by the Geo workstream; not an official spelling",
+    "osm": "OpenStreetMap name:ur (none used in this build — OSM unreachable)",
+    "wikipedia": "Urdu Wikipedia title (none used in this build — unreachable)"
+  },
+  "sources": [
+    {
+      "name": "Who's On First — whosonfirst-data-admin-pk",
+      "url": "https://github.com/whosonfirst-data/whosonfirst-data-admin-pk",
+      "license": "CC0 for WOF original work; per-source attribution as listed in the repository LICENSE.md",
+      "accessed": "2026-09-25",
+      "recordUrlTemplate": "https://spelunker.whosonfirst.org/id/{wof}"
+    },
+    {
+      "name": "GeoNames (via Who's On First \"gn:\" properties)",
+      "url": "https://www.geonames.org/",
+      "license": "Creative Commons Attribution (CC BY)",
+      "accessed": "2026-09-25",
+      "recordUrlTemplate": "https://www.geonames.org/{gn}"
+    },
+    {
+      "name": "Wikidata (via Who's On First \"wd:\" properties)",
+      "url": "https://www.wikidata.org/",
+      "license": "CC0 1.0",
+      "accessed": "2026-09-25",
+      "recordUrlTemplate": "https://www.wikidata.org/wiki/{wd}"
+    },
+    {
+      "name": "geoBoundaries PAK ADM3 (tehsils, 2017; source Pathways Data Pvt. Ltd. / PBS) — verification only",
+      "url": "https://github.com/wmgeolab/geoBoundaries/tree/main/releaseData/gbOpen/PAK/ADM3",
+      "license": "Open Data Commons Open Database License 1.0",
+      "accessed": "2026-09-25"
+    }
+  ],
+  "entries": [
+    {
+      "kind": "town",
+      "name": "Faisalabad",
+      "town": null,
+      "nameUr": "فیصل آباد",
+      "nameUrSource": "wof",
+      "aliases": [
+        "Faisalabad City",
+        "Faisalabad District",
+        "Lyallpur",
+        "Layalpur",
+        "Lailpur",
+        "Faislabad",
+        "Faisalabaad",
+        "Faisal Abad",
+        "Faisalabad Shehar",
+        "FSD",
+        "Shah Faisalabad",
+        "فیصل آباد شہر",
+        "ضلع فیصل آباد",
+        "لائل پور",
+        "لائلپور"
+      ],
+      "lat": 31.418,
+      "lng": 73.079,
+      "radiusM": 13200,
+      "geocodeStatus": "matched",
+      "geocodeSource": "Who's On First (whosonfirst-data-admin-pk), Wikidata coordinate",
+      "geocodeRef": "wof:421181503; gn:1179400; wd:Q173985",
+      "geocodeNote": "Point is the Wikidata coordinate for Q173985 as carried in Who's On First locality 421181503 (wd:latitude/longitude). radiusM from the WOF locality polygon bounding box (72.949661,31.32658,73.257796,31.538949). Tehsil check: inside FAISALABAD CITY tehsil per geoBoundaries PAK ADM3 (2017). \"Lyallpur\" is the city's former name (search alias only). Urdu name from the WOF record (name:urd_x_preferred)."
+    },
+    {
+      "kind": "town",
+      "name": "Jaranwala",
+      "town": null,
+      "nameUr": "جڑانوالہ",
+      "nameUrSource": "transliteration",
+      "aliases": [
+        "Jaranwala Tehsil",
+        "Jarranwala",
+        "Jaranwla",
+        "Jranwala",
+        "Jaranwala Shahar",
+        "جڑانوالا",
+        "جاران والا"
+      ],
+      "lat": 31.332381,
+      "lng": 73.423192,
+      "radiusM": 4000,
+      "geocodeStatus": "matched",
+      "geocodeSource": "Who's On First (whosonfirst-data-admin-pk) locality polygon",
+      "geocodeRef": "wof:421197393; gn:1176106; wd:Q1251242",
+      "geocodeNote": "Jaranwala is a tehsil in the spreadsheet; it is represented here by its headquarters town (WOF locality 421197393 / Wikidata Q1251242, label centroid). The tehsil's rural area extends well beyond this point. radiusM 4000 is a default estimate (city/town). Tehsil check: inside JARANWALA tehsil per geoBoundaries PAK ADM3 (2017) — consistent with Jaranwala. Urdu name is the common spelling (transliteration); WOF gives \"جاران والا\", kept as an alias."
+    },
+    {
+      "kind": "town",
+      "name": "Chak Jhumra",
+      "town": null,
+      "nameUr": "چک جھمرہ",
+      "nameUrSource": "transliteration",
+      "aliases": [
+        "Chak Jhumra Tehsil",
+        "Chak Jumra",
+        "Chak Jhumrah",
+        "Chakjhumra",
+        "Jhumra",
+        "جھمرا",
+        "جھمرہ"
+      ],
+      "lat": 31.568791,
+      "lng": 73.183364,
+      "radiusM": 4000,
+      "geocodeStatus": "matched",
+      "geocodeSource": "Who's On First (whosonfirst-data-admin-pk) locality polygon",
+      "geocodeRef": "wof:421196441; gn:1175748; wd:Q3321415",
+      "geocodeNote": "Chak Jhumra is a tehsil in the spreadsheet; it is represented here by its headquarters town (WOF locality 421196441 / Wikidata Q3321415, label centroid). The tehsil's rural area extends well beyond this point. radiusM 4000 is a default estimate (city/town). Tehsil check: inside CHAK JHUMRA tehsil per geoBoundaries PAK ADM3 (2017) — consistent with Chak Jhumra. WOF names this locality \"Jhumra\" (variant \"Chak Jumra\"; Wikipedia page \"Chak Jhumra\"). WOF Urdu \"جھمرا\" kept as an alias."
+    },
+    {
+      "kind": "town",
+      "name": "Samundri",
+      "town": null,
+      "nameUr": "سمندری",
+      "nameUrSource": "wof",
+      "aliases": [
+        "Samundri Tehsil",
+        "Samundari",
+        "Samundary",
+        "Samandri",
+        "Samundri Shahar"
+      ],
+      "lat": 31.06123,
+      "lng": 72.95858,
+      "radiusM": 4000,
+      "geocodeStatus": "matched",
+      "geocodeSource": "Who's On First (whosonfirst-data-admin-pk), GeoNames-derived point",
+      "geocodeRef": "wof:1344256487; gn:1166234",
+      "geocodeNote": "Samundri is a tehsil in the spreadsheet; it is represented here by its headquarters town (GeoNames feature 1166234 \"Samundri\" (PPL, modified 2017-03-04) republished as Who's On First locality 1344256487). The tehsil's rural area extends well beyond this point. radiusM 4000 is a default estimate (city/town). Tehsil check: inside SAMUNDARI tehsil per geoBoundaries PAK ADM3 (2017) — consistent with Samundri. No polygon in the source, so the headquarters position is a GeoNames point."
+    },
+    {
+      "kind": "town",
+      "name": "Tandlianwala",
+      "town": null,
+      "nameUr": "تاندلیانوالہ",
+      "nameUrSource": "transliteration",
+      "aliases": [
+        "Tandlianwala Tehsil",
+        "Tandliawala",
+        "Tandlian Wala",
+        "Tandlinwala",
+        "Tandlianwali",
+        "Tandlanwala",
+        "ٹنڈلیاں والا",
+        "تاندلیاں والا"
+      ],
+      "lat": 31.036636,
+      "lng": 73.133484,
+      "radiusM": 4000,
+      "geocodeStatus": "matched",
+      "geocodeSource": "Who's On First (whosonfirst-data-admin-pk) locality polygon",
+      "geocodeRef": "wof:421175759; gn:1163968; wd:Q3695292",
+      "geocodeNote": "Tandlianwala is a tehsil in the spreadsheet; it is represented here by its headquarters town (WOF locality 421175759 / Wikidata Q3695292, label centroid). The tehsil's rural area extends well beyond this point. radiusM 4000 is a default estimate (city/town). Tehsil check: inside TANDLIANWALA tehsil per geoBoundaries PAK ADM3 (2017) — consistent with Tandlianwala. WOF Urdu \"ٹنڈلیاں والا\" kept as an alias."
+    },
+    {
+      "kind": "town",
+      "name": "Lyallpur Town",
+      "town": null,
+      "nameUr": "لائل پور ٹاؤن",
+      "nameUrSource": "transliteration",
+      "aliases": [
+        "Lyallpur Taun",
+        "Layalpur Town",
+        "Lyalpur Town",
+        "Lailpur Town"
+      ],
+      "lat": null,
+      "lng": null,
+      "radiusM": null,
+      "geocodeStatus": "not_found",
+      "geocodeSource": "Who's On First admin-pk (GeoNames/Wikidata-derived) searched 2026-09-25 — no match",
+      "geocodeRef": null,
+      "geocodeNote": "Administrative town of Faisalabad city (a polygon, not a point). No boundary or centroid for it exists in the reachable open sources (geoBoundaries only goes down to tehsil level: FAISALABAD CITY). OpenStreetMap/Nominatim, Wikidata and Wikipedia could not be queried from the build environment (egress blocked) — geocode later with Nominatim (single request, ≤1 req/s, cached) or an administrator map pin."
+    },
+    {
+      "kind": "town",
+      "name": "Jinnah Town",
+      "town": null,
+      "nameUr": "جناح ٹاؤن",
+      "nameUrSource": "transliteration",
+      "aliases": [
+        "Jinnah Taun",
+        "Jinah Town",
+        "Jinna Town"
+      ],
+      "lat": null,
+      "lng": null,
+      "radiusM": null,
+      "geocodeStatus": "not_found",
+      "geocodeSource": "Who's On First admin-pk (GeoNames/Wikidata-derived) searched 2026-09-25 — no match",
+      "geocodeRef": null,
+      "geocodeNote": "Administrative town of Faisalabad city (a polygon, not a point). No boundary or centroid for it exists in the reachable open sources (geoBoundaries only goes down to tehsil level: FAISALABAD CITY). OpenStreetMap/Nominatim, Wikidata and Wikipedia could not be queried from the build environment (egress blocked) — geocode later with Nominatim (single request, ≤1 req/s, cached) or an administrator map pin."
+    },
+    {
+      "kind": "town",
+      "name": "Iqbal Town",
+      "town": null,
+      "nameUr": "اقبال ٹاؤن",
+      "nameUrSource": "transliteration",
+      "aliases": [
+        "Iqbal Taun",
+        "Iqbal Tawn",
+        "Ikbal Town"
+      ],
+      "lat": null,
+      "lng": null,
+      "radiusM": null,
+      "geocodeStatus": "not_found",
+      "geocodeSource": "Who's On First admin-pk (GeoNames/Wikidata-derived) searched 2026-09-25 — no match",
+      "geocodeRef": null,
+      "geocodeNote": "Administrative town of Faisalabad city (a polygon, not a point). No boundary or centroid for it exists in the reachable open sources (geoBoundaries only goes down to tehsil level: FAISALABAD CITY). OpenStreetMap/Nominatim, Wikidata and Wikipedia could not be queried from the build environment (egress blocked) — geocode later with Nominatim (single request, ≤1 req/s, cached) or an administrator map pin."
+    },
+    {
+      "kind": "town",
+      "name": "Madina Town",
+      "town": null,
+      "nameUr": "مدینہ ٹاؤن",
+      "nameUrSource": "transliteration",
+      "aliases": [
+        "Madina Taun",
+        "Medina Town",
+        "Madinah Town",
+        "Madeena Town"
+      ],
+      "lat": null,
+      "lng": null,
+      "radiusM": null,
+      "geocodeStatus": "not_found",
+      "geocodeSource": "Who's On First admin-pk (GeoNames/Wikidata-derived) searched 2026-09-25 — no match",
+      "geocodeRef": null,
+      "geocodeNote": "Administrative town of Faisalabad city (a polygon, not a point). No boundary or centroid for it exists in the reachable open sources (geoBoundaries only goes down to tehsil level: FAISALABAD CITY). OpenStreetMap/Nominatim, Wikidata and Wikipedia could not be queried from the build environment (egress blocked) — geocode later with Nominatim (single request, ≤1 req/s, cached) or an administrator map pin."
+    },
+    {
+      "kind": "area",
+      "name": "Aminpur Bangla",
+      "town": "Lyallpur Town",
+      "nameUr": "امین پور بنگلہ",
+      "nameUrSource": "transliteration",
+      "aliases": [
+        "Amin Pur Bangla",
+        "Ameenpur Bangla",
+        "Aminpur Bungalow",
+        "Aminpur Bangala"
+      ],
+      "lat": null,
+      "lng": null,
+      "radiusM": null,
+      "geocodeStatus": "not_found",
+      "geocodeSource": "Who's On First admin-pk (GeoNames/Wikidata-derived) searched 2026-09-25 — no match",
+      "geocodeRef": null,
+      "geocodeNote": "No feature with this name in Faisalabad District in the reachable open sources. Who's On First/GeoNames list other \"Aminpur\"/\"Aminpura\" places, none of them in Faisalabad District. Not to be confused with Aminpur Bazaar at the Clock Tower. OpenStreetMap/Nominatim, Wikidata and Wikipedia could not be queried from the build environment (egress blocked) — geocode later with Nominatim (single request, ≤1 req/s, cached) or an administrator map pin."
+    },
+    {
+      "kind": "area",
+      "name": "Canal Road",
+      "town": "Madina Town",
+      "nameUr": "کینال روڈ",
+      "nameUrSource": "transliteration",
+      "aliases": [
+        "Canal Rd",
+        "Kanal Road",
+        "Nehar Road",
+        "Nahar Road",
+        "Nehr Road",
+        "نہر روڈ"
+      ],
+      "lat": null,
+      "lng": null,
+      "radiusM": null,
+      "geocodeStatus": "ambiguous",
+      "geocodeSource": null,
+      "geocodeRef": null,
+      "geocodeNote": "A road: a linear feature spanning several kilometres, and the spreadsheet does not say which stretch (only \"Madina Town\"). A single point would be misleading, so none is assigned. No source identifies a locality of this name in Madina Town. An administrator can pin a representative position once the served stretch is known."
+    },
+    {
+      "kind": "area",
+      "name": "Chak 185 RB",
+      "town": "Chak Jhumra",
+      "nameUr": "چک نمبر 185 ر ب",
+      "nameUrSource": "transliteration",
+      "aliases": [
+        "Chak No 185 RB",
+        "Chak No. 185 R.B.",
+        "Chak Number 185 RB",
+        "185 RB",
+        "185 R.B.",
+        "185RB",
+        "Chak 185",
+        "Chak 185 Rakh Branch",
+        "چک 185 ر ب",
+        "چک نمبر 185",
+        "Chak One Hundred Eighty-Five",
+        "Sarfattu",
+        "Bhagwān Singh"
+      ],
+      "lat": 31.57725,
+      "lng": 73.20748,
+      "radiusM": 1500,
+      "geocodeStatus": "matched",
+      "geocodeSource": "Who's On First (whosonfirst-data-admin-pk), GeoNames-derived point",
+      "geocodeRef": "wof:1226242163; gn:1389183",
+      "geocodeNote": "GeoNames feature 1389183 \"Chak One Hundred Eighty-five Rakh Branch\" (PPL, modified 2017-03-05) republished as Who's On First locality 1226242163. Only candidate with this number and canal branch in Faisalabad District. Point feature (no extent): radiusM 1500 is a default estimate (chak village). Tehsil check: inside CHAK JHUMRA tehsil per geoBoundaries PAK ADM3 (2017) — consistent with Chak Jhumra. GeoNames alternate names added as aliases: Chak One Hundred Eighty-Five, Sarfattu, Bhagwān Singh."
+    },
+    {
+      "kind": "area",
+      "name": "Chak 190 RB",
+      "town": "Chak Jhumra",
+      "nameUr": "چک نمبر 190 ر ب",
+      "nameUrSource": "transliteration",
+      "aliases": [
+        "Chak No 190 RB",
+        "Chak No. 190 R.B.",
+        "Chak Number 190 RB",
+        "190 RB",
+        "190 R.B.",
+        "190RB",
+        "Chak 190",
+        "Chak 190 Rakh Branch",
+        "چک 190 ر ب",
+        "چک نمبر 190"
+      ],
+      "lat": 31.5435,
+      "lng": 73.15688,
+      "radiusM": 1500,
+      "geocodeStatus": "ambiguous",
+      "geocodeSource": "Who's On First (whosonfirst-data-admin-pk), GeoNames-derived point",
+      "geocodeRef": "wof:1243171635; gn:1389165 | wof:1259706757; gn:1173580",
+      "geocodeNote": "Two GeoNames settlements carry this chak number (apparently Karari Kalan and Chhoti Karari, about 1.8 km apart), and both fall in Faisalabad Saddar tehsil rather than Chak Jhumra (the spreadsheet town), so the match is not confirmed. Candidates: (1) GeoNames feature 1389165 \"Chak One Hundred Ninety Rakh Branch\" (PPL, modified 2017-03-05) republished as Who's On First locality 1243171635 at 31.5435, 73.15688 [alt names: Chak One Hundred Ninety, Kirari, Karāri Kalān] — inside FAISALABAD SADDAR tehsil per geoBoundaries PAK ADM3 (2017) — spreadsheet town is Chak Jhumra; MISMATCH; (2) GeoNames feature 1173580 \"Chak One Hundred Ninety Rakh Branch\" (PPL, modified 2017-03-04) republished as Who's On First locality 1259706757 at 31.53165, 73.17042 [alt names: Karari, Chak One Hundred Ninety, Kirāri, Chhoti Karāri] — inside FAISALABAD SADDAR tehsil per geoBoundaries PAK ADM3 (2017) — spreadsheet town is Chak Jhumra; MISMATCH. lat/lng hold candidate (1) for administrator review only; ambiguous entries are not used for public ranking. radiusM 1500 is a default estimate (chak village)."
+    },
+    {
+      "kind": "area",
+      "name": "Chak 236 GB",
+      "town": "Jaranwala",
+      "nameUr": "چک نمبر 236 گ ب",
+      "nameUrSource": "transliteration",
+      "aliases": [
+        "Chak No 236 GB",
+        "Chak No. 236 G.B.",
+        "Chak Number 236 GB",
+        "236 GB",
+        "236 G.B.",
+        "236GB",
+        "Chak 236",
+        "Chak 236 Gugera Branch",
+        "چک 236 گ ب",
+        "چک نمبر 236",
+        "Kot Daya Kishen",
+        "Kot Daya Kishan",
+        "Kot Rādha Kishān"
+      ],
+      "lat": 31.38272,
+      "lng": 73.48048,
+      "radiusM": 1500,
+      "geocodeStatus": "matched",
+      "geocodeSource": "Who's On First (whosonfirst-data-admin-pk), GeoNames-derived point",
+      "geocodeRef": "wof:1226669295; gn:1173304",
+      "geocodeNote": "GeoNames feature 1173304 \"Chak Two Hundred Thirty-six Gugera Branch\" (PPL, modified 2017-09-04) republished as Who's On First locality 1226669295. Only candidate with this number and canal branch in Faisalabad District. Point feature (no extent): radiusM 1500 is a default estimate (chak village). Tehsil check: inside JARANWALA tehsil per geoBoundaries PAK ADM3 (2017) — consistent with Jaranwala. GeoNames alternate names added as aliases: Kot Daya Kishen, Kot Daya Kishan, Kot Rādha Kishān."
+    },
+    {
+      "kind": "area",
+      "name": "Chak 398 GB",
+      "town": "Tandlianwala",
+      "nameUr": "چک نمبر 398 گ ب",
+      "nameUrSource": "transliteration",
+      "aliases": [
+        "Chak No 398 GB",
+        "Chak No. 398 G.B.",
+        "Chak Number 398 GB",
+        "398 GB",
+        "398 G.B.",
+        "398GB",
+        "Chak 398",
+        "Chak 398 Gugera Branch",
+        "چک 398 گ ب",
+        "چک نمبر 398"
+      ],
+      "lat": 30.91516,
+      "lng": 73.01804,
+      "radiusM": 1500,
+      "geocodeStatus": "ambiguous",
+      "geocodeSource": "Who's On First (whosonfirst-data-admin-pk), GeoNames-derived point",
+      "geocodeRef": "wof:1276897559; gn:1184401 | wof:1259606645; gn:11538941",
+      "geocodeNote": "Two different GeoNames villages are named \"Chak Three Hundred Ninety-eight\", without a canal-branch suffix, so neither can be confirmed as 398 GB. Candidates: (1) GeoNames feature 1184401 \"Chak Three Hundred Ninety-eight\" (PPL, modified 2017-05-07) republished as Who's On First locality 1276897559 at 30.91516, 73.01804 [alt names: Aratula, Ara Tulla, Aro Tulla] — inside TANDLIANWALA tehsil per geoBoundaries PAK ADM3 (2017) — consistent with Tandlianwala; (2) GeoNames feature 11538941 \"Chak Three Hundred Ninety-eight\" (PPL, modified 2017-05-09) republished as Who's On First locality 1259606645 at 30.92401, 73.03285 [alt names: Karaliānwāla] — inside TANDLIANWALA tehsil per geoBoundaries PAK ADM3 (2017) — consistent with Tandlianwala. lat/lng hold candidate (1) for administrator review only; ambiguous entries are not used for public ranking. radiusM 1500 is a default estimate (chak village)."
+    },
+    {
+      "kind": "area",
+      "name": "Chak 412 GB",
+      "town": "Tandlianwala",
+      "nameUr": "چک نمبر 412 گ ب",
+      "nameUrSource": "transliteration",
+      "aliases": [
+        "Chak No 412 GB",
+        "Chak No. 412 G.B.",
+        "Chak Number 412 GB",
+        "412 GB",
+        "412 G.B.",
+        "412GB",
+        "Chak 412",
+        "Chak 412 Gugera Branch",
+        "چک 412 گ ب",
+        "چک نمبر 412",
+        "Kamiāna"
+      ],
+      "lat": 30.99051,
+      "lng": 73.16247,
+      "radiusM": 1500,
+      "geocodeStatus": "matched",
+      "geocodeSource": "Who's On First (whosonfirst-data-admin-pk), GeoNames-derived point",
+      "geocodeRef": "wof:1276123629; gn:11538985",
+      "geocodeNote": "GeoNames feature 11538985 \"Chak Four Hundred Twelve Gugera Branch\" (PPL, modified 2017-05-09) republished as Who's On First locality 1276123629. Only candidate with this number and canal branch in Faisalabad District. Point feature (no extent): radiusM 1500 is a default estimate (chak village). Tehsil check: inside TANDLIANWALA tehsil per geoBoundaries PAK ADM3 (2017) — consistent with Tandlianwala. GeoNames alternate names added as aliases: Kamiāna."
+    },
+    {
+      "kind": "area",
+      "name": "Chak 467 GB",
+      "town": "Samundri",
+      "nameUr": "چک نمبر 467 گ ب",
+      "nameUrSource": "transliteration",
+      "aliases": [
+        "Chak No 467 GB",
+        "Chak No. 467 G.B.",
+        "Chak Number 467 GB",
+        "467 GB",
+        "467 G.B.",
+        "467GB",
+        "Chak 467",
+        "Chak 467 Gugera Branch",
+        "چک 467 گ ب",
+        "چک نمبر 467",
+        "Sharīfbād"
+      ],
+      "lat": 31.07505,
+      "lng": 72.96553,
+      "radiusM": 1500,
+      "geocodeStatus": "matched",
+      "geocodeSource": "Who's On First (whosonfirst-data-admin-pk), GeoNames-derived point",
+      "geocodeRef": "wof:1226241977; gn:11483371",
+      "geocodeNote": "GeoNames feature 11483371 \"Chak Four Hundred Sixty-seven Gugera Branch\" (PPL, modified 2017-03-06) republished as Who's On First locality 1226241977. Only candidate with this number and canal branch in Faisalabad District. Point feature (no extent): radiusM 1500 is a default estimate (chak village). Tehsil check: inside SAMUNDARI tehsil per geoBoundaries PAK ADM3 (2017) — consistent with Samundri. GeoNames alternate names added as aliases: Sharīfbād."
+    },
+    {
+      "kind": "area",
+      "name": "Chak 474 GB",
+      "town": "Samundri",
+      "nameUr": "چک نمبر 474 گ ب",
+      "nameUrSource": "transliteration",
+      "aliases": [
+        "Chak No 474 GB",
+        "Chak No. 474 G.B.",
+        "Chak Number 474 GB",
+        "474 GB",
+        "474 G.B.",
+        "474GB",
+        "Chak 474",
+        "Chak 474 Gugera Branch",
+        "چک 474 گ ب",
+        "چک نمبر 474",
+        "Nāngli"
+      ],
+      "lat": 31.04753,
+      "lng": 72.85088,
+      "radiusM": 1500,
+      "geocodeStatus": "matched",
+      "geocodeSource": "Who's On First (whosonfirst-data-admin-pk), GeoNames-derived point",
+      "geocodeRef": "wof:1242701197; gn:11483353",
+      "geocodeNote": "GeoNames feature 11483353 \"Chak Four Hundred Seventy-four Gugera Branch\" (PPL, modified 2017-03-06) republished as Who's On First locality 1242701197. Only candidate with this number and canal branch in Faisalabad District. Point feature (no extent): radiusM 1500 is a default estimate (chak village). Tehsil check: inside SAMUNDARI tehsil per geoBoundaries PAK ADM3 (2017) — consistent with Samundri. GeoNames alternate names added as aliases: Nāngli."
+    },
+    {
+      "kind": "area",
+      "name": "Chak 65 GB",
+      "town": "Jaranwala",
+      "nameUr": "چک نمبر 65 گ ب",
+      "nameUrSource": "transliteration",
+      "aliases": [
+        "Chak No 65 GB",
+        "Chak No. 65 G.B.",
+        "Chak Number 65 GB",
+        "65 GB",
+        "65 G.B.",
+        "65GB",
+        "Chak 65",
+        "Chak 65 Gugera Branch",
+        "چک 65 گ ب",
+        "چک نمبر 65",
+        "Mukanpur",
+        "Mukandpur"
+      ],
+      "lat": 31.34928,
+      "lng": 73.30688,
+      "radiusM": 1500,
+      "geocodeStatus": "matched",
+      "geocodeSource": "Who's On First (whosonfirst-data-admin-pk), GeoNames-derived point",
+      "geocodeRef": "wof:1226539649; gn:1388712",
+      "geocodeNote": "GeoNames feature 1388712 \"Chak Sixty-five Gugera Branch\" (PPL, modified 2017-09-05) republished as Who's On First locality 1226539649. Only candidate with this number and canal branch in Faisalabad District. Point feature (no extent): radiusM 1500 is a default estimate (chak village). Tehsil check: inside JARANWALA tehsil per geoBoundaries PAK ADM3 (2017) — consistent with Jaranwala. GeoNames alternate names added as aliases: Mukanpur, Mukandpur."
+    },
+    {
+      "kind": "area",
+      "name": "Chak Jhumra City",
+      "town": "Chak Jhumra",
+      "nameUr": "چک جھمرہ شہر",
+      "nameUrSource": "transliteration",
+      "aliases": [
+        "Chak Jhumra",
+        "Jhumra City",
+        "Chak Jhumra Shahar",
+        "Chak Jumra",
+        "Jhumra",
+        "چک جھمرہ",
+        "جھمرا"
+      ],
+      "lat": 31.568791,
+      "lng": 73.183364,
+      "radiusM": 1400,
+      "geocodeStatus": "matched",
+      "geocodeSource": "Who's On First (whosonfirst-data-admin-pk) locality polygon",
+      "geocodeRef": "wof:421196441; gn:1175748; wd:Q3321415",
+      "geocodeNote": "Who's On First locality 421196441 (\"Jhumra\", Wikidata Q3321415); point is the WOF label centroid; radiusM from the polygon bounding box (73.168529,31.554721,73.198737,31.580134). Tehsil check: inside CHAK JHUMRA tehsil per geoBoundaries PAK ADM3 (2017) — consistent with Chak Jhumra."
+    },
+    {
+      "kind": "area",
+      "name": "Chalk 224 RB",
+      "town": "Jinnah Town",
+      "nameUr": "چک نمبر 224 ر ب",
+      "nameUrSource": "transliteration",
+      "aliases": [
+        "Chak 224 RB",
+        "Chak No 224 RB",
+        "Chak No. 224 R.B.",
+        "Chak Number 224 RB",
+        "224 RB",
+        "224 R.B.",
+        "224RB",
+        "Chak 224",
+        "Chak 224 Rakh Branch",
+        "چک 224 ر ب",
+        "چک نمبر 224",
+        "Chak Two Hundred Twenty-Four RB"
+      ],
+      "lat": 31.37782,
+      "lng": 73.05533,
+      "radiusM": 1500,
+      "geocodeStatus": "matched",
+      "geocodeSource": "Who's On First (whosonfirst-data-admin-pk), GeoNames-derived point",
+      "geocodeRef": "wof:1780038085; gn:7110678",
+      "geocodeNote": "GeoNames feature 7110678 \"Chak Two Hundred Twenty-Four RB\" (PPL, modified 2009-11-28) republished as Who's On First neighbourhood 1780038085. Only candidate with this number and canal branch in Faisalabad District. Point feature (no extent): radiusM 1500 is a default estimate (chak village). Tehsil check: inside FAISALABAD CITY tehsil per geoBoundaries PAK ADM3 (2017) — consistent with Jinnah Town (the city tehsil; Jinnah Town is one of the city's administrative towns, whose own boundary is not in the data, so town membership is not verified). Spreadsheet spells it \"Chalk 224 RB\" (almost certainly a typo for \"Chak 224 RB\"); the original name is kept and the corrected spelling is an alias."
+    },
+    {
+      "kind": "area",
+      "name": "D-Type Colony",
+      "town": "Jinnah Town",
+      "nameUr": "ڈی ٹائپ کالونی",
+      "nameUrSource": "transliteration",
+      "aliases": [
+        "D Type Colony",
+        "D-Type",
+        "D Type",
+        "DType Colony",
+        "Dee Type Colony",
+        "D Taip Colony"
+      ],
+      "lat": null,
+      "lng": null,
+      "radiusM": null,
+      "geocodeStatus": "not_found",
+      "geocodeSource": "Who's On First admin-pk (GeoNames/Wikidata-derived) searched 2026-09-25 — no match",
+      "geocodeRef": null,
+      "geocodeNote": "No feature with this name in Faisalabad District in the reachable open sources. OpenStreetMap/Nominatim, Wikidata and Wikipedia could not be queried from the build environment (egress blocked) — geocode later with Nominatim (single request, ≤1 req/s, cached) or an administrator map pin."
+    },
+    {
+      "kind": "area",
+      "name": "Factory Area",
+      "town": "Iqbal Town",
+      "nameUr": "فیکٹری ایریا",
+      "nameUrSource": "transliteration",
+      "aliases": [
+        "Factory Ariya",
+        "Factory Aria"
+      ],
+      "lat": null,
+      "lng": null,
+      "radiusM": null,
+      "geocodeStatus": "not_geocodable",
+      "geocodeSource": null,
+      "geocodeRef": null,
+      "geocodeNote": "Generic description (\"factory area\"), not a unique place name: many industrial zones in Faisalabad could be meant. Needs an administrator decision before any position is assigned."
+    },
+    {
+      "kind": "area",
+      "name": "Gatwala",
+      "town": "Madina Town",
+      "nameUr": "گٹ والا",
+      "nameUrSource": "transliteration",
+      "aliases": [
+        "Gat Wala",
+        "Gutwala",
+        "Gatwala Araiyan",
+        "Gatwala Sikhan"
+      ],
+      "lat": 31.46667,
+      "lng": 73.18333,
+      "radiusM": 1200,
+      "geocodeStatus": "ambiguous",
+      "geocodeSource": "Who's On First (whosonfirst-data-admin-pk), GeoNames-derived point",
+      "geocodeRef": "wof:1780036917; gn:1178754 | wof:1780038545; gn:1178753",
+      "geocodeNote": "Two GeoNames settlements start with this name within Faisalabad city tehsil (\"Gatwala Araiyan\" and \"Gatwala Sikhan\", about 5.7 km apart), and the spreadsheet does not say which (if either) is meant. Both records are old GeoNames points at 1-arc-minute precision. Candidates: (1) GeoNames feature 1178754 \"Gatwāla Arāiyān\" (PPL, modified 1996-05-08) republished as Who's On First neighbourhood 1780036917 at 31.46667, 73.18333 — inside FAISALABAD CITY tehsil per geoBoundaries PAK ADM3 (2017) — consistent with Madina Town (the city tehsil; Madina Town is one of the city's administrative towns, whose own boundary is not in the data, so town membership is not verified); (2) GeoNames feature 1178753 \"Gatwāla Sikhān\" (PPL, modified 1996-05-08) republished as Who's On First neighbourhood 1780038545 at 31.41667, 73.16667 — inside FAISALABAD CITY tehsil per geoBoundaries PAK ADM3 (2017) — consistent with Madina Town (the city tehsil; Madina Town is one of the city's administrative towns, whose own boundary is not in the data, so town membership is not verified). lat/lng hold candidate (1) for administrator review only; ambiguous entries are not used for public ranking. radiusM 1200 is a default estimate (area)."
+    },
+    {
+      "kind": "area",
+      "name": "Ghulam Muhammad Abad",
+      "town": "Lyallpur Town",
+      "nameUr": "غلام محمد آباد",
+      "nameUrSource": "transliteration",
+      "aliases": [
+        "Ghulam Muhammadabad",
+        "Ghulam Mohammad Abad",
+        "Ghulam Mohammadabad",
+        "Ghulam Muhammad Abaad",
+        "G M Abad",
+        "GM Abad",
+        "G.M. Abad"
+      ],
+      "lat": null,
+      "lng": null,
+      "radiusM": null,
+      "geocodeStatus": "not_found",
+      "geocodeSource": "Who's On First admin-pk (GeoNames/Wikidata-derived) searched 2026-09-25 — no match",
+      "geocodeRef": null,
+      "geocodeNote": "No feature with this name in Faisalabad District in the reachable open sources. OpenStreetMap/Nominatim, Wikidata and Wikipedia could not be queried from the build environment (egress blocked) — geocode later with Nominatim (single request, ≤1 req/s, cached) or an administrator map pin."
+    },
+    {
+      "kind": "area",
+      "name": "Gulberg",
+      "town": "Jinnah Town",
+      "nameUr": "گلبرگ",
+      "nameUrSource": "transliteration",
+      "aliases": [
+        "Gulbarg",
+        "Gulburg",
+        "Gulberg Colony",
+        "Gul Berg"
+      ],
+      "lat": null,
+      "lng": null,
+      "radiusM": null,
+      "geocodeStatus": "not_found",
+      "geocodeSource": "Who's On First admin-pk (GeoNames/Wikidata-derived) searched 2026-09-25 — no match",
+      "geocodeRef": null,
+      "geocodeNote": "No feature with this name in Faisalabad District in the reachable open sources. OpenStreetMap/Nominatim, Wikidata and Wikipedia could not be queried from the build environment (egress blocked) — geocode later with Nominatim (single request, ≤1 req/s, cached) or an administrator map pin."
+    },
+    {
+      "kind": "area",
+      "name": "Gulfishan Colony",
+      "town": "Iqbal Town",
+      "nameUr": "گلفشاں کالونی",
+      "nameUrSource": "transliteration",
+      "aliases": [
+        "Gulfishan",
+        "Gul Fishan",
+        "Gulfeshan Colony",
+        "Gulfishan Coloni"
+      ],
+      "lat": 31.40636,
+      "lng": 73.03291,
+      "radiusM": 1200,
+      "geocodeStatus": "ambiguous",
+      "geocodeSource": "Who's On First (whosonfirst-data-admin-pk), GeoNames-derived point",
+      "geocodeRef": "wof:1780038275; gn:7110612",
+      "geocodeNote": "Single GeoNames candidate named \"Gulfishan\" (not \"Gulfishan Colony\") inside Faisalabad city tehsil; the spreadsheet places the area in Iqbal Town, and town boundaries are not available to confirm it. Candidates: (1) GeoNames feature 7110612 \"Gulfishan\" (PPL, modified 2018-05-10) republished as Who's On First neighbourhood 1780038275 at 31.40636, 73.03291 — inside FAISALABAD CITY tehsil per geoBoundaries PAK ADM3 (2017) — consistent with Iqbal Town (the city tehsil; Iqbal Town is one of the city's administrative towns, whose own boundary is not in the data, so town membership is not verified). lat/lng hold candidate (1) for administrator review only; ambiguous entries are not used for public ranking. radiusM 1200 is a default estimate (area)."
+    },
+    {
+      "kind": "area",
+      "name": "Jaranwala City",
+      "town": "Jaranwala",
+      "nameUr": "جڑانوالہ شہر",
+      "nameUrSource": "transliteration",
+      "aliases": [
+        "Jaranwala",
+        "Jarranwala",
+        "Jaranwala Shahar",
+        "Jaranwala Shehar",
+        "جڑانوالہ",
+        "جاران والا"
+      ],
+      "lat": 31.332381,
+      "lng": 73.423192,
+      "radiusM": 2400,
+      "geocodeStatus": "matched",
+      "geocodeSource": "Who's On First (whosonfirst-data-admin-pk) locality polygon",
+      "geocodeRef": "wof:421197393; gn:1176106; wd:Q1251242",
+      "geocodeNote": "Who's On First locality 421197393 (\"Jaranwala\", Wikidata Q1251242); point is the WOF label centroid; radiusM from the polygon bounding box (73.40265,31.315295,73.444356,31.365268). Tehsil check: inside JARANWALA tehsil per geoBoundaries PAK ADM3 (2017) — consistent with Jaranwala."
+    },
+    {
+      "kind": "area",
+      "name": "Jhang Road",
+      "town": "Jinnah Town",
+      "nameUr": "جھنگ روڈ",
+      "nameUrSource": "transliteration",
+      "aliases": [
+        "Jhang Rd",
+        "Jhang Rod",
+        "Jhung Road"
+      ],
+      "lat": null,
+      "lng": null,
+      "radiusM": null,
+      "geocodeStatus": "ambiguous",
+      "geocodeSource": null,
+      "geocodeRef": null,
+      "geocodeNote": "A road: a linear feature spanning several kilometres, and the spreadsheet does not say which stretch (only \"Jinnah Town\"). A single point would be misleading, so none is assigned. No source identifies a locality of this name in Jinnah Town. An administrator can pin a representative position once the served stretch is known."
+    },
+    {
+      "kind": "area",
+      "name": "Kachi Abadi",
+      "town": "Iqbal Town",
+      "nameUr": "کچی آبادی",
+      "nameUrSource": "transliteration",
+      "aliases": [
+        "Katchi Abadi",
+        "Kachi Abaadi",
+        "Kacchi Abadi"
+      ],
+      "lat": null,
+      "lng": null,
+      "radiusM": null,
+      "geocodeStatus": "not_geocodable",
+      "geocodeSource": null,
+      "geocodeRef": null,
+      "geocodeNote": "\"Kachi abadi\" is a generic term for an informal settlement, not a place name; the spreadsheet does not say which settlement is meant."
+    },
+    {
+      "kind": "area",
+      "name": "Kohinoor City",
+      "town": "Madina Town",
+      "nameUr": "کوہ نور سٹی",
+      "nameUrSource": "transliteration",
+      "aliases": [
+        "Kohinoor",
+        "Koh-i-Noor City",
+        "Kohenoor City",
+        "Kohe Noor City",
+        "Kohinur City",
+        "کوہ نور"
+      ],
+      "lat": null,
+      "lng": null,
+      "radiusM": null,
+      "geocodeStatus": "not_found",
+      "geocodeSource": "Who's On First admin-pk (GeoNames/Wikidata-derived) searched 2026-09-25 — no match",
+      "geocodeRef": null,
+      "geocodeNote": "No feature with this name in Faisalabad District in the reachable open sources. OpenStreetMap/Nominatim, Wikidata and Wikipedia could not be queried from the build environment (egress blocked) — geocode later with Nominatim (single request, ≤1 req/s, cached) or an administrator map pin."
+    },
+    {
+      "kind": "area",
+      "name": "Madina Town",
+      "town": "Madina Town",
+      "nameUr": "مدینہ ٹاؤن",
+      "nameUrSource": "transliteration",
+      "aliases": [
+        "Madina Taun",
+        "Medina Town",
+        "Madinah Town",
+        "Madeena Town"
+      ],
+      "lat": null,
+      "lng": null,
+      "radiusM": null,
+      "geocodeStatus": "not_found",
+      "geocodeSource": "Who's On First admin-pk (GeoNames/Wikidata-derived) searched 2026-09-25 — no match",
+      "geocodeRef": null,
+      "geocodeNote": "No feature with this name in Faisalabad District in the reachable open sources. OpenStreetMap/Nominatim, Wikidata and Wikipedia could not be queried from the build environment (egress blocked) — geocode later with Nominatim (single request, ≤1 req/s, cached) or an administrator map pin."
+    },
+    {
+      "kind": "area",
+      "name": "Manawala",
+      "town": "Madina Town",
+      "nameUr": "مانا والا",
+      "nameUrSource": "transliteration",
+      "aliases": [
+        "Mana Wala",
+        "Manawaala"
+      ],
+      "lat": null,
+      "lng": null,
+      "radiusM": null,
+      "geocodeStatus": "not_found",
+      "geocodeSource": "Who's On First admin-pk (GeoNames/Wikidata-derived) searched 2026-09-25 — no match",
+      "geocodeRef": null,
+      "geocodeNote": "No feature with this name in Faisalabad District in the reachable open sources. Who's On First/GeoNames list a \"Manawala\" only in another district. OpenStreetMap/Nominatim, Wikidata and Wikipedia could not be queried from the build environment (egress blocked) — geocode later with Nominatim (single request, ≤1 req/s, cached) or an administrator map pin."
+    },
+    {
+      "kind": "area",
+      "name": "Millat Town",
+      "town": "Lyallpur Town",
+      "nameUr": "ملت ٹاؤن",
+      "nameUrSource": "transliteration",
+      "aliases": [
+        "Milat Town",
+        "Millat Taun",
+        "Millat Tawn"
+      ],
+      "lat": null,
+      "lng": null,
+      "radiusM": null,
+      "geocodeStatus": "not_found",
+      "geocodeSource": "Who's On First admin-pk (GeoNames/Wikidata-derived) searched 2026-09-25 — no match",
+      "geocodeRef": null,
+      "geocodeNote": "No feature with this name in Faisalabad District in the reachable open sources. OpenStreetMap/Nominatim, Wikidata and Wikipedia could not be queried from the build environment (egress blocked) — geocode later with Nominatim (single request, ≤1 req/s, cached) or an administrator map pin."
+    },
+    {
+      "kind": "area",
+      "name": "Model Town",
+      "town": "Jinnah Town",
+      "nameUr": "ماڈل ٹاؤن",
+      "nameUrSource": "transliteration",
+      "aliases": [
+        "Modal Town",
+        "Model Taun",
+        "Maadal Town",
+        "Model Tawn"
+      ],
+      "lat": null,
+      "lng": null,
+      "radiusM": null,
+      "geocodeStatus": "not_found",
+      "geocodeSource": "Who's On First admin-pk (GeoNames/Wikidata-derived) searched 2026-09-25 — no match",
+      "geocodeRef": null,
+      "geocodeNote": "No feature with this name in Faisalabad District in the reachable open sources. OpenStreetMap/Nominatim, Wikidata and Wikipedia could not be queried from the build environment (egress blocked) — geocode later with Nominatim (single request, ≤1 req/s, cached) or an administrator map pin."
+    },
+    {
+      "kind": "area",
+      "name": "Nishatabad",
+      "town": "Lyallpur Town",
+      "nameUr": "نشاط آباد",
+      "nameUrSource": "transliteration",
+      "aliases": [
+        "Nishat Abad",
+        "Nishatabaad",
+        "Nishat Abaad",
+        "Nishaatabad"
+      ],
+      "lat": null,
+      "lng": null,
+      "radiusM": null,
+      "geocodeStatus": "not_found",
+      "geocodeSource": "Who's On First admin-pk (GeoNames/Wikidata-derived) searched 2026-09-25 — no match",
+      "geocodeRef": null,
+      "geocodeNote": "No feature with this name in Faisalabad District in the reachable open sources. OpenStreetMap/Nominatim, Wikidata and Wikipedia could not be queried from the build environment (egress blocked) — geocode later with Nominatim (single request, ≤1 req/s, cached) or an administrator map pin."
+    },
+    {
+      "kind": "area",
+      "name": "Noor Pur",
+      "town": "Lyallpur Town",
+      "nameUr": "نور پور",
+      "nameUrSource": "transliteration",
+      "aliases": [
+        "Noorpur",
+        "Nurpur",
+        "Nur Pur"
+      ],
+      "lat": 31.45,
+      "lng": 73.1,
+      "radiusM": 1200,
+      "geocodeStatus": "ambiguous",
+      "geocodeSource": "Who's On First (whosonfirst-data-admin-pk), GeoNames-derived point",
+      "geocodeRef": "wof:1780038291; gn:1168778 | wof:1326729971; gn:1419915",
+      "geocodeNote": "\"Noor Pur\" is a very common place name. GeoNames has a \"Nurpur\" inside Faisalabad city tehsil (candidate 1, a 1994 record at 1-arc-minute precision) and another in Jaranwala tehsil (candidate 2). Candidate 1 is plausible for Lyallpur Town but the town boundary cannot be checked. Candidates: (1) GeoNames feature 1168778 \"Nūrpur\" (PPL, modified 1994-01-27) republished as Who's On First neighbourhood 1780038291 at 31.45, 73.1 — inside FAISALABAD CITY tehsil per geoBoundaries PAK ADM3 (2017) — consistent with Lyallpur Town (the city tehsil; Lyallpur Town is one of the city's administrative towns, whose own boundary is not in the data, so town membership is not verified); (2) GeoNames feature 1419915 \"Nurpur\" (PPL, modified 2018-05-10) republished as Who's On First locality 1326729971 at 31.29173, 73.58458 — inside JARANWALA tehsil per geoBoundaries PAK ADM3 (2017) — spreadsheet town is Lyallpur Town; MISMATCH. lat/lng hold candidate (1) for administrator review only; ambiguous entries are not used for public ranking. radiusM 1200 is a default estimate (area)."
+    },
+    {
+      "kind": "area",
+      "name": "Novelty Bridge",
+      "town": "Iqbal Town",
+      "nameUr": "ناولٹی پل",
+      "nameUrSource": "transliteration",
+      "aliases": [
+        "Novelty Pul",
+        "Novelty Pull",
+        "Noveltee Bridge",
+        "Novelty Phatak",
+        "ناولٹی برج"
+      ],
+      "lat": null,
+      "lng": null,
+      "radiusM": null,
+      "geocodeStatus": "not_found",
+      "geocodeSource": "Who's On First admin-pk (GeoNames/Wikidata-derived) searched 2026-09-25 — no match",
+      "geocodeRef": null,
+      "geocodeNote": "No feature with this name in Faisalabad District in the reachable open sources. OpenStreetMap/Nominatim, Wikidata and Wikipedia could not be queried from the build environment (egress blocked) — geocode later with Nominatim (single request, ≤1 req/s, cached) or an administrator map pin."
+    },
+    {
+      "kind": "area",
+      "name": "Saline Zone-A",
+      "town": "Chak Jhumra",
+      "nameUr": "سیلائن زون اے",
+      "nameUrSource": "transliteration",
+      "aliases": [
+        "Saline Zone A",
+        "Saline A",
+        "Salin Zone A",
+        "Zone A"
+      ],
+      "lat": null,
+      "lng": null,
+      "radiusM": null,
+      "geocodeStatus": "not_geocodable",
+      "geocodeSource": null,
+      "geocodeRef": null,
+      "geocodeNote": "Not a place name: \"Saline Zone-A\" looks like a programme/category label (saline-water treatment zone) applied across Chak Jhumra. Cannot be placed on a map."
+    },
+    {
+      "kind": "area",
+      "name": "Saline Zone-B",
+      "town": "Jaranwala",
+      "nameUr": "سیلائن زون بی",
+      "nameUrSource": "transliteration",
+      "aliases": [
+        "Saline Zone B",
+        "Saline B",
+        "Salin Zone B",
+        "Zone B"
+      ],
+      "lat": null,
+      "lng": null,
+      "radiusM": null,
+      "geocodeStatus": "not_geocodable",
+      "geocodeSource": null,
+      "geocodeRef": null,
+      "geocodeNote": "Not a place name: \"Saline Zone-B\" looks like a programme/category label (saline-water treatment zone) applied across Jaranwala. Cannot be placed on a map."
+    },
+    {
+      "kind": "area",
+      "name": "Saline Zone-C",
+      "town": "Samundri",
+      "nameUr": "سیلائن زون سی",
+      "nameUrSource": "transliteration",
+      "aliases": [
+        "Saline Zone C",
+        "Saline C",
+        "Salin Zone C",
+        "Zone C"
+      ],
+      "lat": null,
+      "lng": null,
+      "radiusM": null,
+      "geocodeStatus": "not_geocodable",
+      "geocodeSource": null,
+      "geocodeRef": null,
+      "geocodeNote": "Not a place name: \"Saline Zone-C\" looks like a programme/category label (saline-water treatment zone) applied across Samundri. Cannot be placed on a map."
+    },
+    {
+      "kind": "area",
+      "name": "Saline Zone-D",
+      "town": "Tandlianwala",
+      "nameUr": "سیلائن زون ڈی",
+      "nameUrSource": "transliteration",
+      "aliases": [
+        "Saline Zone D",
+        "Saline D",
+        "Salin Zone D",
+        "Zone D"
+      ],
+      "lat": null,
+      "lng": null,
+      "radiusM": null,
+      "geocodeStatus": "not_geocodable",
+      "geocodeSource": null,
+      "geocodeRef": null,
+      "geocodeNote": "Not a place name: \"Saline Zone-D\" looks like a programme/category label (saline-water treatment zone) applied across Tandlianwala. Cannot be placed on a map."
+    },
+    {
+      "kind": "area",
+      "name": "Samanabad",
+      "town": "Jinnah Town",
+      "nameUr": "سمن آباد",
+      "nameUrSource": "transliteration",
+      "aliases": [
+        "Saman Abad",
+        "Samnabad",
+        "Samanabaad",
+        "Samanabad Colony"
+      ],
+      "lat": null,
+      "lng": null,
+      "radiusM": null,
+      "geocodeStatus": "not_found",
+      "geocodeSource": "Who's On First admin-pk (GeoNames/Wikidata-derived) searched 2026-09-25 — no match",
+      "geocodeRef": null,
+      "geocodeNote": "No feature with this name in Faisalabad District in the reachable open sources. Who's On First lists other \"Samanabad\" places (e.g. in Lahore) but none in Faisalabad District. OpenStreetMap/Nominatim, Wikidata and Wikipedia could not be queried from the build environment (egress blocked) — geocode later with Nominatim (single request, ≤1 req/s, cached) or an administrator map pin."
+    },
+    {
+      "kind": "area",
+      "name": "Samundri City",
+      "town": "Samundri",
+      "nameUr": "سمندری شہر",
+      "nameUrSource": "transliteration",
+      "aliases": [
+        "Samundri",
+        "Samundari",
+        "Samundri Shahar",
+        "Samundari City",
+        "Samandri",
+        "سمندری"
+      ],
+      "lat": 31.06123,
+      "lng": 72.95858,
+      "radiusM": 4000,
+      "geocodeStatus": "matched",
+      "geocodeSource": "Who's On First (whosonfirst-data-admin-pk), GeoNames-derived point",
+      "geocodeRef": "wof:1344256487; gn:1166234",
+      "geocodeNote": "GeoNames feature 1166234 \"Samundri\" (PPL, modified 2017-03-04) republished as Who's On First locality 1344256487. Point feature (no extent): radiusM 4000 is a default estimate (city/town). Tehsil check: inside SAMUNDARI tehsil per geoBoundaries PAK ADM3 (2017) — consistent with Samundri. WOF also lists \"Nai Samundri\" (a separate place about 2 km away), which was not used."
+    },
+    {
+      "kind": "area",
+      "name": "Samundri Road",
+      "town": "Iqbal Town",
+      "nameUr": "سمندری روڈ",
+      "nameUrSource": "transliteration",
+      "aliases": [
+        "Samundri Rd",
+        "Samundari Road",
+        "Samandri Road"
+      ],
+      "lat": null,
+      "lng": null,
+      "radiusM": null,
+      "geocodeStatus": "ambiguous",
+      "geocodeSource": null,
+      "geocodeRef": null,
+      "geocodeNote": "A road: a linear feature spanning several kilometres, and the spreadsheet does not say which stretch (only \"Iqbal Town\"). A single point would be misleading, so none is assigned. No source identifies a locality of this name in Iqbal Town. An administrator can pin a representative position once the served stretch is known."
+    },
+    {
+      "kind": "area",
+      "name": "Sargodha Road",
+      "town": "Lyallpur Town",
+      "nameUr": "سرگودھا روڈ",
+      "nameUrSource": "transliteration",
+      "aliases": [
+        "Sargodha Rd",
+        "Sargodah Road",
+        "Sargoda Road"
+      ],
+      "lat": null,
+      "lng": null,
+      "radiusM": null,
+      "geocodeStatus": "ambiguous",
+      "geocodeSource": null,
+      "geocodeRef": null,
+      "geocodeNote": "A road: a linear feature spanning several kilometres, and the spreadsheet does not say which stretch (only \"Lyallpur Town\"). A single point would be misleading, so none is assigned. No source identifies a locality of this name in Lyallpur Town. An administrator can pin a representative position once the served stretch is known."
+    },
+    {
+      "kind": "area",
+      "name": "Susan Road",
+      "town": "Madina Town",
+      "nameUr": "سوسن روڈ",
+      "nameUrSource": "transliteration",
+      "aliases": [
+        "Susan Rd",
+        "Sosan Road",
+        "Soosan Road",
+        "Susan Rod"
+      ],
+      "lat": null,
+      "lng": null,
+      "radiusM": null,
+      "geocodeStatus": "ambiguous",
+      "geocodeSource": null,
+      "geocodeRef": null,
+      "geocodeNote": "A road: a linear feature spanning several kilometres, and the spreadsheet does not say which stretch (only \"Madina Town\"). A single point would be misleading, so none is assigned. No source identifies a locality of this name in Madina Town. An administrator can pin a representative position once the served stretch is known."
+    },
+    {
+      "kind": "area",
+      "name": "Tandlianwala City",
+      "town": "Tandlianwala",
+      "nameUr": "تاندلیانوالہ شہر",
+      "nameUrSource": "transliteration",
+      "aliases": [
+        "Tandlianwala",
+        "Tandliawala",
+        "Tandlianwala Shahar",
+        "Tandlian Wala",
+        "تاندلیانوالہ",
+        "ٹنڈلیاں والا"
+      ],
+      "lat": 31.036636,
+      "lng": 73.133484,
+      "radiusM": 1400,
+      "geocodeStatus": "matched",
+      "geocodeSource": "Who's On First (whosonfirst-data-admin-pk) locality polygon",
+      "geocodeRef": "wof:421175759; gn:1163968; wd:Q3695292",
+      "geocodeNote": "Who's On First locality 421175759 (\"Tandlianwala\", Wikidata Q3695292); point is the WOF label centroid; radiusM from the polygon bounding box (73.11763,31.021846,73.146346,31.048514). Tehsil check: inside TANDLIANWALA tehsil per geoBoundaries PAK ADM3 (2017) — consistent with Tandlianwala."
+    },
+    {
+      "kind": "landmark",
+      "name": "Faisalabad International Airport",
+      "town": null,
+      "nameUr": "فیصل آباد ہوائی اڈا",
+      "nameUrSource": "wof",
+      "aliases": [
+        "Faisalabad Airport",
+        "Airport",
+        "LYP",
+        "OPFA",
+        "Hawai Adda",
+        "Hawaii Adda",
+        "Air Port",
+        "ایئرپورٹ",
+        "ہوائی اڈا",
+        "فیصل آباد ایئرپورٹ"
+      ],
+      "lat": 31.365,
+      "lng": 72.994722,
+      "radiusM": 1000,
+      "geocodeStatus": "matched",
+      "geocodeSource": "Who's On First (whosonfirst-data-admin-pk), Wikidata coordinate",
+      "geocodeRef": "wof:102535597; wd:Q31580",
+      "geocodeNote": "Who's On First campus 102535597 (\"Faisalabad Airport\", src:geom wikidata; Wikidata Q31580; IATA LYP / ICAO OPFA). Point feature: radiusM 1000 is a default estimate. Tehsil check: inside FAISALABAD SADDAR tehsil per geoBoundaries PAK ADM3 (2017)."
+    }
+  ],
+  "pendingLandmarks": [
+    {
+      "kind": "landmark",
+      "name": "Clock Tower",
+      "nameUr": "گھنٹہ گھر",
+      "nameUrSource": "transliteration",
+      "aliases": [
+        "Ghanta Ghar",
+        "Ghanta Gher",
+        "Gunta Ghar",
+        "Clock Tower Faisalabad",
+        "Ghanta Ghar Chowk",
+        "Clock Tower Chowk"
+      ],
+      "reason": "Not geocoded: no citable position was reachable from the build environment on 2026-09-25 (OpenStreetMap, Nominatim, Wikidata and Wikipedia were blocked). Not loaded into the database. Geocode (e.g. one Nominatim lookup each, ≤1 req/s, cached) or pin by an administrator, then move into \"entries\" with the source recorded."
+    },
+    {
+      "kind": "landmark",
+      "name": "Kachehri Bazaar",
+      "nameUr": "کچہری بازار",
+      "nameUrSource": "transliteration",
+      "aliases": [
+        "Kutchery Bazaar",
+        "Kachari Bazar",
+        "Kacheri Bazar"
+      ],
+      "reason": "Not geocoded: no citable position was reachable from the build environment on 2026-09-25 (OpenStreetMap, Nominatim, Wikidata and Wikipedia were blocked). Not loaded into the database. Geocode (e.g. one Nominatim lookup each, ≤1 req/s, cached) or pin by an administrator, then move into \"entries\" with the source recorded."
+    },
+    {
+      "kind": "landmark",
+      "name": "Chiniot Bazaar",
+      "nameUr": "چنیوٹ بازار",
+      "nameUrSource": "transliteration",
+      "aliases": [
+        "Chiniot Bazar",
+        "Chinioti Bazaar"
+      ],
+      "reason": "Not geocoded: no citable position was reachable from the build environment on 2026-09-25 (OpenStreetMap, Nominatim, Wikidata and Wikipedia were blocked). Not loaded into the database. Geocode (e.g. one Nominatim lookup each, ≤1 req/s, cached) or pin by an administrator, then move into \"entries\" with the source recorded."
+    },
+    {
+      "kind": "landmark",
+      "name": "Montgomery Bazaar",
+      "nameUr": "منٹگمری بازار",
+      "nameUrSource": "transliteration",
+      "aliases": [
+        "Montgomery Bazar",
+        "Mintgumri Bazar"
+      ],
+      "reason": "Not geocoded: no citable position was reachable from the build environment on 2026-09-25 (OpenStreetMap, Nominatim, Wikidata and Wikipedia were blocked). Not loaded into the database. Geocode (e.g. one Nominatim lookup each, ≤1 req/s, cached) or pin by an administrator, then move into \"entries\" with the source recorded."
+    },
+    {
+      "kind": "landmark",
+      "name": "Jhang Bazaar",
+      "nameUr": "جھنگ بازار",
+      "nameUrSource": "transliteration",
+      "aliases": [
+        "Jhang Bazar"
+      ],
+      "reason": "Not geocoded: no citable position was reachable from the build environment on 2026-09-25 (OpenStreetMap, Nominatim, Wikidata and Wikipedia were blocked). Not loaded into the database. Geocode (e.g. one Nominatim lookup each, ≤1 req/s, cached) or pin by an administrator, then move into \"entries\" with the source recorded."
+    },
+    {
+      "kind": "landmark",
+      "name": "Bhowana Bazaar",
+      "nameUr": "بھوانہ بازار",
+      "nameUrSource": "transliteration",
+      "aliases": [
+        "Bhawana Bazaar",
+        "Bhowana Bazar"
+      ],
+      "reason": "Not geocoded: no citable position was reachable from the build environment on 2026-09-25 (OpenStreetMap, Nominatim, Wikidata and Wikipedia were blocked). Not loaded into the database. Geocode (e.g. one Nominatim lookup each, ≤1 req/s, cached) or pin by an administrator, then move into \"entries\" with the source recorded."
+    },
+    {
+      "kind": "landmark",
+      "name": "Karkhana Bazaar",
+      "nameUr": "کارخانہ بازار",
+      "nameUrSource": "transliteration",
+      "aliases": [
+        "Karkhana Bazar"
+      ],
+      "reason": "Not geocoded: no citable position was reachable from the build environment on 2026-09-25 (OpenStreetMap, Nominatim, Wikidata and Wikipedia were blocked). Not loaded into the database. Geocode (e.g. one Nominatim lookup each, ≤1 req/s, cached) or pin by an administrator, then move into \"entries\" with the source recorded."
+    },
+    {
+      "kind": "landmark",
+      "name": "Aminpur Bazaar",
+      "nameUr": "امین پور بازار",
+      "nameUrSource": "transliteration",
+      "aliases": [
+        "Aminpur Bazar",
+        "Ameenpur Bazaar"
+      ],
+      "reason": "Not geocoded: no citable position was reachable from the build environment on 2026-09-25 (OpenStreetMap, Nominatim, Wikidata and Wikipedia were blocked). Not loaded into the database. Geocode (e.g. one Nominatim lookup each, ≤1 req/s, cached) or pin by an administrator, then move into \"entries\" with the source recorded."
+    },
+    {
+      "kind": "landmark",
+      "name": "Rail Bazaar",
+      "nameUr": "ریل بازار",
+      "nameUrSource": "transliteration",
+      "aliases": [
+        "Rail Bazar",
+        "Railway Bazaar"
+      ],
+      "reason": "Not geocoded: no citable position was reachable from the build environment on 2026-09-25 (OpenStreetMap, Nominatim, Wikidata and Wikipedia were blocked). Not loaded into the database. Geocode (e.g. one Nominatim lookup each, ≤1 req/s, cached) or pin by an administrator, then move into \"entries\" with the source recorded."
+    },
+    {
+      "kind": "landmark",
+      "name": "Faisalabad Railway Station",
+      "nameUr": "فیصل آباد ریلوے اسٹیشن",
+      "nameUrSource": "transliteration",
+      "aliases": [
+        "Railway Station",
+        "Faisalabad Junction",
+        "Railway Station Faisalabad",
+        "Tesan",
+        "Station"
+      ],
+      "reason": "Not geocoded: no citable position was reachable from the build environment on 2026-09-25 (OpenStreetMap, Nominatim, Wikidata and Wikipedia were blocked). Not loaded into the database. Geocode (e.g. one Nominatim lookup each, ≤1 req/s, cached) or pin by an administrator, then move into \"entries\" with the source recorded."
+    },
+    {
+      "kind": "landmark",
+      "name": "University of Agriculture Faisalabad",
+      "nameUr": "زرعی یونیورسٹی فیصل آباد",
+      "nameUrSource": "transliteration",
+      "aliases": [
+        "UAF",
+        "Agriculture University",
+        "Zarai University",
+        "Agri University"
+      ],
+      "reason": "Not geocoded: no citable position was reachable from the build environment on 2026-09-25 (OpenStreetMap, Nominatim, Wikidata and Wikipedia were blocked). Not loaded into the database. Geocode (e.g. one Nominatim lookup each, ≤1 req/s, cached) or pin by an administrator, then move into \"entries\" with the source recorded."
+    },
+    {
+      "kind": "landmark",
+      "name": "Allied Hospital",
+      "nameUr": "الائیڈ ہسپتال",
+      "nameUrSource": "transliteration",
+      "aliases": [
+        "Allied Hospital Faisalabad",
+        "Allied Hospital-I",
+        "Allied Aspataal"
+      ],
+      "reason": "Not geocoded: no citable position was reachable from the build environment on 2026-09-25 (OpenStreetMap, Nominatim, Wikidata and Wikipedia were blocked). Not loaded into the database. Geocode (e.g. one Nominatim lookup each, ≤1 req/s, cached) or pin by an administrator, then move into \"entries\" with the source recorded."
+    },
+    {
+      "kind": "landmark",
+      "name": "D Ground",
+      "nameUr": "ڈی گراؤنڈ",
+      "nameUrSource": "transliteration",
+      "aliases": [
+        "D-Ground",
+        "People's Colony D Ground",
+        "Dee Ground"
+      ],
+      "reason": "Not geocoded: no citable position was reachable from the build environment on 2026-09-25 (OpenStreetMap, Nominatim, Wikidata and Wikipedia were blocked). Not loaded into the database. Geocode (e.g. one Nominatim lookup each, ≤1 req/s, cached) or pin by an administrator, then move into \"entries\" with the source recorded."
+    },
+    {
+      "kind": "landmark",
+      "name": "Iqbal Stadium",
+      "nameUr": "اقبال اسٹیڈیم",
+      "nameUrSource": "transliteration",
+      "aliases": [
+        "Iqbal Cricket Stadium",
+        "Iqbal Stadium Faisalabad"
+      ],
+      "reason": "Not geocoded: no citable position was reachable from the build environment on 2026-09-25 (OpenStreetMap, Nominatim, Wikidata and Wikipedia were blocked). Not loaded into the database. Geocode (e.g. one Nominatim lookup each, ≤1 req/s, cached) or pin by an administrator, then move into \"entries\" with the source recorded."
+    },
+    {
+      "kind": "landmark",
+      "name": "Chenab Club",
+      "nameUr": "چناب کلب",
+      "nameUrSource": "transliteration",
+      "aliases": [
+        "Chenab Club Faisalabad"
+      ],
+      "reason": "Not geocoded: no citable position was reachable from the build environment on 2026-09-25 (OpenStreetMap, Nominatim, Wikidata and Wikipedia were blocked). Not loaded into the database. Geocode (e.g. one Nominatim lookup each, ≤1 req/s, cached) or pin by an administrator, then move into \"entries\" with the source recorded."
+    }
+  ]
+}

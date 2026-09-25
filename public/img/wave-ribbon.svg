@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 80" width="400" height="80" preserveAspectRatio="none">
+  <!-- Decorative. Seamless every 400 units: background: url(/img/wave-ribbon.svg) repeat-x center / auto 100%; -->
+  <path d="M0 23C45 10 150 36 200 23S355 36 400 23V67C355 80 250 54 200 67S45 54 0 67Z" fill="#0a1a33" opacity=".16"/>
+  <path d="M0 20C45 7 150 33 200 20S355 33 400 20V64C355 77 250 51 200 64S45 51 0 64Z" fill="#2240c4"/>
+  <path d="M0 25C45 12 150 38 200 25S355 38 400 25" fill="none" stroke="#3556e0" stroke-width="3"/>
+  <path d="M0 59.5C45 46.5 150 72.5 200 59.5S355 72.5 400 59.5" fill="none" stroke="#163a6b" stroke-width="2" opacity=".35"/>
+</svg>

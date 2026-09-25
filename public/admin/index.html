@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="referrer" content="same-origin">
+  <title>Team Water Admin</title>
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/admin/css/admin.css">
+  <link rel="stylesheet" href="/admin/css/moderation.css">
+  <script type="module" src="/admin/js/main.js"></script>
+</head>
+<body class="is-booting">
+  <a class="skip-link" href="#main" id="skip-link">Skip to main content</a>
+
+  <div id="demo-banner" class="demo-banner" role="note" hidden>
+    <strong>Demonstration data is loaded.</strong> Plants with <code>DEMO-</code> codes are not real plants.
+  </div>
+
+  <p id="boot" class="boot" role="status">Loading the dashboard…</p>
+  <noscript><p class="boot">The Team Water admin dashboard needs JavaScript to run.</p></noscript>
+
+  <!-- Sign-in screen -->
+  <div id="login-view" class="login-view" hidden>
+    <main class="login-card" aria-labelledby="login-title">
+      <div class="wordmark wordmark-lg">
+        <svg class="wordmark-wave" viewBox="0 0 40 24" width="40" height="24" aria-hidden="true" focusable="false">
+          <path d="M2 9c4-4 8-4 12 0s8 4 12 0 8-4 12 0M2 17c4-4 8-4 12 0s8 4 12 0 8-4 12 0" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+        <span class="wordmark-text">Team Water</span>
+        <span class="wordmark-tag">Admin</span>
+      </div>
+      <h1 id="login-title" class="login-title" tabindex="-1">Sign in</h1>
+      <p class="login-sub">Faisalabad Water Finder — staff dashboard</p>
+      <div id="login-status" class="notice notice-info" role="status" hidden></div>
+      <form id="login-form" class="login-form" novalidate>
+        <div id="login-error" class="form-error" role="alert" tabindex="-1" hidden></div>
+        <div class="field">
+          <label class="field-label" for="login-username">Username</label>
+          <input id="login-username" name="username" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" required maxlength="100" aria-describedby="login-username-err">
+          <p id="login-username-err" class="field-error" hidden></p>
+        </div>
+        <div class="field">
+          <label class="field-label" for="login-password">Password</label>
+          <input id="login-password" name="password" type="password" autocomplete="current-password" required maxlength="200" aria-describedby="login-password-err">
+          <p id="login-password-err" class="field-error" hidden></p>
+        </div>
+        <button id="login-submit" type="submit" class="btn btn-primary btn-block">Sign in</button>
+      </form>
+      <p class="login-foot">Accounts are created by an administrator. Sessions end after inactivity; every change is recorded in the audit log.</p>
+    </main>
+  </div>
+
+  <!-- Dashboard -->
+  <div id="app-view" class="app-view" hidden>
+    <header class="topbar">
+      <button id="menu-toggle" class="btn btn-ghost menu-toggle" type="button" aria-controls="sidenav" aria-expanded="false">
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false"><path d="M4 6h16M4 12h16M4 18h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <span>Menu</span>
+      </button>
+      <a class="wordmark" href="#/overview" aria-label="Team Water Admin — overview">
+        <svg class="wordmark-wave" viewBox="0 0 40 24" width="32" height="20" aria-hidden="true" focusable="false">
+          <path d="M2 9c4-4 8-4 12 0s8 4 12 0 8-4 12 0M2 17c4-4 8-4 12 0s8 4 12 0 8-4 12 0" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+        <span class="wordmark-text">Team Water</span>
+        <span class="wordmark-tag">Admin</span>
+      </a>
+      <div class="session" id="session">
+        <p class="session-user"><span class="visually-hidden">Signed in as </span><span id="session-name"></span> <span id="session-role" class="badge badge-info"></span></p>
+        <button id="signout" class="btn btn-secondary btn-sm" type="button">Sign out</button>
+      </div>
+    </header>
+    <div class="layout">
+      <nav id="sidenav" class="sidenav" aria-label="Admin sections"></nav>
+      <main id="main" class="main" tabindex="-1"></main>
+    </div>
+  </div>
+</body>
+</html>

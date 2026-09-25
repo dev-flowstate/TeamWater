@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Diagram preview · Team Water</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/css/diagram.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; background: var(--tw-bg); color: var(--tw-text); font-family: var(--tw-font-body); }
+    header { padding: 24px 16px 8px; max-width: 1200px; margin: 0 auto; display: flex; gap: 12px; align-items: center; }
+    header img { width: 40px; height: 40px; }
+    h1 { font-family: var(--tw-font-display); font-weight: 400; font-size: clamp(1.6rem, 4vw, 2.4rem); margin: 0; }
+    .lede { max-width: 1200px; margin: 0 auto; padding: 0 16px; color: var(--tw-text-muted); }
+    h2 { max-width: 1200px; margin: 28px auto 12px; padding: 0 16px; font-family: var(--tw-font-display); font-weight: 400; font-size: 1.4rem; }
+    .grid { max-width: 1200px; margin: 0 auto; padding: 0 16px; display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); }
+    .grid--wide { grid-template-columns: repeat(auto-fill, minmax(min(100%, 520px), 1fr)); }
+    .card { background: var(--tw-surface); border: 1px solid var(--tw-border); border-radius: var(--tw-radius-lg); padding: 16px; box-shadow: var(--tw-shadow-sm); min-width: 0; }
+    .card--cream { background: var(--tw-surface-2); }
+    .card h3 { margin: 0 0 10px; font-size: 0.8rem; font-weight: 600; color: var(--tw-text-muted); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; overflow-wrap: anywhere; }
+    .ribbon { display: block; width: 100%; height: 56px; margin-top: 40px; }
+  </style>
+  <script type="module" src="/js/diagram.js?autorender"></script>
+</head>
+<body>
+  <header><img src="/img/logo.svg" alt="" width="40" height="40"><h1>Treatment diagram preview</h1></header>
+  <p class="lede">Every stage combination used by the source data, in English and Urdu, on white and cream cards. Diagrams animate only when motion is allowed; the “static” cards use <code>animate:false</code>.</p>
+
+  <h2>English</h2>
+  <div class="grid">
+    <div class="card"><h3>["reverse_osmosis"] · Groundwater (Tube Well)</h3><div data-tw-diagram='{"stages":["reverse_osmosis"],"waterSource":"Groundwater (Tube Well)","technologyRaw":"Reverse Osmosis (RO)"}'></div></div>
+    <div class="card card--cream"><h3>["reverse_osmosis"] · Surface Water (Canal Supply)</h3><div data-tw-diagram='{"stages":["reverse_osmosis"],"waterSource":"Surface Water (Canal Supply)","technologyRaw":"Reverse Osmosis (RO)"}'></div></div>
+    <div class="card"><h3>["reverse_osmosis"] · Mixed Municipal Supply</h3><div data-tw-diagram='{"stages":["reverse_osmosis"],"waterSource":"Mixed Municipal Supply","technologyRaw":"Reverse Osmosis (RO)"}'></div></div>
+    <div class="card card--cream"><h3>["reverse_osmosis"] · Brackish/Saline Groundwater</h3><div data-tw-diagram='{"stages":["reverse_osmosis"],"waterSource":"Brackish/Saline Groundwater","technologyRaw":"Heavy-Duty Brackish RO Membrane (High TDS)"}'></div></div>
+    <div class="card"><h3>["activated_carbon","uv"]</h3><div data-tw-diagram='{"stages":["activated_carbon","uv"],"waterSource":"Groundwater (Tube Well)","technologyRaw":"Activated Carbon + UV"}'></div></div>
+    <div class="card card--cream"><h3>["ultrafiltration"]</h3><div data-tw-diagram='{"stages":["ultrafiltration"],"waterSource":"Surface Water (Canal Supply)","technologyRaw":"Ultrafiltration (UF)"}'></div></div>
+    <div class="card"><h3>[] · technologyRaw "Nano filtration + ozone"</h3><div data-tw-diagram='{"stages":[],"waterSource":"Mixed Municipal Supply","technologyRaw":"Nano filtration + ozone"}'></div></div>
+    <div class="card card--cream"><h3>[] · nothing recorded (static)</h3><div data-tw-diagram='{"stages":[],"waterSource":null,"technologyRaw":null,"animate":false}'></div></div>
+  </div>
+  <div class="grid grid--wide" style="margin-top:16px">
+    <div class="card"><h3>Full 9-stage demo (not in the data)</h3><div data-tw-diagram='{"stages":["sediment","activated_carbon","ultrafiltration","reverse_osmosis","uv","chlorination","remineralization","storage","dispensing"],"waterSource":"Groundwater (Tube Well)","technologyRaw":"Demo"}'></div></div>
+  </div>
+
+  <h2 lang="ur" dir="rtl">اردو</h2>
+  <div class="grid" dir="rtl">
+    <div class="card"><h3>["reverse_osmosis"] · Groundwater (Tube Well)</h3><div data-tw-diagram='{"lang":"ur","stages":["reverse_osmosis"],"waterSource":"Groundwater (Tube Well)","technologyRaw":"Reverse Osmosis (RO)"}'></div></div>
+    <div class="card card--cream"><h3>["reverse_osmosis"] · Surface Water (Canal Supply)</h3><div data-tw-diagram='{"lang":"ur","stages":["reverse_osmosis"],"waterSource":"Surface Water (Canal Supply)","technologyRaw":"Reverse Osmosis (RO)"}'></div></div>
+    <div class="card"><h3>["reverse_osmosis"] · Mixed Municipal Supply</h3><div data-tw-diagram='{"lang":"ur","stages":["reverse_osmosis"],"waterSource":"Mixed Municipal Supply","technologyRaw":"Reverse Osmosis (RO)"}'></div></div>
+    <div class="card card--cream"><h3>["reverse_osmosis"] · Brackish/Saline Groundwater</h3><div data-tw-diagram='{"lang":"ur","stages":["reverse_osmosis"],"waterSource":"Brackish/Saline Groundwater","technologyRaw":"Heavy-Duty Brackish RO Membrane (High TDS)"}'></div></div>
+    <div class="card"><h3>["activated_carbon","uv"]</h3><div data-tw-diagram='{"lang":"ur","stages":["activated_carbon","uv"],"waterSource":"Groundwater (Tube Well)","technologyRaw":"Activated Carbon + UV"}'></div></div>
+    <div class="card card--cream"><h3>["ultrafiltration"]</h3><div data-tw-diagram='{"lang":"ur","stages":["ultrafiltration"],"waterSource":"Surface Water (Canal Supply)","technologyRaw":"Ultrafiltration (UF)"}'></div></div>
+    <div class="card"><h3>[] · technologyRaw "Nano filtration + ozone"</h3><div data-tw-diagram='{"lang":"ur","stages":[],"waterSource":"Mixed Municipal Supply","technologyRaw":"Nano filtration + ozone"}'></div></div>
+    <div class="card card--cream"><h3>[] · nothing recorded (static)</h3><div data-tw-diagram='{"lang":"ur","stages":[],"waterSource":null,"technologyRaw":null,"animate":false}'></div></div>
+  </div>
+  <div class="grid grid--wide" dir="rtl" style="margin-top:16px">
+    <div class="card"><h3>Full 9-stage demo (not in the data)</h3><div data-tw-diagram='{"lang":"ur","stages":["sediment","activated_carbon","ultrafiltration","reverse_osmosis","uv","chlorination","remineralization","storage","dispensing"],"waterSource":"Groundwater (Tube Well)","technologyRaw":"Demo"}'></div></div>
+  </div>
+
+  <img class="ribbon" src="/img/wave-ribbon.svg" alt="">
+</body>
+</html>

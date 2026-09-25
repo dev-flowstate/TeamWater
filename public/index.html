@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Team Water — Find a water filtration plant in Faisalabad</title>
+  <meta name="description" content="Find water filtration plants near you in Faisalabad, see what is recorded about them, get directions and report problems. No account needed.">
+  <meta name="theme-color" content="#f6f1e7">
+  <link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="/vendor/fontsource/dm-serif-display/files/dm-serif-display-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/vendor/fontsource/inter/files/inter-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/css/app.css">
+  <link rel="modulepreload" href="/js/i18n.js">
+  <link rel="modulepreload" href="/js/api.js">
+  <link rel="modulepreload" href="/js/util.js">
+  <link rel="modulepreload" href="/js/shell.js">
+  <script type="module" src="/js/app.js"></script>
+</head>
+<body data-page="home">
+  <header id="tw-header" class="tw-header"></header>
+
+  <main id="main" tabindex="-1">
+    <!-- ───────────── Home / search ───────────── -->
+    <div id="home-view">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-art" aria-hidden="true" data-img-slot>
+          <img class="hero-photo" src="/img/hero-shore-1600.webp" srcset="/img/hero-shore-800.webp 800w, /img/hero-shore-1600.webp 1600w" sizes="(max-width: 899px) 100vw, 60vw" alt="" data-optional decoding="async" fetchpriority="low">
+          <img class="hero-heron" src="/img/heron.svg" alt="" data-optional decoding="async">
+          <img class="hero-gulls" src="/img/gulls.svg" alt="" data-optional decoding="async" loading="lazy">
+        </div>
+        <div class="hero-inner wrap">
+          <p class="eyebrow" data-i18n="search.hero.eyebrow">Water filtration plants · Faisalabad District</p>
+          <h1 id="hero-title" class="hero-title" data-i18n="search.hero.title">Find a water filtration plant near you.</h1>
+          <p class="hero-hand" data-i18n="search.hero.accent">clean water, close to home</p>
+
+          <form id="search-form" class="search-card" role="search" novalidate data-i18n-attr="aria-label:search.form.aria">
+            <label id="place-label" for="place-input" class="search-label" data-i18n="search.form.label">Where are you?</label>
+            <div id="place-combo" class="combo">
+              <span class="combo-icon" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24" focusable="false"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg></span>
+              <input id="place-input" class="combo-input" type="text" role="combobox" aria-autocomplete="list" aria-expanded="false"
+                aria-controls="place-listbox" aria-describedby="place-hint" autocomplete="off" autocapitalize="off" spellcheck="false"
+                enterkeyhint="search" data-testid="place-input" data-i18n-attr="placeholder:search.form.placeholder">
+              <button type="button" id="place-clear" class="combo-clear btn-icon" hidden data-i18n-attr="aria-label:search.form.clear">
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6 6 18"/></svg>
+              </button>
+              <div id="place-pop" class="combo-pop" hidden>
+                <p id="place-pop-head" class="combo-head" hidden></p>
+                <ul id="place-listbox" role="listbox" aria-labelledby="place-label" data-testid="place-listbox"></ul>
+                <div id="place-pop-foot" class="combo-foot" hidden></div>
+              </div>
+            </div>
+            <p id="place-hint" class="hint" data-i18n="search.form.hint">Type an area, town or landmark — in English, اردو or Roman Urdu.</p>
+
+            <div id="area-panel" class="area-panel" hidden></div>
+            <div id="chosen" class="chosen" hidden></div>
+
+            <div class="search-alt">
+              <button type="button" id="btn-locate" class="btn btn-ghost" aria-describedby="locate-note" data-testid="btn-locate">
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="3.2"/><circle cx="12" cy="12" r="7.5"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+                <span data-i18n="search.locate.button">Use my location</span>
+              </button>
+              <button type="button" id="btn-pick" class="btn btn-ghost" aria-expanded="false" aria-controls="picker" data-testid="btn-pick">
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 4 3.5 6v14L9 18l6 2 5.5-2V4L15 6 9 4Z"/><path d="M9 4v14M15 6v14"/></svg>
+                <span data-i18n="search.pick.button">Choose on map</span>
+              </button>
+            </div>
+            <p id="locate-note" class="locate-note" data-i18n="search.locate.explain">Your location is used only to find nearby plants. It isn't stored, and the result is approximate.</p>
+            <div id="locate-status" class="status-msg" role="status" aria-live="polite"></div>
+
+            <div id="picker" class="picker" hidden>
+              <div class="picker-frame">
+                <div id="picker-map" class="picker-map" tabindex="0" data-testid="picker-map"></div>
+                <span class="picker-crosshair" aria-hidden="true"></span>
+                <p id="picker-notice" class="picker-notice" role="status" hidden></p>
+              </div>
+              <div class="picker-bar">
+                <p class="hint" data-i18n="search.pick.help">Tap or click the map to drop a pin, then drag it to adjust. Keyboard: move the map with the arrow keys, then use the map centre.</p>
+                <button type="button" id="btn-center" class="btn btn-ghost btn-sm" data-testid="btn-center">
+                  <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8"/><path d="M12 2v6M12 16v6M2 12h6M16 12h6"/></svg>
+                  <span data-i18n="search.pick.center">Use map centre</span>
+                </button>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-lg btn-search" data-testid="btn-search">
+              <span data-i18n="search.form.submit">Search filtration plants</span>
+              <svg class="icon icon-dir" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </button>
+            <div id="search-error" aria-live="assertive"></div>
+            <div id="search-live" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+          </form>
+
+          <p class="hero-note">
+            <span data-i18n="search.hero.noAccount">No account needed.</span>
+            <span data-i18n="search.hero.dataNote">Plant details come from an imported spreadsheet and are not verified on site.</span>
+            <a href="/about.html" data-i18n="search.hero.aboutLink">About the data</a>
+          </p>
+        </div>
+      </section>
+
+      <div class="ribbon" aria-hidden="true">
+        <div class="ribbon-track">
+          <span class="ribbon-set">
+            <span lang="en">clean water</span><i>✳</i><span lang="ur">صاف پانی</span><i>✳</i>
+            <span lang="en">find a plant</span><i>✳</i><span lang="ur">قریبی فلٹر پلانٹ</span><i>✳</i>
+            <span lang="en">get directions</span><i>✳</i><span lang="ur">راستہ معلوم کریں</span><i>✳</i>
+            <span lang="en">report a problem</span><i>✳</i><span lang="ur">مسئلہ بتائیں</span><i>✳</i>
+          </span>
+          <span class="ribbon-set">
+            <span lang="en">clean water</span><i>✳</i><span lang="ur">صاف پانی</span><i>✳</i>
+            <span lang="en">find a plant</span><i>✳</i><span lang="ur">قریبی فلٹر پلانٹ</span><i>✳</i>
+            <span lang="en">get directions</span><i>✳</i><span lang="ur">راستہ معلوم کریں</span><i>✳</i>
+            <span lang="en">report a problem</span><i>✳</i><span lang="ur">مسئلہ بتائیں</span><i>✳</i>
+          </span>
+        </div>
+      </div>
+
+      <section class="steps wrap" aria-labelledby="steps-title">
+        <h2 id="steps-title" class="section-title" data-i18n="search.steps.title">How it works</h2>
+        <ol class="steps-list">
+          <li class="step">
+            <span class="step-num" aria-hidden="true">1</span>
+            <h3 data-i18n="search.steps.1.title">Choose a place</h3>
+            <p data-i18n="search.steps.1.text">Search for your area, share your location, or drop a pin on the map.</p>
+          </li>
+          <li class="step">
+            <span class="step-num" aria-hidden="true">2</span>
+            <h3 data-i18n="search.steps.2.title">Compare nearby plants</h3>
+            <p data-i18n="search.steps.2.text">Browse one plant at a time with the arrows. Each card says exactly what is recorded — and what isn't.</p>
+          </li>
+          <li class="step">
+            <span class="step-num" aria-hidden="true">3</span>
+            <h3 data-i18n="search.steps.3.title">Go, or tell us</h3>
+            <p data-i18n="search.steps.3.text">Get directions where a plant's exact site is known, or report a problem so staff can check it.</p>
+          </li>
+        </ol>
+      </section>
+
+      <section class="honesty wrap" aria-labelledby="honesty-title">
+        <div class="honesty-card">
+          <h2 id="honesty-title" class="section-title" data-i18n="search.honesty.title">What the data can — and can't — tell you</h2>
+          <ul class="honesty-list">
+            <li><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 4 3.5 6v14L9 18l6 2 5.5-2V4L15 6 9 4Z"/><path d="M9 4v14M15 6v14"/></svg>
+              <p><strong data-i18n="search.honesty.loc.title">Locations are approximate.</strong> <span data-i18n="search.honesty.loc.text">The spreadsheet lists each plant's area, not its exact site, so most results point to an area centre.</span></p></li>
+            <li><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5M12 7.8h.01"/></svg>
+              <p><strong data-i18n="search.honesty.status.title">Status is listed, not verified.</strong> <span data-i18n="search.honesty.status.text">Every plant is marked "Fully Functional" in the source, with no date. Staff verification is shown separately when it exists.</span></p></li>
+            <li><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 17a8 8 0 1 1 16 0"/><path d="m12 17 3.5-5"/></svg>
+              <p><strong data-i18n="search.honesty.cap.title">Capacity isn't an allowance.</strong> <span data-i18n="search.honesty.cap.text">Gallons per hour is the plant's production rate — not how much one person can collect.</span></p></li>
+            <li><svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3.5s6 6.4 6 10.5a6 6 0 0 1-12 0c0-4.1 6-10.5 6-10.5Z"/></svg>
+              <p><strong data-i18n="search.honesty.quality.title">Ratings aren't safety tests.</strong> <span data-i18n="search.honesty.quality.text">Water-test evidence and community ratings are kept apart. No test on record means "Unknown".</span></p></li>
+          </ul>
+          <a class="btn btn-ghost" href="/about.html" data-i18n="search.honesty.more">Read about the data</a>
+        </div>
+      </section>
+
+      <div class="shore-band" aria-hidden="true" data-img-slot>
+        <img src="/img/shoreline.svg" alt="" data-optional loading="lazy" decoding="async">
+      </div>
+    </div>
+
+    <!-- ───────────── Results (rendered by /js/results.js) ───────────── -->
+    <div id="results-view" class="results-view" hidden></div>
+  </main>
+
+  <footer id="tw-footer" class="tw-footer"></footer>
+</body>
+</html>

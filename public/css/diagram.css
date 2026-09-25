@@ -1,0 +1,95 @@
+/* Team Water — illustrative treatment diagram (owned by Visuals; injected by /js/diagram.js).
+   Colours come from /css/tokens.css; fallbacks keep it readable if tokens are missing. */
+
+.twd {
+  margin: 0;
+  font-family: var(--tw-font-body, Inter, system-ui, sans-serif);
+  color: var(--tw-text, #0a1a33);
+}
+
+.twd-art {
+  position: relative;
+  padding: 6px 6px 2px;
+  border-radius: var(--tw-radius, 14px);
+  background:
+    radial-gradient(120% 70% at 50% 118%, rgba(169, 217, 230, 0.55), rgba(169, 217, 230, 0) 70%),
+    linear-gradient(180deg, #f7fbfc 0%, #eef6f8 100%);
+  box-shadow: inset 0 0 0 1px rgba(78, 106, 122, 0.12);
+  overflow: hidden;
+}
+
+/* Faint foam bubbles, echoing the shoreline reference. */
+.twd-art::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 8% 22%, #fff 0 2px, transparent 2.5px),
+    radial-gradient(circle at 14% 30%, #fff 0 1.2px, transparent 1.7px),
+    radial-gradient(circle at 91% 18%, #fff 0 2.2px, transparent 2.7px),
+    radial-gradient(circle at 86% 26%, #fff 0 1.3px, transparent 1.8px),
+    radial-gradient(circle at 95% 34%, #fff 0 1px, transparent 1.5px);
+  pointer-events: none;
+}
+
+.twd-svg { position: relative; display: block; width: 100%; height: auto; margin-inline: auto; overflow: visible; }
+.twd-svg text { font-family: var(--tw-font-body, Inter, system-ui, sans-serif); }
+.twd-tag { letter-spacing: 0.08em; }
+.twd-svg text.twd-lat { font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
+/* Urdu: Nastaliq only covers Arabic-script ranges (unicode-range), so Latin falls through to Inter. */
+.twd[dir='rtl'] .twd-svg text:not(.twd-lat),
+.twd[dir='rtl'] .twd-cap { font-family: 'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', 'Inter', system-ui, sans-serif; letter-spacing: 0; }
+
+.twd-cap {
+  display: grid;
+  gap: 2px;
+  margin-block-start: var(--tw-space-2, 8px);
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: var(--tw-text-muted, #45566b);
+}
+.twd-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--tw-teal-700, #0a6d80);
+}
+.twd-title::before {
+  content: '';
+  display: inline-block;
+  inline-size: 0.6em;
+  block-size: 0.8em;
+  margin-inline-end: 0.4em;
+  vertical-align: -0.05em;
+  background: currentColor;
+  border-radius: 50% 50% 50% 50% / 62% 62% 38% 38%;
+  clip-path: polygon(50% 0, 100% 62%, 100% 100%, 0 100%, 0 62%);
+}
+.twd-steps { color: var(--tw-text, #0a1a33); }
+.twd-shown { font-weight: 600; }
+.twd-note { font-size: 0.72rem; }
+
+.twd[dir='rtl'] .twd-cap { font-size: 0.85rem; line-height: 1.9; }
+.twd[dir='rtl'] .twd-title { font-size: 0.85rem; letter-spacing: 0; text-transform: none; }
+.twd[dir='rtl'] .twd-note { font-size: 0.8rem; }
+
+/* ── Motion (only when JS adds .twd--anim and the figure is on screen: .twd--play) ── */
+@keyframes twd-flow { to { stroke-dashoffset: -24; } }
+@keyframes twd-glow { from { opacity: 0.55; } to { opacity: 1; } }
+@keyframes twd-drop {
+  0%, 35% { transform: translateY(0); opacity: 0; }
+  45% { opacity: 1; }
+  90% { transform: translateY(9px); opacity: 1; }
+  100% { transform: translateY(11px); opacity: 0; }
+}
+
+.twd-drop { opacity: 0.9; }
+.twd--play .twd-flow { animation: twd-flow 1.6s linear infinite; }
+.twd--play .twd-glow { animation: twd-glow 2.4s ease-in-out infinite alternate; }
+.twd--play .twd-drop { animation: twd-drop 2.4s cubic-bezier(0.55, 0, 0.9, 0.5) infinite; }
+.twd--play .twd-drop2 { animation-delay: 1.2s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .twd *, .twd *::before { animation: none !important; transition: none !important; }
+}

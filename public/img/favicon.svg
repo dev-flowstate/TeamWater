@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+  <style>.d{fill:#2240c4}@media (prefers-color-scheme:dark){.d{fill:#6a83ec}}</style>
+  <defs>
+    <path id="p" d="M24 2S7 20.5 7 31a17 17 0 0 0 34 0C41 20.5 24 2 24 2Z"/>
+    <clipPath id="c"><use href="#p"/></clipPath>
+  </defs>
+  <use href="#p" class="d"/>
+  <g clip-path="url(#c)">
+    <path d="M2 32c5.5-4.2 10.5-4.2 16 0s10.5 4.2 16 0 10.5-4.2 16 0v16H2Z" fill="#13a3bf"/>
+    <path d="M2 32c5.5-4.2 10.5-4.2 16 0s10.5 4.2 16 0 10.5-4.2 16 0" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+  </g>
+</svg>

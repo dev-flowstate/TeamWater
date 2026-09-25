@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Check a report · Team Water</title>
+  <meta name="description" content="Check the status of a Team Water problem report, reply to staff, or request a correction, appeal or data deletion.">
+  <meta name="theme-color" content="#f6f1e7">
+  <meta name="referrer" content="no-referrer">
+  <link rel="preload" href="/vendor/fontsource/dm-serif-display/files/dm-serif-display-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/css/app.css">
+  <link rel="stylesheet" href="/css/report.css">
+  <script type="module" src="/js/status.js"></script>
+</head>
+<body class="twr">
+  <header id="tw-header"></header>
+
+  <main id="main" class="twr-main" tabindex="-1">
+    <div class="twr-shore" aria-hidden="true">
+      <svg viewBox="0 0 1200 90" preserveAspectRatio="none" focusable="false">
+        <path class="twr-shore-water" d="M0 0H1200V38C1100 60 1010 30 900 46S700 70 600 52 420 22 300 44 110 66 0 40Z"/>
+        <path class="twr-shore-foam" d="M0 40C110 66 190 38 300 44S480 76 600 52 780 34 900 46 1100 60 1200 38V50C1100 74 1000 46 900 58S720 82 600 64 430 36 300 56 110 80 0 52Z"/>
+        <g class="twr-shore-bubbles"><circle cx="140" cy="20" r="3"/><circle cx="420" cy="14" r="2.5"/><circle cx="690" cy="26" r="3.5"/><circle cx="960" cy="16" r="2.5"/><circle cx="1110" cy="30" r="2"/><circle cx="250" cy="30" r="2"/></g>
+      </svg>
+    </div>
+
+    <div class="twr-wrap">
+      <section class="twr-hero" aria-labelledby="page-title">
+        <p class="twr-kicker" data-i18n="report.st.kicker">Report status</p>
+        <h1 id="page-title" class="twr-title" data-i18n="report.st.title">Check a report</h1>
+        <p class="twr-hand" data-i18n="report.st.hand">Follow up on what you reported</p>
+        <p class="twr-lede" data-i18n="report.st.intro">Enter your reference number and the last 4 digits of the phone number you used. We never show your full number.</p>
+      </section>
+
+      <div class="twr-status-layout">
+        <section class="twr-card twr-lookup" aria-labelledby="lookup-title">
+          <h2 id="lookup-title" class="twr-legend"><span class="twr-step" aria-hidden="true">
+            <svg class="twr-ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/></svg></span><span data-i18n="report.st.lookupTitle">Find your report</span></h2>
+          <form id="lookup-form" class="twr-form" novalidate>
+            <div id="lookup-summary" class="twr-summary" tabindex="-1" hidden aria-labelledby="lookup-summary-title">
+              <h2 id="lookup-summary-title" class="twr-summary-title" data-i18n="report.errors.title">There is a problem</h2>
+              <ul class="twr-summary-list"></ul>
+            </div>
+            <div class="twr-field">
+              <label class="twr-label" for="lookup-ref" data-i18n="report.st.ref.label">Reference number</label>
+              <p class="twr-hint" id="lookup-ref-hint" data-i18n="report.st.ref.hint">It looks like TW-XXXX-XXXX.</p>
+              <p class="twr-field-error" id="lookup-ref-error" hidden></p>
+              <input class="twr-input twr-input--ref" id="lookup-ref" name="reference" type="text" dir="ltr" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="20" placeholder="TW-XXXX-XXXX" aria-describedby="lookup-ref-hint">
+            </div>
+            <div class="twr-field">
+              <label class="twr-label" for="lookup-last4" data-i18n="report.st.last4.label">Last 4 digits of your phone number</label>
+              <p class="twr-hint" id="lookup-last4-hint" data-i18n="report.st.last4.hint">For 0300-1234567, enter 4567.</p>
+              <p class="twr-field-error" id="lookup-last4-error" hidden></p>
+              <input class="twr-input twr-input--last4" id="lookup-last4" name="last4" type="text" dir="ltr" inputmode="numeric" autocomplete="off" maxlength="4" pattern="[0-9]{4}" placeholder="••••" aria-describedby="lookup-last4-hint">
+            </div>
+            <p class="twr-actions">
+              <button type="submit" class="twr-btn" id="lookup-submit">
+                <span class="twr-spinner twr-spinner--light" aria-hidden="true" hidden id="lookup-spinner"></span>
+                <span id="lookup-submit-label" data-i18n="report.st.lookup">Check status</span>
+              </button>
+            </p>
+            <p class="twr-status" id="lookup-status" aria-live="polite"></p>
+          </form>
+        </section>
+
+        <section id="result" class="twr-card twr-result" hidden tabindex="-1" aria-labelledby="result-title" aria-live="polite">
+          <div class="twr-result-head">
+            <h2 id="result-title" class="twr-result-ref"></h2>
+            <span id="result-badge"></span>
+          </div>
+          <p id="result-explain" class="twr-result-explain"></p>
+          <p id="reply-done" class="twr-reply-done twr-section-gap" hidden tabindex="-1">
+            <svg class="twr-ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.5 2.5L16 9.5"/></svg>
+            <span data-i18n="report.reply.done">Thank you. Your reply was sent and staff will continue the review.</span>
+          </p>
+          <dl class="twr-meta" id="result-meta"></dl>
+
+          <section id="reply" class="twr-reply" hidden aria-labelledby="reply-title">
+            <h3 id="reply-title" class="twr-h3" data-i18n="report.reply.title">Reply to staff</h3>
+            <form id="reply-form" class="twr-form" novalidate>
+              <div class="twr-field">
+                <label class="twr-label" for="reply-message" data-i18n="report.reply.label">Your reply</label>
+                <p class="twr-hint" id="reply-hint" data-i18n="report.reply.hint">Answer the staff question above. Don't include personal details.</p>
+                <p class="twr-field-error" id="reply-error" hidden></p>
+                <textarea class="twr-input twr-textarea" id="reply-message" rows="4" maxlength="2000" aria-describedby="reply-hint"></textarea>
+              </div>
+              <p class="twr-actions">
+                <button type="submit" class="twr-btn" id="reply-submit"><span id="reply-submit-label" data-i18n="report.reply.send">Send reply</span></button>
+              </p>
+              <p class="twr-status" id="reply-status" aria-live="polite"></p>
+            </form>
+          </section>
+
+          <h3 class="twr-h3 twr-section-gap" data-i18n="report.st.timeline">History</h3>
+          <ol class="twr-timeline" id="result-timeline"></ol>
+
+          <p class="twr-actions" id="result-appeal" hidden>
+            <a class="twr-btn twr-btn--ghost" href="#appeal" id="result-appeal-link" data-i18n="report.st.appeal">Disagree with a decision? Make an appeal</a>
+          </p>
+        </section>
+
+        <section id="appeal" class="twr-card twr-appeal twr-wide" aria-labelledby="appeal-title">
+          <h2 id="appeal-title" class="twr-appeal-title" tabindex="-1" data-i18n="report.ap.title">Corrections, appeals and deletion requests</h2>
+          <p class="twr-hint" data-i18n="report.ap.intro">Tell us if plant details are wrong, if you disagree with a decision about your report, or if you want your data deleted. A person reads every request.</p>
+
+          <form id="appeal-form" class="twr-form twr-section-gap" novalidate>
+            <div id="ap-summary" class="twr-summary" tabindex="-1" hidden aria-labelledby="ap-summary-title">
+              <h2 id="ap-summary-title" class="twr-summary-title" data-i18n="report.errors.title">There is a problem</h2>
+              <ul class="twr-summary-list"></ul>
+            </div>
+            <fieldset class="twr-fieldset">
+              <legend class="twr-label" data-i18n="report.ap.kind.legend">What would you like to do?</legend>
+              <p class="twr-field-error" id="ap-kind-error" hidden></p>
+              <div class="twr-kinds" id="ap-kinds"></div>
+            </fieldset>
+            <div class="twr-appeal-grid twr-appeal-grid--2">
+              <div class="twr-field">
+                <label class="twr-label" for="ap-ref" data-i18n="report.ap.ref.label">Report reference (optional)</label>
+                <p class="twr-hint" id="ap-ref-hint" data-i18n="report.ap.ref.hint">If this is about a report, enter its reference.</p>
+                <p class="twr-field-error" id="ap-ref-error" hidden></p>
+                <input class="twr-input twr-input--ref" id="ap-ref" type="text" dir="ltr" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="20" placeholder="TW-XXXX-XXXX" aria-describedby="ap-ref-hint">
+              </div>
+              <div class="twr-field" id="ap-plant-field" hidden>
+                <label class="twr-label" for="ap-plant" data-i18n="report.ap.plant.label">Plant ID</label>
+                <p class="twr-hint" id="ap-plant-hint" data-i18n="report.ap.plant.hint">For example FSD-WFP-0123.</p>
+                <p class="twr-field-error" id="ap-plant-error" hidden></p>
+                <input class="twr-input twr-input--ref" id="ap-plant" type="text" dir="ltr" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="40" placeholder="FSD-WFP-0000" aria-describedby="ap-plant-hint">
+              </div>
+            </div>
+            <div class="twr-field">
+              <label class="twr-label" for="ap-phone" data-i18n="report.ap.phone.label">Your phone number</label>
+              <p class="twr-hint" id="ap-phone-hint" data-i18n="report.ap.phone.hint">Use the number you reported with.</p>
+              <p class="twr-field-error" id="ap-phone-error" hidden></p>
+              <input class="twr-input twr-input--phone" id="ap-phone" type="tel" dir="ltr" inputmode="tel" autocomplete="tel" maxlength="20" placeholder="03XX-XXXXXXX" aria-describedby="ap-phone-hint ap-phone-privacy">
+              <p class="twr-privacy" id="ap-phone-privacy">
+                <svg class="twr-ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+                <span data-i18n="report.phone.privacy">Your number is private. Only authorised staff can see it. It is never shown publicly.</span>
+              </p>
+            </div>
+            <div class="twr-field">
+              <label class="twr-label" for="ap-message" data-i18n="report.ap.message.label">Message</label>
+              <p class="twr-hint" id="ap-message-hint">What is wrong, and what is correct?</p>
+              <p class="twr-field-error" id="ap-message-error" hidden></p>
+              <textarea class="twr-input twr-textarea" id="ap-message" rows="5" maxlength="2000" aria-describedby="ap-message-hint"></textarea>
+            </div>
+            <p class="twr-actions">
+              <button type="submit" class="twr-btn" id="ap-submit"><span id="ap-submit-label" data-i18n="report.ap.send">Send request</span></button>
+            </p>
+            <p class="twr-status" id="ap-status" aria-live="polite"></p>
+          </form>
+
+          <div id="ap-done" class="twr-done twr-done--sm twr-section-gap" hidden tabindex="-1" aria-labelledby="ap-done-title">
+            <div class="twr-done-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 12.5l4 4L18 8"/></svg></div>
+            <h3 id="ap-done-title" class="twr-done-title" data-i18n="report.ap.done.title">Your request was received</h3>
+            <div class="twr-ticket">
+              <p class="twr-ticket-label" id="ap-done-ref-label" data-i18n="report.ap.done.refLabel">Request reference</p>
+              <p class="twr-ticket-ref" id="ap-done-ref" dir="ltr" aria-labelledby="ap-done-ref-label ap-done-ref"></p>
+              <button type="button" class="twr-btn twr-btn--ghost twr-btn--sm" id="ap-copy">
+                <svg class="twr-ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/></svg>
+                <span data-i18n="report.done.copy">Copy</span>
+              </button>
+              <p class="twr-status" id="ap-copy-status" aria-live="polite"></p>
+            </div>
+            <p class="twr-save" data-i18n="report.ap.done.body">Keep this reference.</p>
+            <p class="twr-actions"><button type="button" class="twr-btn twr-btn--ghost" id="ap-another" data-i18n="report.ap.another">Send another request</button></p>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <footer id="tw-footer"></footer>
+</body>
+</html>
