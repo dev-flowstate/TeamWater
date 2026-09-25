@@ -3,6 +3,8 @@
 //   driving  → config.routing.osrmUrl     (the public demo server is car-only and for light use)
 //   walking  → config.routing.osrmFootUrl (only if configured; otherwise mode_unsupported)
 //   cycling  → config.routing.osrmBikeUrl (only if configured; otherwise mode_unsupported)
+// (router.project-osrm.org is car-only; community foot/bike instances such as routing.openstreetmap.de
+// exist but are only used when an operator sets OSRM_FOOT_URL / OSRM_BIKE_URL and accepts their terms.)
 // We never pretend: an unsupported mode is reported as `mode_unsupported`, an unreachable server as
 // `unavailable` (with a 60 s circuit breaker per OSRM instance), and "no road connection" as `no_route`.
 // Coordinates travel in the request URL only; they are not logged or stored.

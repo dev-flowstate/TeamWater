@@ -306,25 +306,29 @@ const DEPS = { ultrafiltration: ['cart'], reverse_osmosis: ['tube'], dispensing:
 // ───────────────────────── text helpers ─────────────────────────
 const RTL_CHARS = /[֐-ࣿיִ-﷿ﹰ-ﻼ]/;
 
-function wrap(text, max, maxLines) {
+// Approximate advance widths (em) for Inter semibold; good enough to wrap/shrink short labels.
+const em = (c) => (/[ijl.,:;'!|()[\] ]/.test(c) ? 0.3 : /[ftrI/-]/.test(c) ? 0.38 : /[mwMW]/.test(c) ? 0.85 : /[A-Z]/.test(c) ? 0.68 : 0.56);
+const latinWidth = (s, size) => [...s].reduce((a, c) => a + em(c), 0) * size;
+
+// Word-wrap `text` so each line's measure(line) <= limit; at most maxLines (last one gets "…").
+function wrap(text, measure, limit, maxLines) {
   const str = String(text).trim();
-  if (str.length <= max) return [str];
+  if (measure(str) <= limit) return [str];
   const par = str.indexOf(' ('); // prefer "Groundwater" / "(Tube Well)"
-  if (maxLines > 1 && par > 0 && par <= max && str.length - par - 1 <= max) return [str.slice(0, par), str.slice(par + 1)];
-  const words = str.split(/\s+/).filter(Boolean);
+  if (maxLines > 1 && par > 0 && measure(str.slice(0, par)) <= limit && measure(str.slice(par + 1)) <= limit) return [str.slice(0, par), str.slice(par + 1)];
   const lines = [];
   let cur = '';
-  for (let w of words) {
-    while (w.length > max) { if (cur) { lines.push(cur); cur = ''; } lines.push(w.slice(0, max - 1) + '-'); w = w.slice(max - 1); }
-    if (!cur) cur = w;
-    else if (cur.length + 1 + w.length <= max) cur += ' ' + w;
-    else { lines.push(cur); cur = w; }
+  for (let w of str.split(/\s+/)) {
+    while (w.length > 24) { if (cur) { lines.push(cur); cur = ''; } lines.push(w.slice(0, 23) + '-'); w = w.slice(23); }
+    if (cur && measure(`${cur} ${w}`) <= limit) cur += ` ${w}`;
+    else { if (cur) lines.push(cur); cur = w; }
   }
   if (cur) lines.push(cur);
   if (lines.length > maxLines) {
     lines.length = maxLines;
-    const last = lines[maxLines - 1];
-    lines[maxLines - 1] = (last.length >= max ? last.slice(0, max - 1) : last) + '…';
+    let last = lines[maxLines - 1];
+    while (last.length > 1 && measure(`${last}…`) > limit) last = last.slice(0, -1);
+    lines[maxLines - 1] = `${last.trimEnd()}…`;
   }
   return lines;
 }
@@ -448,24 +452,28 @@ function buildSvg(m, prefix) {
   });
 
   // labels (one <text> per line so Latin lines keep LTR order inside Urdu diagrams)
-  const fs = ur ? 11 : 10.5, lh = ur ? 19 : 12.5, max = ur ? 22 : 17;
+  const fs = ur ? 11 : 10.5, lh = ur ? 19 : 12.5;
   let labels = '';
   m.nodes.forEach((nd, i) => {
     const p = pos[i];
-    const wmax = nd.wide ? Math.round(max * 2) : max;
+    const room = (nd.wide ? SLOT * 2.1 : SLOT) - 6;
+    // Latin text is measured; Nastaliq is compact, so Urdu wraps by character count.
+    const fit = (size) => [(t) => (RTL_CHARS.test(t) ? t.length * (room / 22) : latinWidth(t, size)), room];
     let y = p.y + (ur ? 37 : 35);
     const line = (txt, cls, size, weight, fill, gap = lh) => {
       const lat = !RTL_CHARS.test(txt);
-      const out = `<text x="${p.x}" y="${r1(y)}" class="${cls}${lat ? ' twd-lat' : ''}" font-size="${size}"${weight ? ` font-weight="${weight}"` : ''} fill="${fill}" text-anchor="middle" direction="${lat ? 'ltr' : 'rtl'}">${esc(txt)}</text>`;
+      const w = lat ? latinWidth(txt, size) : 0;
+      const sz = w > room ? r1(Math.max(size * room / w, size * 0.8)) : size; // shrink a long single word slightly
+      const out = `<text x="${p.x}" y="${r1(y)}" class="${cls}${lat ? ' twd-lat' : ''}" font-size="${sz}"${weight ? ` font-weight="${weight}"` : ''} fill="${fill}" text-anchor="middle" direction="${lat ? 'ltr' : 'rtl'}">${esc(txt)}</text>`;
       y += lat && ur ? 14 : gap;
       return out;
     };
     if (nd.tag) labels += line(ur ? nd.tag : nd.tag.toUpperCase(), 'twd-tag', ur ? 10 : 8, 700, K.t7, ur ? 18 : 12);
-    for (const t of wrap(nd.label, wmax, nd.wide ? 1 : 2)) labels += line(t, 'twd-lbl', fs, 600, K.n7);
+    for (const t of wrap(nd.label, ...fit(fs), nd.wide ? 1 : 2)) labels += line(t, 'twd-lbl', fs, 600, K.n7);
     if (nd.sub) {
-      const [k, v] = nd.sub;
-      const subLines = ur ? [`${k}:`, ...wrap(v, wmax, 1)] : wrap(`${k}: ${v}`, wmax, 2);
-      for (const t of subLines) labels += line(t, 'twd-sub', ur ? 10.5 : 9.5, 400, K.l7, ur ? 18 : 11.5);
+      const [k, v] = nd.sub, ss = ur ? 10.5 : 9.5;
+      const subLines = ur ? [`${k}:`, ...wrap(v, ...fit(ss), 1)] : wrap(`${k}: ${v}`, ...fit(ss), 2);
+      for (const t of subLines) labels += line(t, 'twd-sub', ss, 400, K.l7, ur ? 18 : 11.5);
     }
   });
 
@@ -487,9 +495,9 @@ function figureHtml(m, prefix) {
   return `<figure class="twd twd--${m.stages.length ? 'stages' : 'none'}" lang="${m.lang}" dir="${m.rtl ? 'rtl' : 'ltr'}" data-stages="${esc(m.stages.join(' '))}">`
     + `<div class="twd-art">${buildSvg(m, prefix)}</div>`
     + '<figcaption class="twd-cap">'
-    + `<span class="twd-title">${esc(S.title)}</span>`
-    + `<span class="twd-steps"><span class="twd-shown">${esc(S.shown)}:</span> ${src}${sep}${steps}</span>`
-    + `<span class="twd-note">${esc(S.note)}</span>`
+    + `<span class="twd-title" style="display:block">${esc(S.title)}</span>`
+    + `<span class="twd-steps" style="display:block"><span class="twd-shown">${esc(S.shown)}:</span> ${src}${sep}${steps}</span>`
+    + `<span class="twd-note" style="display:block">${esc(S.note)}</span>`
     + '</figcaption></figure>';
 }
 

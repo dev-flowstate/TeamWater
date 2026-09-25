@@ -183,6 +183,7 @@ textarea.mod-input { resize: vertical; min-block-size: 80px; line-height: 1.45; 
 
 /* ── Tables ── */
 .mod-tablewrap {
+  position: relative; /* contains visually-hidden (absolute) text so it cannot widen the page */
   overflow-x: auto;
   border: 1px solid var(--tw-border);
   border-radius: var(--tw-radius);

@@ -27,8 +27,8 @@ const FILE_MIME = new Set(['application/pdf', 'image/jpeg', 'image/png']);
 const FILE_EXT = { 'application/pdf': 'pdf', 'image/jpeg': 'jpg', 'image/png': 'png' };
 
 const RATE = {
-  geo: { bucket: 'public:geo', windowMs: 60e3, max: 60 },
-  suggest: { bucket: 'public:suggest', windowMs: 60e3, max: 240 }, // gazetteer-only, as-you-type
+  geo: { bucket: 'public:geo', windowMs: 60e3, max: 60 }, // reverse + submitted geocode (may reach providers)
+  suggest: { bucket: 'public:suggest', windowMs: 60e3, max: 240 }, // as-you-type geocode: gazetteer only
   route: { bucket: 'public:route', windowMs: 60e3, max: 60 },
   search: { bucket: 'public:search', windowMs: 60e3, max: 120 },
 };
@@ -106,8 +106,9 @@ router.get('/config', (req, res) => {
         ? "Map data comes from Google Maps and reflects the provider's current data."
         : "OpenStreetMap is continuously edited; tiles reflect the provider's current data.",
     },
-    geocoder: { provider: ['nominatim', 'google'].includes(config.geocoder.provider) ? config.geocoder.provider : 'none' },
-    routing: { provider: ['osrm', 'google'].includes(config.routing.provider) ? config.routing.provider : 'none', modes: routing.modes() },
+    // Effective providers: Google geocoding / routing count only when the map is Google (Google's terms).
+    geocoder: { provider: geocoder.providerName() },
+    routing: { provider: routing.providerName(), modes: routing.modes() },
     sms: { enabled: smsEnabled() },
     demoMode: !!config.demoData,
     stats: stats(),
@@ -121,17 +122,18 @@ router.get('/config', (req, res) => {
   });
 });
 
-// ── GET /api/geocode?q=&lang=&suggest=1 ──
-// suggest=1 (additive): gazetteer only, for as-you-type suggestions — external geocoders are only queried
-// for submitted searches (Nominatim's usage policy forbids autocomplete).
-const isSuggest = (req) => /^(1|true)$/.test(String(req.query.suggest || ''));
-router.get('/geocode', (req, res, next) => rateLimit(isSuggest(req) ? 'suggest' : 'geo')(req, res, next), async (req, res) => {
+// ── GET /api/geocode?q=&lang=&submit=1 ──
+// Without submit=1 (as-you-type queries) only the gazetteer answers and providers.external is 'skipped'.
+// submit=1 marks an explicit search (Enter / search button); only then is the external geocoder asked
+// (Nominatim's usage policy forbids autocomplete). Submitted searches have the stricter rate limit.
+const isSubmit = (req) => /^(1|true)$/.test(String(req.query.submit || ''));
+router.get('/geocode', (req, res, next) => rateLimit(isSubmit(req) ? 'geo' : 'suggest')(req, res, next), async (req, res) => {
   const v = validate(req.query, {
     q: str({ min: geocoder.MIN_QUERY, max: geocoder.MAX_QUERY }),
     lang: oneOf(['en', 'ur'], { optional: true }),
-    suggest: bool({ optional: true }),
+    submit: bool({ optional: true }),
   });
-  res.json(await geocoder.search(v.q, { lang: v.lang || 'en', suggest: !!v.suggest }));
+  res.json(await geocoder.search(v.q, { lang: v.lang || 'en', submit: !!v.submit }));
 });
 
 // ── GET /api/reverse ──

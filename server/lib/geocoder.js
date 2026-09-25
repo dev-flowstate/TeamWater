@@ -8,8 +8,12 @@
 // configured external provider (config.geocoder.provider: nominatim | google | none). External results
 // outside the Faisalabad bounds are dropped. If the provider is down we say so (providers.external =
 // 'unavailable') and still return gazetteer results — nothing is invented.
-// providers.external: 'ok' | 'unavailable' | 'disabled' (no provider configured) | 'skipped' (suggest mode
-// or a query shorter than 3 characters: the provider was deliberately not asked).
+// providers.external: 'ok' | 'unavailable' | 'disabled' (no usable provider configured) | 'skipped' (not an
+// explicit submit=1 search, or a query shorter than 3 characters: the provider was deliberately not asked).
+//
+// Google Geocoding is only used when the MAP is also Google (config.map.provider === 'google'): Google's
+// terms require its geocodes to be shown on a Google map and not stored. With an OSM map a configured
+// GEOCODER_PROVIDER=google is treated as disabled.
 //
 // The gazetteer module (owned by the Geo workstream) is feature-detected: search(q,{limit}),
 // nearestArea(lat,lng,{maxKm}), isUsable(area). When a function is missing or throws we fall back to
@@ -37,8 +41,13 @@ function gazetteer() {
 
 function externalProvider() {
   const p = config.geocoder.provider;
-  return p === 'nominatim' ? nominatim : p === 'google' ? googleGeocode : null;
+  if (p === 'nominatim') return nominatim;
+  if (p === 'google' && config.map.provider === 'google') return googleGeocode; // Google content only on a Google map
+  return null;
 }
+
+/** Effective provider name for /api/config ('none' when unusable). */
+const providerName = () => (externalProvider() ? externalProvider().name : 'none');
 
 const visibleDemoSql = () => (config.demoData ? '' : 'AND is_demo = 0');
 
@@ -206,18 +215,18 @@ const publicResult = (r) => Object.fromEntries(PUBLIC_FIELDS.map((k) => [k, r[k]
 
 /**
  * @param {string} q
- * @param {{ lang?: 'en'|'ur', suggest?: boolean }} opts  suggest=true → gazetteer only (for as-you-type
- *   suggestions). Nominatim's usage policy forbids autocomplete, so external providers are only queried
- *   for submitted searches; providers.external is then 'skipped'.
+ * @param {{ lang?: 'en'|'ur', submit?: boolean }} opts  The external provider is queried ONLY when
+ *   submit=true (an explicit search: Enter key / search button). Keystroke queries are answered from the
+ *   gazetteer alone — Nominatim's usage policy forbids autocomplete. providers.external is then 'skipped'.
  */
-async function search(q, { lang = 'en', suggest = false } = {}) {
+async function search(q, { lang = 'en', submit = false } = {}) {
   const query = String(q || '').trim().slice(0, MAX_QUERY);
   const nq = normalizeSearch(query);
   const skipped = !externalProvider() ? 'disabled' : 'skipped';
   if (query.length < MIN_QUERY || !nq) {
     return { query, results: [], ambiguous: false, providers: { gazetteer: 'ok', external: skipped } };
   }
-  const callExternal = !suggest && nq.length >= MIN_EXTERNAL_QUERY;
+  const callExternal = submit && nq.length >= MIN_EXTERNAL_QUERY;
   const [gaz, ext] = await Promise.all([
     gazetteerSearch(query, { limit: GAZ_LIMIT, lang }).then((results) => ({ status: 'ok', results }), () => ({ status: 'unavailable', results: [] })),
     callExternal ? externalSearch(query, { lang, limit: EXT_LIMIT }) : Promise.resolve({ status: skipped, results: [] }),
@@ -276,14 +285,18 @@ async function reverse(lat, lng, { lang = 'en' } = {}) {
 /**
  * Importer helper: geocode a free-text address (optionally within a town). Returns null when nothing
  * usable was found OR the provider is unavailable (the importer then leaves coordinates missing).
- * City-level matches are discarded as too coarse. Results are candidates only — the importer must store
+ * City-level matches are discarded as too coarse. Results are candidates only — the importer stores
  * them as coord_status='geocoded_pending' for administrator review, never as exact positions.
+ *
+ * GOOGLE: this function's results are PERSISTED by the importer, and Google's terms do not allow storing
+ * Google geocodes. So Google is never consulted here, whatever GEOCODER_PROVIDER says; only Nominatim
+ * (ODbL, storable with attribution) and our own gazetteer are used.
  */
 async function geocodeAddress(text, { town = null } = {}) {
   const t = String(text || '').trim();
   if (t.length < MIN_QUERY) return null;
   const q = [t, town, 'Faisalabad'].filter(Boolean).join(', ');
-  const ext = await externalSearch(q, { lang: 'en', limit: 5 });
+  const ext = externalProvider() === nominatim ? await externalSearch(q, { lang: 'en', limit: 5 }) : { status: 'disabled', results: [] };
   const usable = ext.results.filter((r) => r.kind !== 'town');
   if (usable.length) {
     const best = usable[0];
@@ -303,4 +316,4 @@ async function geocodeAddress(text, { town = null } = {}) {
   return null;
 }
 
-module.exports = { MIN_QUERY, MAX_QUERY, search, reverse, geocodeAddress, nearestArea, isAmbiguous, matchQuality, sqlGazetteerSearch };
+module.exports = { MIN_QUERY, MIN_EXTERNAL_QUERY, MAX_QUERY, providerName, search, reverse, geocodeAddress, nearestArea, isAmbiguous, matchQuality, sqlGazetteerSearch };

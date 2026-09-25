@@ -247,6 +247,7 @@ CREATE TABLE IF NOT EXISTS reports (
   review_queue          INTEGER NOT NULL DEFAULT 0 CHECK (review_queue IN (0, 1)),
   proximity_shared      INTEGER NOT NULL DEFAULT 0 CHECK (proximity_shared IN (0, 1)),
   proximity_distance_m  REAL,                        -- distance to plant if shared; raw coordinates NOT stored
+  proximity_basis       TEXT CHECK (proximity_basis IN ('plant', 'area_centre')), -- what the distance was measured to
   text_fingerprint      TEXT,
   lang                  TEXT,
   created_at            TEXT NOT NULL,

@@ -14,21 +14,29 @@ const { exactPosition } = require('./plant-view');
 
 const BASE_MODES = ['driving', 'walking', 'cycling'];
 
+// Google Routes content may only be shown on a Google map (Google Maps Platform terms), and needs the
+// server key; otherwise ROUTING_PROVIDER=google is treated as disabled.
+const googleUsable = () => config.map.provider === 'google' && !!config.googleServerKey;
+
 function impl() {
   const p = config.routing.provider;
-  return p === 'osrm' ? osrm : p === 'google' ? googleRoutes : null;
+  if (p === 'osrm') return osrm;
+  if (p === 'google' && googleUsable()) return googleRoutes;
+  return null;
 }
 
-/** Modes accepted by the API. `two_wheeler` only exists when Google Routes is the provider. */
+/** Effective provider for /api/config: 'osrm' | 'google' | 'none'. */
+const providerName = () => { const p = impl(); return p ? config.routing.provider : 'none'; };
+
+/** Modes accepted by the API. `two_wheeler` only exists when Google Routes is the active provider. */
 function validModes() {
-  return config.routing.provider === 'google' ? [...BASE_MODES, 'two_wheeler'] : BASE_MODES;
+  return impl() === googleRoutes ? [...BASE_MODES, 'two_wheeler'] : BASE_MODES;
 }
 
 /** Availability of a mode without contacting the provider. */
 function availability(mode) {
   const provider = impl();
   if (!provider) return { available: false, reason: 'disabled' };
-  if (config.routing.provider === 'google' && !config.googleServerKey) return { available: false, reason: 'disabled' };
   if (!provider.supportsMode(mode)) return { available: false, reason: 'mode_unsupported' };
   return { available: true, reason: null };
 }
@@ -73,4 +81,4 @@ async function table(from, plants, mode = 'driving') {
   }
 }
 
-module.exports = { BASE_MODES, validModes, availability, modes, routeTo, table };
+module.exports = { BASE_MODES, providerName, validModes, availability, modes, routeTo, table };

@@ -31,6 +31,7 @@ test('core api', async (t) => {
     config.routing.provider = 'none';
     config.routing.osrmUrl = 'https://router.project-osrm.org';
     config.googleServerKey = '';
+    config.map.provider = 'osm';
     config.demoData = false;
   }
   const jsonRes = (body, status = 200) => new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json' } });
@@ -330,7 +331,11 @@ test('core api', async (t) => {
     config.geocoder.provider = 'nominatim';
     stubFetch(async () => { throw new TypeError('fetch failed'); });
     try {
-      const r = await get('/api/geocode?q=model%20town');
+      const typed = await get('/api/geocode?q=model%20town');
+      assert.equal(typed.body.providers.external, 'skipped', 'as-you-type queries never reach the provider');
+      assert.equal(extCalls.length, 0);
+      const r = await get('/api/geocode?q=model%20town&submit=1');
+      assert.equal(extCalls.length, 1);
       assert.equal(r.body.providers.external, 'unavailable');
       assert.equal(r.body.providers.gazetteer, 'ok');
       const hit = r.body.results.find((x) => x.label === 'Model Town');
@@ -343,10 +348,6 @@ test('core api', async (t) => {
       assert.equal(hit.plantCount, 2, 'open plants only, same rule as /api/plants?area=');
       const unlocated = (await get('/api/geocode?q=saline%20zone')).body.results.find((x) => x.areaId === A2);
       assert.ok(unlocated && unlocated.lat === null && unlocated.lng === null);
-      // as-you-type suggestions never reach the external provider
-      const sug = await get('/api/geocode?q=model%20town&suggest=1');
-      assert.equal(sug.body.providers.external, 'skipped');
-      assert.ok(sug.body.results.some((x) => x.areaId === A1));
       assert.equal((await get('/api/geocode?q=m')).status, 400);
     } finally { restore(); }
 
@@ -379,7 +380,7 @@ test('core api', async (t) => {
       ]);
     });
     try {
-      const r = await get('/api/geocode?q=Clock%20Tower&lang=ur');
+      const r = await get('/api/geocode?q=Clock%20Tower&lang=ur&submit=1');
       assert.equal(r.body.providers.external, 'ok');
       const ext = r.body.results.filter((x) => x.source === 'nominatim');
       assert.equal(ext.length, 1, 'result outside the Faisalabad bounds is dropped');
@@ -395,7 +396,7 @@ test('core api', async (t) => {
       assert.equal(extCalls[0].opts.headers['User-Agent'], config.geocoder.userAgent);
       assert.equal(s.db.prepare("SELECT COUNT(*) AS n FROM geocode_cache WHERE provider = 'nominatim'").get().n, 1);
 
-      await get('/api/geocode?q=clock%20%20TOWER&lang=ur'); // same normalised query → cache hit
+      await get('/api/geocode?q=clock%20%20TOWER&lang=ur&submit=1'); // same normalised query → cache hit
       assert.equal(extCalls.length, 1);
 
       const rev = await get('/api/reverse?lat=31.4187&lng=73.0791');
@@ -424,7 +425,52 @@ test('core api', async (t) => {
     } finally { providers.nominatim._test.queue.minIntervalMs = 1000; restore(); }
   });
 
-  await t.test('google geocoder: region/bounds/language, not persisted; routes field mask', async () => {
+  await t.test('google providers are disabled unless the map is Google (terms)', async () => {
+    config.geocoder.provider = 'google';
+    config.routing.provider = 'google';
+    config.googleServerKey = 'server-key';
+    stubFetch(async () => { throw new Error('Google must not be called with an OSM map'); });
+    try {
+      const cfg = (await get('/api/config')).body;
+      assert.deepEqual(cfg.geocoder, { provider: 'none' });
+      assert.deepEqual(cfg.routing, { provider: 'none', modes: { driving: false, walking: false, cycling: false } });
+      assert.equal((await get('/api/geocode?q=susan%20road&submit=1')).body.providers.external, 'disabled');
+      assert.equal((await search()).body.distance.routingReason, 'disabled');
+      assert.equal(extCalls.length, 0);
+    } finally { restore(); }
+  });
+
+  await t.test('geocodeAddress (importer): Nominatim candidates, never Google, gazetteer fallback', async () => {
+    const geocoder = require('../server/lib/geocoder');
+    config.geocoder.provider = 'nominatim';
+    providers.nominatim._test.queue.minIntervalMs = 0;
+    stubFetch(async (url) => {
+      const q = new URL(url).searchParams.get('q');
+      if (q.startsWith('Susan Road')) return jsonRes([{ osm_type: 'way', osm_id: 9, lat: '31.41', lon: '73.11', category: 'highway', type: 'primary', addresstype: 'road', name: 'Susan Road', display_name: 'Susan Road, Madina Town, Faisalabad, Pakistan' }]);
+      return jsonRes([]);
+    });
+    try {
+      assert.deepEqual(await geocoder.geocodeAddress('Susan Road', { town: 'Madina Town' }),
+        { lat: 31.41, lng: 73.11, precision: 'street', ambiguous: false, source: 'nominatim', ref: 'osm:way/9' });
+      assert.equal(new URL(extCalls[0].url).searchParams.get('q'), 'Susan Road, Madina Town, Faisalabad');
+      const fallback = await geocoder.geocodeAddress('Model Town');
+      assert.equal(fallback.source, 'gazetteer');
+      assert.equal(fallback.precision, 'area');
+      assert.equal(fallback.ref, `area:${A1}`);
+      assert.equal(await geocoder.geocodeAddress('Nowhere Street 99'), null);
+
+      config.geocoder.provider = 'google';
+      config.map.provider = 'google';
+      config.googleServerKey = 'server-key';
+      stubFetch(async () => { throw new Error('geocodeAddress must never call Google (results are stored)'); });
+      const g = await geocoder.geocodeAddress('Model Town');
+      assert.equal(g.source, 'gazetteer');
+      assert.equal(extCalls.length, 0);
+    } finally { providers.nominatim._test.queue.minIntervalMs = 1000; restore(); }
+  });
+
+  await t.test('google geocoder + routes with a Google map: region/bounds/language, not persisted, field mask', async () => {
+    config.map.provider = 'google';
     config.geocoder.provider = 'google';
     config.routing.provider = 'google';
     config.googleServerKey = 'server-key';
@@ -441,7 +487,7 @@ test('core api', async (t) => {
       throw new Error('unexpected ' + url);
     });
     try {
-      const r = await get('/api/geocode?q=susan%20road&lang=ur');
+      const r = await get('/api/geocode?q=susan%20road&lang=ur&submit=1');
       const g = r.body.results.find((x) => x.source === 'google');
       assert.equal(g.kind, 'address');
       assert.equal(g.precision, 'street');
@@ -451,9 +497,12 @@ test('core api', async (t) => {
       assert.equal(u.searchParams.get('bounds'), '30.75,72.6|31.85,73.65');
       assert.equal(s.db.prepare("SELECT COUNT(*) AS n FROM geocode_cache WHERE provider = 'google'").get().n, 0);
       const cfg = (await get('/api/config')).body;
+      assert.equal(cfg.map.provider, 'google');
+      assert.equal(cfg.geocoder.provider, 'google');
+      assert.equal(cfg.routing.provider, 'google');
       assert.equal(cfg.routing.modes.two_wheeler, true);
-      assert.equal(cfg.map.googleBrowserKey, undefined, 'browser key only when the MAP provider is google');
-      assert.ok(!JSON.stringify(cfg).includes('server-key'));
+      assert.ok('googleBrowserKey' in cfg.map, 'browser key is sent when the MAP provider is google');
+      assert.ok(!JSON.stringify(cfg).includes('server-key'), 'server key never sent');
       const sr = await search('&mode=two_wheeler');
       assert.equal(sr.body.distance.method, 'route');
       assert.equal(sr.body.exact[0].durationS, 100);
@@ -841,7 +890,7 @@ test('core api', async (t) => {
   await t.test('rate limiting on geocode (hashed IP subject, 60/min)', async () => {
     clearRate();
     let last;
-    for (let i = 0; i < 61; i++) last = await s.fetch('/api/geocode?q=model');
+    for (let i = 0; i < 61; i++) last = await s.fetch('/api/geocode?q=model&submit=1');
     assert.equal(last.status, 429);
     const body = await last.json();
     assert.ok(body.error.details.retryAfterSec > 0);

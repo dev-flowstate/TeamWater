@@ -6,8 +6,9 @@
 // We therefore NEVER persist Google results in `geocode_cache` (or anywhere else). The only cache is a
 // small in-memory, per-process LRU with a 5-minute TTL, which absorbs repeated submissions of the same
 // query by the same visitors and vanishes on restart. Reverse lookups are not cached at all.
-// (If the importer stores a Google-derived coordinate, it must keep it `geocoded_pending` for admin
-// review and replace it with an admin-verified pin — see Google's terms on lat/lng retention.)
+// For the same reason lib/geocoder.geocodeAddress() (whose results the importer stores) never calls Google,
+// and lib/geocoder only enables this provider when the map itself is Google (MAP_PROVIDER=google), since
+// Google content may only be displayed on a Google map.
 const config = require('../../config');
 const { normalizeSearch } = require('../text');
 const { ProviderError, CircuitBreaker, fetchJson, TtlLru } = require('./common');
