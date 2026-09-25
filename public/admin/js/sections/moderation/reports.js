@@ -159,8 +159,9 @@ export default {
         res = await ctx.api('/reports', {
           query: cleanQuery({
             status: state.status, queue: state.queue ? 1 : '', severity: state.severity, plantCode: state.plantCode,
-            // from/to are not in the API contract yet; they are also applied to the loaded page below.
+            // The server filters by from/to and orders by priority/newest; 'oldest' is ordered client-side below.
             from: state.from, to: state.to,
+            sort: state.sort === 'oldest' ? 'newest' : state.sort,
             page: state.page, pageSize: PAGE_SIZE,
           }),
         });

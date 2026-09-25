@@ -132,7 +132,7 @@ body.is-login {
 .sidenav {
   background: var(--tw-surface-2); border-inline-end: 1px solid var(--tw-border);
   padding: var(--tw-space-4) var(--tw-space-2); position: sticky; top: 63px; align-self: start;
-  max-height: calc(100vh - 63px); overflow-y: auto;
+  height: calc(100vh - 63px); overflow-y: auto;
 }
 .nav-group + .nav-group { margin-top: var(--tw-space-4); }
 .nav-group-title {
@@ -159,7 +159,7 @@ body.is-login {
   .layout { grid-template-columns: minmax(0, 1fr); }
   .sidenav {
     position: fixed; top: 63px; bottom: 0; inset-inline-start: 0; z-index: 25; width: min(300px, 85vw);
-    max-height: none; box-shadow: var(--tw-shadow-lg); transform: translateX(-105%); visibility: hidden;
+    height: auto; max-height: none; box-shadow: var(--tw-shadow-lg); transform: translateX(-105%); visibility: hidden;
     transition: transform var(--tw-duration) var(--tw-ease), visibility 0s linear var(--tw-duration);
   }
   [dir='rtl'] .sidenav { transform: translateX(105%); }

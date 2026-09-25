@@ -21,7 +21,22 @@ function open(dbPath = config.dbPath) {
   conn.exec('PRAGMA foreign_keys = ON;');
   conn.exec('PRAGMA busy_timeout = 5000;');
   conn.exec(fs.readFileSync(path.join(__dirname, '..', 'db', 'schema.sql'), 'utf8'));
+  migrate(conn);
   return conn;
+}
+
+// Columns added after the first release. schema.sql creates them for new databases;
+// this adds them to databases created before (CREATE TABLE IF NOT EXISTS won't).
+const ADDED_COLUMNS = [
+  ['areas', 'kind', "TEXT NOT NULL DEFAULT 'area' CHECK (kind IN ('area', 'town', 'landmark'))"],
+  ['reports', 'proximity_basis', "TEXT CHECK (proximity_basis IN ('plant', 'area_centre'))"],
+];
+
+function migrate(conn) {
+  for (const [table, column, definition] of ADDED_COLUMNS) {
+    const exists = conn.prepare(`PRAGMA table_info(${table})`).all().some((c) => c.name === column);
+    if (!exists) conn.exec(`ALTER TABLE ${table} ADD COLUMN ${column} ${definition}`);
+  }
 }
 
 function getDb() {

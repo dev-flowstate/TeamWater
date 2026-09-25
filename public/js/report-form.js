@@ -1,7 +1,7 @@
 // /report.html?plant=CODE — community problem report (docs/ARCHITECTURE.md §6 "Reports & ratings", §8).
 // Plain ES module, no framework. Works fully by keyboard; every message is translated via /js/i18n.js.
 import {
-  $, h, svg, api, toResult, bootPage, setFieldError, showSummary, normalizePhone, displayPhone,
+  h, svg, api, toResult, bootPage, setFieldError, showSummary, normalizePhone, displayPhone,
   formatDuration, countdown, copyText, statusBadge, prefersReducedMotion, t, getLang, onLangChange, formatNumber,
 } from '/js/appeal.js';
 
@@ -586,8 +586,6 @@ function handleSubmitError(r) {
   const err = r.error || {};
   const details = err.details || {};
   const field = details.field;
-  const detail = err.message && getLang() === 'en' ? null : null; // server copy is English-only; we show our own
-  void detail;
   if (r.network) { state.general = { key: 'report.err.network' }; return paintErrors(true); }
   if (r.status === 429) {
     const sec = r.retryAfterSec || 60;

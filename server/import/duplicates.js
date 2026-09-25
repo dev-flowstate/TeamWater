@@ -15,9 +15,27 @@ const { getDb, tx, parseJson } = require('../lib/db');
 const { HttpError } = require('../lib/http');
 const { audit } = require('../lib/audit');
 const { nowIso } = require('../lib/time');
-const { insertEntry, addExtras, makeAreaLinker, rowView } = require('./pipeline');
+const { insertEntry, addExtras, makeAreaLinker, rowView, haversineM } = require('./pipeline');
 
 const STATUSES = ['open', 'merged', 'kept_separate', 'dismissed'];
+/** duplicate_candidates.reason codes. */
+const REASONS = {
+  duplicate_plant_code: 'The same Plant ID appears more than once in an imported file; the later row was held back.',
+  same_name_and_area: 'Two plants have the same name in the same area.',
+  nearby_position: 'Two plants are within 25 m of each other and have similar names.',
+};
+
+function reasonDetail(c, plant, other, row) {
+  if (c.reason === 'duplicate_plant_code' && row) {
+    const n = parseJson(row.normalized_json, {}) || {};
+    return `Plant ID '${n.code}' appears more than once in '${c.source_filename || 'the file'}' (first at row ${n.duplicateOfRow ?? '?'}); row ${row.row_number} was not imported.`;
+  }
+  if (c.reason === 'nearby_position' && plant && other && plant.latitude !== null && other.latitude !== null) {
+    return `About ${Math.round(haversineM(plant.latitude, plant.longitude, other.latitude, other.longitude))} m apart, with similar names (similarity ${Math.round((c.score || 0) * 100)}%).`;
+  }
+  if (c.reason === 'same_name_and_area' && plant && other) return `Both are named "${plant.name}" in ${plant.areaRaw || 'the same area'} (${plant.town || 'town not given'}).`;
+  return REASONS[c.reason] || c.reason;
+}
 
 function plantKeyFields(db, id) {
   if (!id) return null;
@@ -37,13 +55,15 @@ function plantKeyFields(db, id) {
 function candidateView(db, c) {
   const row = c.import_row_id ? db.prepare('SELECT * FROM import_rows WHERE id = ?').get(c.import_row_id) : null;
   const rv = row ? rowView(row) : null;
+  const plant = plantKeyFields(db, c.plant_id);
+  const other = plantKeyFields(db, c.other_plant_id);
+  const rowOut = rv ? { id: rv.id, rowNumber: rv.rowNumber, plantCode: rv.plantCode, values: rv.values, plant: rv.plant, warnings: rv.warnings, importedAsPlantId: rv.plantId } : null;
   return {
-    id: c.id, kind: c.other_plant_id || !c.import_row_id ? 'likely_duplicate' : 'duplicate_code_in_file',
-    status: c.status, reason: c.reason, score: c.score, batchId: c.batch_id, sourceFile: c.source_filename ?? null, detectedAt: c.committed_at ?? null,
+    id: c.id, kind: c.reason === 'duplicate_plant_code' ? 'duplicate_code_in_file' : 'likely_duplicate',
+    status: c.status, reason: c.reason, reasonDetail: reasonDetail(c, plant, other, row), score: c.score,
+    batchId: c.batch_id, sourceFile: c.source_filename ?? null, detectedAt: c.committed_at ?? null,
     resolutionNote: c.resolution_note, resolvedAt: c.resolved_at, resolvedBy: c.resolved_by_username ?? null,
-    plant: plantKeyFields(db, c.plant_id),
-    other: plantKeyFields(db, c.other_plant_id),
-    row: rv ? { id: rv.id, rowNumber: rv.rowNumber, plantCode: rv.plantCode, values: rv.values, plant: rv.plant, warnings: rv.warnings, importedAsPlantId: rv.plantId } : null,
+    plant, other, row: rowOut, importRow: rowOut,
   };
 }
 
@@ -105,7 +125,7 @@ function resolveDuplicate(id, { action, note }, { req = null, actorLabel = null 
       db.prepare('UPDATE duplicate_candidates SET status = ?, resolution_note = ?, resolved_by = ?, resolved_at = ?, other_plant_id = ? WHERE id = ?')
         .run(status, extra.note || note, userId, now, 'otherPlantId' in extra ? extra.otherPlantId : c.other_plant_id, c.id);
     };
-    const inFile = !c.other_plant_id && !!c.import_row_id;
+    const inFile = c.reason === 'duplicate_plant_code' && !!c.import_row_id;
     let result;
 
     if (action === 'merge') {
@@ -158,4 +178,4 @@ function resolveDuplicate(id, { action, note }, { req = null, actorLabel = null 
   });
 }
 
-module.exports = { listDuplicates, resolveDuplicate, mergePlants, STATUSES };
+module.exports = { listDuplicates, resolveDuplicate, mergePlants, STATUSES, REASONS };

@@ -325,13 +325,28 @@ test('import: pipeline, duplicates, routes and the real file', async (t) => {
     await assert.rejects(pipeline.commitBatch(batchA, {}), (err) => err.status === 409);
   });
 
-  await t.test('geocoder failure is safe', async () => {
-    const buf = await xlsxBuffer([{ name: 'S', rows: [['Plant ID', 'Address'], ['TG-0001', '1 Main Road']] }]);
-    const { batchId } = await pipeline.createBatch({ buffer: buf, filename: 'geo.xlsx' });
-    await pipeline.previewBatch(batchId, {});
-    const sum = await pipeline.commitBatch(batchId, { geocoder: async () => { throw new Error('down'); } });
-    assert.equal(sum.new, 1);
+  await t.test('geocoder failure or area-level matches never produce coordinates', async () => {
+    const commitWith = async (code, geocoder) => {
+      const buf = await xlsxBuffer([{ name: 'S', rows: [['Plant ID', 'Town', 'Address'], [code, 'Jinnah Town', 'Model Town']] }]);
+      const { batchId } = await pipeline.createBatch({ buffer: buf, filename: `${code}.xlsx` });
+      await pipeline.previewBatch(batchId, {});
+      return pipeline.commitBatch(batchId, geocoder === undefined ? {} : { geocoder });
+    };
+    const sum = await commitWith('TG-0001', async () => { throw new Error('down'); });
+    assert.deepEqual([sum.new, sum.geocoded], [1, 0]);
     assert.equal(plant('TG-0001').coord_status, 'missing');
+    await commitWith('TG-0002', async () => ({ lat: 31.4, lng: 73.1, precision: 'area', ambiguous: false, source: 'gazetteer' }));
+    assert.deepEqual([plant('TG-0002').coord_status, plant('TG-0002').latitude], ['missing', null], 'an area centroid is never stored as a plant position');
+    await commitWith('TG-0003', async () => ({ lat: 40.7, lng: -74.0, precision: 'exact', source: 'stub' }));
+    assert.equal(plant('TG-0003').latitude, null, 'out-of-bounds geocodes are dropped');
+    await commitWith('TG-0004', async () => ({ lat: 31.41, lng: 73.09, precision: 'exact', ambiguous: true, source: 'stub', ref: 'osm:node/1' }));
+    const p4 = plant('TG-0004');
+    assert.deepEqual([p4.coord_status, p4.needs_review], ['geocoded_pending', 1]);
+    assert.deepEqual(JSON.parse(p4.review_reasons_json).filter((c) => c.startsWith('geocode')).sort(), ['geocode_ambiguous', 'geocoded_location_unverified']);
+    assert.match(p4.coord_note, /osm:node\/1/);
+    // The real geocoder (feature-detected; GEOCODER_PROVIDER=none in tests) must be safe too.
+    await commitWith('TG-0005', undefined);
+    assert.equal(plant('TG-0005').coord_status, 'missing');
   });
 
   await t.test('re-import: update vs unchanged, blanks never erase, admin curation survives', async () => {
@@ -429,7 +444,7 @@ test('import: pipeline, duplicates, routes and the real file', async (t) => {
     assert.equal(csvRes.status, 200);
     assert.match(csvRes.headers.get('content-type'), /text\/csv/);
     assert.match(csvRes.headers.get('content-disposition'), /attachment; filename="import-\d+-errors\.csv"/);
-    const csvText = (await csvRes.text()).replace(/^﻿/, '');
+    const csvText = (await csvRes.text()).replace(/^\uFEFF/, '');
     const csv = parseCsv(csvText);
     assert.deepEqual(csv[0], ['row_number', 'plant_code', 'severity', 'field', 'code', 'message', 'original_value']);
     const err = csv.find((r) => r[2] === 'error');
@@ -440,7 +455,7 @@ test('import: pipeline, duplicates, routes and the real file', async (t) => {
     const malformed = csv.find((r) => r[4] === 'plant_code_malformed');
     assert.equal(malformed[1], "'+TC-0002");
     assert.ok(csv.some((r) => r[2] === 'notice' && r[4] === 'no_coordinates'));
-    const onlyErrors = parseCsv((await (await editor.fetch(`/api/admin/imports/${id}/errors.csv?severity=error`)).text()).replace(/^﻿/, ''));
+    const onlyErrors = parseCsv((await (await editor.fetch(`/api/admin/imports/${id}/errors.csv?severity=error`)).text()).replace(/^\uFEFF/, ''));
     assert.equal(onlyErrors.length, 2);
 
     const cm = await editor.fetch(`/api/admin/imports/${id}/commit`, { method: 'POST' });
@@ -471,7 +486,7 @@ test('import: pipeline, duplicates, routes and the real file', async (t) => {
     await assert.rejects(pipeline.createBatch({ buffer: Buffer.from('PK\u0003\u0004 truncated zip', 'latin1'), filename: 'broken.xlsx' }), (e) => e.status === 422);
     const { zipUncompressedSize } = require('../server/import/parse');
     assert.ok(zipUncompressedSize(fs.readFileSync(REAL_FILE)) > 0);
-    const csv = Buffer.from('﻿Plant ID,Town/Tehsil,Capacity (Gallons Per Hour)\r\nTD-0001,Samundri,"5,000 GPH"\r\n,Samundri,1\r\n');
+    const csv = Buffer.from('\uFEFFPlant ID,Town/Tehsil,Capacity (Gallons Per Hour)\r\nTD-0001,Samundri,"5,000 GPH"\r\n,Samundri,1\r\n');
     const created = await pipeline.createBatch({ buffer: csv, filename: 'plants.csv' });
     const pv = await pipeline.previewBatch(created.batchId, {});
     assert.deepEqual([pv.summary.new, pv.summary.rejected], [1, 1]);
@@ -487,6 +502,10 @@ test('import: pipeline, duplicates, routes and the real file', async (t) => {
     const likely = list.items.find((c) => c.kind === 'likely_duplicate' && c.other);
     assert.ok(inFile && likely);
     assert.equal(inFile.row.rowNumber, 5);
+    assert.equal(inFile.reason, 'duplicate_plant_code');
+    assert.match(inFile.reasonDetail, /first at row 2\); row 5 was not imported/);
+    assert.equal(inFile.importRow.values['Plant ID'], 'TA-0001');
+    assert.ok(['same_name_and_area', 'nearby_position'].includes(likely.reason));
     assert.equal(inFile.row.values['Plant Name'], 'Model Town Filter Plant (repeat)');
     assert.ok(likely.plant.code && likely.other.code && 'technologyRaw' in likely.plant);
 

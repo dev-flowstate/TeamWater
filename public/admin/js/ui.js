@@ -43,6 +43,9 @@ export function append(parent, children) {
 
 export function clear(el) { el.replaceChildren(); return el; }
 
+/** Like el.replaceChildren() but skips null/false (native DOM would insert the text "null"). */
+export function replace(el, ...children) { el.replaceChildren(); return append(el, children); }
+
 let uidSeq = 0;
 export const uid = (prefix = 'tw') => `${prefix}-${++uidSeq}`;
 

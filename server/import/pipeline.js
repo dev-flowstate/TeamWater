@@ -340,7 +340,7 @@ function csvFromRows(rows, { severity } = {}) {
       out.push([r.rowNumber, r.plantCode ?? '', sev, it.field ?? '', it.code ?? '', it.message ?? '', it.value ?? '']);
     }
   }
-  return '﻿' + toCsv(out);
+  return '\uFEFF' + toCsv(out);
 }
 
 // ───────────────────────── public API ─────────────────────────
@@ -633,7 +633,7 @@ async function commitBatch(batchId, { userId = null, req = null, actorLabel = nu
     // In-file duplicate codes -> review queue (not imported)
     const findPlant = db.prepare('SELECT id FROM plants WHERE plant_code = ?');
     const openSame = db.prepare(`SELECT dc.id FROM duplicate_candidates dc JOIN import_rows ir ON ir.id = dc.import_row_id
-                                 WHERE dc.status = 'open' AND dc.other_plant_id IS NULL AND dc.plant_id IS ? AND ir.raw_json = ?`);
+                                 WHERE dc.status = 'open' AND dc.reason = 'duplicate_plant_code' AND dc.plant_id IS ? AND ir.raw_json = ?`);
     const insCand = db.prepare(`INSERT INTO duplicate_candidates (batch_id, import_row_id, plant_id, other_plant_id, reason, score, status)
                                 VALUES (?, ?, ?, ?, ?, ?, 'open')`);
     for (const p of plan) {
@@ -751,6 +751,6 @@ async function importFromFile({ filePath, sheet, mapping, actorLabel = 'cli', up
 module.exports = {
   createBatch, previewBatch, commitBatch, cancelBatch, errorsCsv, importFromFile, getRows, listBatches, getBatchDetail,
   // exported for the duplicates workflow and tests
-  insertEntry, addExtras, makeAreaLinker, mergeForUpdate, findLikelyDuplicates, validateMapping, interpretGeocode, rowView,
+  insertEntry, addExtras, makeAreaLinker, mergeForUpdate, findLikelyDuplicates, validateMapping, interpretGeocode, rowView, haversineM,
   TARGET_FIELDS, DATA_ISSUES,
 };

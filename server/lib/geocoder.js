@@ -1,6 +1,6 @@
 'use strict';
 // Place search for the public UI and address geocoding for the importer.
-//   search(q, { lang })            → contract §6 GET /api/geocode body
+//   search(q, { lang, submit })    → contract §6 GET /api/geocode body (external provider only when submit)
 //   reverse(lat, lng, { lang })    → { label, source, precision } | { label: null }   (never cached/stored)
 //   geocodeAddress(text, { town }) → { lat, lng, precision: 'exact'|'street'|'area', ambiguous, source, ref } | null
 //
@@ -56,7 +56,11 @@ function plantCounts() {
   const db = getDb();
   const base = `FROM plants WHERE status NOT IN ('permanently_closed','decommissioned') ${visibleDemoSql()}`;
   const byArea = new Map(db.prepare(`SELECT area_id, COUNT(*) AS n ${base} AND area_id IS NOT NULL GROUP BY area_id`).all().map((r) => [r.area_id, r.n]));
-  const byTown = new Map(db.prepare(`SELECT town, COUNT(*) AS n ${base} AND town IS NOT NULL GROUP BY town`).all().map((r) => [normalizeSearch(r.town), r.n]));
+  const byTown = new Map();
+  for (const r of db.prepare(`SELECT town, COUNT(*) AS n ${base} AND town IS NOT NULL GROUP BY town`).all()) {
+    const k = normalizeSearch(r.town);
+    byTown.set(k, (byTown.get(k) || 0) + r.n);
+  }
   return { byArea, byTown };
 }
 

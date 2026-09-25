@@ -4,7 +4,7 @@
 import {
   h, pick, maybeJson, listOf, pageHeader, card, defList, dataTable, formField, setFieldError, showFormError, clearFormErrors,
   withBusy, displayValue, notProvided, notice, badge, loadingBlock, errorBlock, formatNumber, todayIso, keyLabel,
-  redactPhones, safeUrl, uid,
+  redactPhones, safeUrl, uid, replace, append,
 } from '../ui.js';
 import {
   plantCode, plantName, isDemo, needsReview, precisionBadge, statusBadge, demoBadge, statusCode, statusSource, coordStatus, latLng,
@@ -147,7 +147,7 @@ export default {
         type: 'button', onClick: () => { const c = document.getElementById(id); if (!c) return; c.scrollIntoView({ block: 'start' }); const hd = c.querySelector('h2'); hd?.setAttribute('tabindex', '-1'); hd?.focus({ preventScroll: true }); },
       }, label))));
 
-      root.replaceChildren(
+      replace(root,
         head,
         isDemo(plant) ? notice('demo', h('p', null, h('strong', null, 'DEMO — not a real plant. '), 'This record exists only because demonstration data is switched on.')) : null,
         nav,
@@ -233,7 +233,7 @@ export default {
       const hasPhone = !blank(pick(plant, 'public_phone', 'publicPhone'));
       const phone = formField({ label: 'Replace public contact number', name: 'public_phone', type: 'tel', hint: `The plant's own published number only — never a reporter's. ${hasPhone ? 'A number is on file (not shown here).' : 'No number on file.'} Leave empty to keep it unchanged.`, attrs: { autocomplete: 'off', inputmode: 'tel', maxlength: '30' } });
       const phoneRemove = hasPhone ? formField({ label: 'Remove the public contact number', name: 'public_phone_remove', type: 'checkbox' }) : null;
-      grid.append(phone, phoneRemove);
+      append(grid, [phone, phoneRemove]);
       const reason = formField({ label: 'Reason for this change', name: 'reason', type: 'textarea', required: true, rows: 2, hint: 'Required. Say how you know (site visit, operator, document). Recorded in the audit log.', dir: 'auto', className: 'span-all' });
       grid.append(reason);
       const form = h('form', { novalidate: true, 'aria-label': 'Edit plant details' }, grid,

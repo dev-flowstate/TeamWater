@@ -73,7 +73,7 @@ router.get('/imports/:id/errors.csv', requirePermission('imports'), (req, res) =
 
 router.post('/imports/:id/commit', requirePermission('imports'), async (req, res) => {
   const summary = await pipeline.commitBatch(batchId(req), { userId: req.user.id, req });
-  res.json({ summary });
+  res.json({ summary, batchId: summary.batchId, filename: summary.sourceFile, sheet: summary.sheet, committedAt: summary.importedAt });
 });
 
 router.post('/imports/:id/cancel', requirePermission('imports'), (req, res) => {
