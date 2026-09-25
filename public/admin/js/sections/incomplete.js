@@ -10,7 +10,7 @@ const KINDS = [
   { key: 'noTests', label: 'No water tests', focus: 'tests', fix: 'Add test', help: 'Water quality is shown as “Unknown”.' },
   { key: 'needsReview', label: 'Flagged for review', focus: 'details', fix: 'Review', browse: '#/plants?needsReview=1', help: 'Inconsistent or implausible source values.' },
 ];
-const MISSING_LABEL = { coordinates: 'Coordinates', name: 'Name', address: 'Address', openingHours: 'Opening hours', collectionLimit: 'Collection limit', contact: 'Contact', accessibility: 'Accessibility', waterTests: 'Water tests', hours: 'Opening hours', location: 'Location' };
+const MISSING_LABEL = { noExactLocation: 'Exact location', noLocationAtAll: 'Any location', noName: 'Name', noHours: 'Opening hours', noTests: 'Water tests', needsReview: 'Needs review', coordinates: 'Coordinates', name: 'Name', address: 'Address', openingHours: 'Opening hours', collectionLimit: 'Collection limit', contact: 'Contact', accessibility: 'Accessibility', waterTests: 'Water tests', hours: 'Opening hours', location: 'Location' };
 
 export default {
   id: 'incomplete',
@@ -30,7 +30,7 @@ export default {
       ctx.setQuery({ kind, page: page > 1 ? page : '' });
       listBox.setAttribute('aria-busy', 'true');
       let data;
-      try { data = await ctx.api('/incomplete', { query: { kind, type: kind, page } }); } catch (err) {
+      try { data = await ctx.api('/incomplete', { query: { missing: kind, page } }); } catch (err) {
         listBox.removeAttribute('aria-busy');
         countsBox.replaceChildren(errorBlock(err, load));
         listBox.replaceChildren();

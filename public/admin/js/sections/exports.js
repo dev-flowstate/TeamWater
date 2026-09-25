@@ -21,7 +21,13 @@ export default {
     if (ctx.can('export:plants')) {
       el.append(card('Plants',
         h('p', null, 'All plant records with original source values, location precision, status source and verification dates. No private data.'),
-        h('div', { class: 'form-actions' }, button('Download plants (CSV)', '/export/plants.csv'), button('Download plants (JSON)', '/export/plants.json', undefined, 'btn-secondary'))));
+        (() => {
+          const demo = formField({ label: 'Include demonstration (DEMO-) plants', name: 'includeDemo', type: 'checkbox', hint: 'Off by default: demo plants are not real.' });
+          const q = () => (demo.control.checked ? { includeDemo: 1 } : undefined);
+          return h('div', null, demo, h('div', { class: 'form-actions' },
+            h('button', { type: 'button', class: 'btn btn-primary', onClick: (e) => dl(e.currentTarget, '/export/plants.csv', q()) }, 'Download plants (CSV)'),
+            h('button', { type: 'button', class: 'btn btn-secondary', onClick: (e) => dl(e.currentTarget, '/export/plants.json', q()) }, 'Download plants (JSON)')));
+        })()));
     }
     if (ctx.can('export:reports')) {
       el.append(card('Community reports',

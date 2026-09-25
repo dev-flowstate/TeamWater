@@ -24,11 +24,12 @@
     <!-- ───────────── Home / search ───────────── -->
     <div id="home-view">
       <section class="hero" aria-labelledby="hero-title">
-        <div class="hero-art" aria-hidden="true" data-img-slot>
-          <img class="hero-photo" src="/img/hero-shore-1600.webp" srcset="/img/hero-shore-800.webp 800w, /img/hero-shore-1600.webp 1600w" sizes="(max-width: 899px) 100vw, 60vw" alt="" data-optional decoding="async" fetchpriority="low">
-          <img class="hero-heron" src="/img/heron.svg" alt="" data-optional decoding="async">
-          <img class="hero-gulls" src="/img/gulls.svg" alt="" data-optional decoding="async" loading="lazy">
+        <div class="hero-art" aria-hidden="true">
+          <span class="hero-sun"></span>
+          <img class="hero-heron" src="/img/heron.svg" alt="" width="120" height="160" data-optional decoding="async">
+          <img class="hero-gulls" src="/img/gulls.svg" alt="" width="200" height="90" data-optional decoding="async">
         </div>
+        <div class="hero-shore" aria-hidden="true"></div>
         <div class="hero-inner wrap">
           <p class="eyebrow" data-i18n="search.hero.eyebrow">Water filtration plants · Faisalabad District</p>
           <h1 id="hero-title" class="hero-title" data-i18n="search.hero.title">Find a water filtration plant near you.</h1>
@@ -154,9 +155,7 @@
         </div>
       </section>
 
-      <div class="shore-band" aria-hidden="true" data-img-slot>
-        <img src="/img/shoreline.svg" alt="" data-optional loading="lazy" decoding="async">
-      </div>
+      <div class="shore-band" aria-hidden="true"></div>
     </div>
 
     <!-- ───────────── Results (rendered by /js/results.js) ───────────── -->

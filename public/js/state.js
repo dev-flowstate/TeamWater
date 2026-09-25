@@ -1,6 +1,7 @@
 // URL-backed state for the find/results page, so back/forward and shared links work.
 //   ?lat=&lng=&label=&sort=nearest|recommended&mode=driving|walking&plant=CODE&group=exact|area
-//    &view=map|list&technology=&operatorType=&hideClosed=1&area=<areaId>&lang=
+//    &view=map|list&technology=&operatorType=&hideClosed=1&area=<areaId>&town=<name>&lang=
+// area/town (without lat/lng) = the text list for plants that have no usable map position.
 // The search location lives only in the URL and memory — it is never stored by the site.
 
 const DEFAULTS = { sort: 'nearest', mode: 'driving', view: 'map' };
@@ -21,8 +22,9 @@ export function readState(search = location.search) {
     lng: hasPoint ? lng : null,
     label: (p.get('label') || '').slice(0, 160) || null,
     area: /^\d{1,9}$/.test(p.get('area') || '') ? p.get('area') : null,
+    town: (p.get('town') || '').slice(0, 200) || null,
     sort: p.get('sort') === 'recommended' ? 'recommended' : 'nearest',
-    mode: ['driving', 'walking'].includes(p.get('mode')) ? p.get('mode') : 'driving',
+    mode: ['driving', 'walking', 'two_wheeler'].includes(p.get('mode')) ? p.get('mode') : 'driving',
     plant: /^[A-Za-z0-9-]{1,40}$/.test(p.get('plant') || '') ? p.get('plant') : null,
     group: ['exact', 'area'].includes(p.get('group')) ? p.get('group') : null,
     view: p.get('view') === 'list' ? 'list' : 'map',
@@ -34,11 +36,11 @@ export function readState(search = location.search) {
 }
 
 /** True when the state describes a results view (a point, or an area text list). */
-export const isResultsState = (s) => (s.lat !== null && s.lng !== null) || !!s.area;
+export const isResultsState = (s) => (s.lat !== null && s.lng !== null) || !!s.area || !!s.town;
 
 /** Same result set? (ranking must stay stable while only the selected plant/view changes) */
 export function sameQuery(a, b) {
-  return a.lat === b.lat && a.lng === b.lng && a.area === b.area && a.sort === b.sort && a.mode === b.mode &&
+  return a.lat === b.lat && a.lng === b.lng && a.area === b.area && a.town === b.town && a.sort === b.sort && a.mode === b.mode &&
     a.technology === b.technology && a.operatorType === b.operatorType && a.hideClosed === b.hideClosed;
 }
 
@@ -49,6 +51,7 @@ export function toSearch(s) {
     p.set('lng', String(round6(s.lng)));
   }
   if (s.area) p.set('area', s.area);
+  if (s.town) p.set('town', s.town);
   if (s.label) p.set('label', s.label);
   if (s.sort && s.sort !== DEFAULTS.sort) p.set('sort', s.sort);
   if (s.mode && s.mode !== DEFAULTS.mode) p.set('mode', s.mode);

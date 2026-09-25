@@ -24,6 +24,9 @@ export function toast(message, type = 'info') {
     h('p', { class: 'toast-msg' }, h('strong', null, `${label}: `), String(message ?? '')),
     h('button', { type: 'button', class: 'toast-close', 'aria-label': 'Dismiss notification', onClick: () => item.remove() }, '×'));
   (tone === 'error' ? a : p).appendChild(item);
+  // Keep at most three visible; the oldest go first.
+  const all = [...p.children, ...a.children];
+  for (const old of all.slice(0, Math.max(0, all.length - 3))) if (old !== item) old.remove();
   const ms = tone === 'error' ? 12000 : 6000;
   let timer = setTimeout(() => item.remove(), ms);
   item.addEventListener('mouseenter', () => clearTimeout(timer));

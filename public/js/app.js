@@ -45,8 +45,10 @@ async function home(config) {
   const { initSearch } = await import('/js/search.js');
   const search = initSearch({
     config: cfg,
-    onSubmit: ({ lat, lng, label }) => go({ lat, lng, label, area: null }),
-    onAreaList: ({ areaId, label }) => go({ lat: null, lng: null, area: String(areaId), label }),
+    onSubmit: ({ lat, lng, label }) => go({ lat, lng, label, area: null, town: null }),
+    onAreaList: ({ areaId, town, label }) => go(town
+      ? { lat: null, lng: null, area: null, town, label }
+      : { lat: null, lng: null, area: String(areaId), town: null, label }),
   });
 
   function go(loc) {
@@ -67,7 +69,7 @@ async function home(config) {
           config: cfg,
           onChangeLocation: () => {
             const s = readState();
-            writeState({ lat: null, lng: null, area: null, label: null, sort: s.sort, mode: s.mode, view: 'map' });
+            writeState({ lat: null, lng: null, area: null, town: null, label: null, sort: s.sort, mode: s.mode, view: 'map' });
             route(readState(), { focus: true, fromResults: s });
           },
         });

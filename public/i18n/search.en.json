@@ -1,14 +1,12 @@
 {
   "meta.title": "Team Water — Find a water filtration plant in Faisalabad",
   "meta.titleResults": "Nearby filtration plants — Team Water",
-
   "hero.eyebrow": "Water filtration plants · Faisalabad District",
   "hero.title": "Find a water filtration plant near you.",
   "hero.accent": "clean water, close to home",
   "hero.noAccount": "No account needed.",
   "hero.dataNote": "Plant details come from an imported spreadsheet and are not verified on site.",
   "hero.aboutLink": "About the data",
-
   "form.aria": "Find filtration plants",
   "form.label": "Where are you?",
   "form.placeholder": "e.g. Model Town, مدینہ ٹاؤن, gulberg",
@@ -17,7 +15,6 @@
   "form.submit": "Search filtration plants",
   "form.needLocation": "Choose a place first: type an area, use your location, or choose on the map.",
   "form.geocodeDown": "Place search isn't responding right now. You can use your location or choose on the map instead.",
-
   "combo.noPosition": "No position recorded",
   "combo.approx": "Area (approximate)",
   "combo.plants": "{n} plants listed",
@@ -28,11 +25,9 @@
   "combo.externalDown": "Street-level search is unavailable right now, so only known areas and landmarks are shown.",
   "combo.count": "{n} suggestions. Use the up and down arrow keys to review, Enter to choose.",
   "combo.error": "Suggestions are unavailable right now. You can still use your location or choose on the map.",
-
   "areaPanel.title": "We don't have a map position for {area}.",
   "areaPanel.text": "Its plants can't be ranked by distance, but you can still see every plant listed there, or pick your own spot on the map.",
   "areaPanel.list": "Show plants listed in this area",
-
   "chosen.approxLabel": "{label} (area centre, approximate)",
   "chosen.from.geocode": "Searching near",
   "chosen.from.gps": "Your location",
@@ -42,7 +37,6 @@
   "chosen.clear": "Clear chosen location",
   "chosen.pinned": "Pinned location ({lat}, {lng})",
   "chosen.finding": "Finding the place name…",
-
   "locate.button": "Use my location",
   "locate.explain": "Your location is used only to find nearby plants. It isn't stored, and the result is approximate.",
   "locate.unsupported": "This browser can't share your location. Search by name or choose on the map instead.",
@@ -55,7 +49,6 @@
   "locate.timeout": "Finding your location took too long. Try again, search by name, or choose on the map.",
   "locate.unavailable": "Your device couldn't work out your location. Search by name or choose on the map instead.",
   "locate.typeInstead": "Type a place",
-
   "pick.button": "Choose on map",
   "pick.help": "Tap or click the map to drop a pin, then drag it to adjust. Keyboard: move the map with the arrow keys, then choose “Use map centre”.",
   "pick.center": "Use map centre",
@@ -64,7 +57,6 @@
   "pick.failed": "The map couldn't be loaded. Please search by name or use your location instead.",
   "pick.placed": "Pin placed. Press Search filtration plants to continue.",
   "pick.moved": "Pin moved.",
-
   "map.origin": "Your chosen location",
   "map.label": "Map of nearby filtration plants",
   "map.markerLabel": "Plant {rank}: {name}, {dist}. Show details",
@@ -75,7 +67,6 @@
   "map.tiles": "The map service may be unavailable. Plant markers and areas still work, and the text list shows the same ranking.",
   "map.showList": "Show text list",
   "map.googleFailed": "Google Maps couldn't be loaded, so OpenStreetMap is shown instead.",
-
   "steps.title": "How it works",
   "steps.1.title": "Choose a place",
   "steps.1.text": "Search for your area, share your location, or drop a pin on the map.",
@@ -83,7 +74,6 @@
   "steps.2.text": "Browse one plant at a time with the arrows. Each card says exactly what is recorded — and what isn't.",
   "steps.3.title": "Go, or tell us",
   "steps.3.text": "Get directions where a plant's exact site is known, or report a problem so staff can check it.",
-
   "honesty.title": "What the data can — and can't — tell you",
   "honesty.loc.title": "Locations are approximate.",
   "honesty.loc.text": "The spreadsheet lists each plant's area, not its exact site, so most results point to an area centre.",
@@ -94,7 +84,6 @@
   "honesty.quality.title": "Ratings aren't safety tests.",
   "honesty.quality.text": "Water-test evidence and community ratings are kept apart. No test on record means “Unknown”.",
   "honesty.more": "Read about the data",
-
   "results.locating": "Your chosen location",
   "results.eyebrow": "Filtration plants near",
   "results.eyebrowArea": "Plants listed in",
@@ -105,16 +94,13 @@
   "results.loading": "Finding nearby plants…",
   "results.pinnedAt": "Pinned location ({lat}, {lng})",
   "results.announce": "{n} plants in this list. Showing plant 1.",
-
   "group.label": "Show",
   "group.exact": "Exact sites",
   "group.area": "Listed by area",
   "group.announce": "{group}: {n} plants.",
-
   "sort.label": "Sort by",
   "sort.nearest": "Nearest",
   "sort.recommended": "Recommended",
-
   "mode.label": "Travel mode",
   "mode.driving": "Driving",
   "mode.walking": "Walking",
@@ -122,7 +108,6 @@
   "mode.reason.disabled": "Road routing is switched off on this site, so distances are straight-line estimates.",
   "mode.reason.walking": "Walking routes aren't available from the routing service; walking uses straight-line distance.",
   "mode.reason.provider_unavailable": "The routing service isn't responding, so distances are straight-line estimates for now.",
-
   "filters.button": "Filters",
   "filters.any": "Any",
   "filters.technology": "Filtration technology",
@@ -130,11 +115,9 @@
   "filters.hideClosed": "Hide temporarily closed plants",
   "filters.clear": "Clear filters",
   "filters.note": "Values are shown exactly as recorded in the source.",
-
   "view.label": "View",
   "view.map": "Map",
   "view.list": "List",
-
   "notice.noCoordsTitle": "Exact plant sites aren't recorded yet.",
   "notice.noCoords": "The source spreadsheet has no plant coordinates, so we can't show exact sites or give directions. The list below shows plants by their area — each position is an approximate area centre.",
   "notice.noExactTitle": "No plants with an exact site match here.",
@@ -144,21 +127,18 @@
   "notice.noLocation": "{n} listed plants aren't included because their area has no known map position. Search for the area by name to list them.",
   "notice.areaNoPosTitle": "Missing plant coordinates",
   "notice.areaNoPos": "Neither these plants nor their area have a recorded map position, so distances and directions aren't available. They're listed by plant ID.",
-
   "list.title": "{n} plants, in ranking order",
   "list.titleArea": "{n} plants listed in this area",
   "list.hint": "Same ranking as the map. Select a plant to see its details.",
   "list.hintAreaGroup": "Distances are to each area's centre, not to the plant itself.",
   "list.hintArea": "Ordered by plant ID.",
   "list.drawer": "Text list ({n})",
-
   "empty.title": "No plants found near this location",
   "empty.text": "There are no listed plants within reach of this point. Try a different area, or zoom out and pin a new spot.",
   "empty.filtered": "No plants match your filters here. Try clearing the filters.",
   "empty.group": "No plants in this group. Try the other group.",
   "empty.show.exact": "Show exact sites ({n})",
   "empty.show.area": "Show plants listed by area ({n})",
-
   "error.title": "We couldn't load the plant list",
   "error.down": "The Team Water service isn't responding right now. Please try again in a moment.",
   "error.timeout": "The service took too long to answer. Please try again.",
@@ -166,10 +146,8 @@
   "error.invalid": "That location couldn't be searched. Please choose the place again.",
   "error.noFake": "We never show made-up results in place of real data.",
   "error.configDown": "Some site settings couldn't be loaded, so parts of the page may not work. The map uses default settings.",
-
   "sheet.expand": "Show more of the card",
   "sheet.collapse": "Show more of the map",
-
   "card.panelLabel": "Plant details",
   "card.regionLabel": "Plant details. Use the left and right arrow keys to move between plants.",
   "card.roledesc": "plant browser",
@@ -185,10 +163,8 @@
   "card.loadingDetails": "Loading the full record…",
   "card.detailError": "Some record details couldn't be loaded.",
   "card.detailUnavailable": "Not available right now.",
-
   "value.notProvided": "Not provided",
   "value.notVerified": "Not verified",
-
   "status.verified": "Operating — verified by staff",
   "status.verifiedOn": "Operating — verified by staff on {date}",
   "status.listedSpreadsheet": "Listed as operational in the source spreadsheet — undated, not verified",
@@ -203,22 +179,18 @@
   "status.short.tempClosed": "Temporarily closed",
   "status.short.closed": "Closed",
   "status.short.unknown": "Status unknown",
-
   "hours.openNow": "Open now",
   "hours.closedNow": "Closed now",
-
   "precision.exactSource": "Exact site (from source, not verified)",
   "precision.exactVerified": "Exact site (verified)",
   "precision.area": "Approximate — area only",
   "precision.none": "No position recorded",
-
   "distance.straight": "Approximate straight-line distance",
   "distance.areaCentre": "Approximate distance to area centre",
   "distance.route": "Travel distance by road",
   "distance.timeDrive": "{time} by car",
   "distance.timeWalk": "{time} on foot",
   "distance.none": "Distance not available — no map position recorded.",
-
   "rec.title": "Why it's recommended",
   "reason.join": "{list}.",
   "reason.sep": "; ",
@@ -240,13 +212,11 @@
   "reason.recently_verified": "recently checked by staff",
   "reason.not_verified": "never checked by staff",
   "reason.location_approximate": "location is approximate (area only)",
-
   "dir.google": "Get directions",
   "dir.osm": "OpenStreetMap",
   "dir.viewArea": "View area on map",
   "dir.areaOnly": "Exact location not recorded — directions would be to the area centre, not the plant.",
   "dir.noLocation": "No location recorded for this plant, so directions aren't available.",
-
   "route.loading": "Checking the road route…",
   "route.ok": "Route preview: {dist} by road, {time} ({mode}).",
   "route.straightLabel": "Straight line — not a route",
@@ -254,7 +224,6 @@
   "route.reason.mode_unsupported": "road routes aren't available for this travel mode.",
   "route.reason.disabled": "road routing is switched off on this site.",
   "route.reason.no_exact_location": "this plant has no exact location.",
-
   "fact.address": "Address",
   "fact.landmark": "Landmark",
   "fact.hours": "Opening hours",
@@ -270,7 +239,6 @@
   "fact.accessibility": "Accessibility",
   "fact.phone": "Public phone",
   "fact.contactNote": "Contact note",
-
   "capacity.main": "{n} gallons per hour (GPH)",
   "capacity.basis": "production capacity as recorded; {gallon}.",
   "capacity.gallonUnspecified": "gallon type not specified",
@@ -279,7 +247,6 @@
   "capacity.litres": "About {n} litres per hour.",
   "capacity.notAllowance": "Not a per-person allowance.",
   "capacity.rawOnly": "Recorded as",
-
   "quality.title": "Water quality evidence",
   "quality.historical": "Historical",
   "quality.unknownTitle": "Unknown",
@@ -304,7 +271,6 @@
   "quality.within.no": "No",
   "quality.within.na": "Not assessed",
   "quality.report": "Lab report",
-
   "rating.title": "Community experience rating",
   "rating.notSafety": "Not a water-safety measure",
   "rating.tooFew": "Too few ratings",
@@ -313,7 +279,6 @@
   "rating.score": "{score} out of 5",
   "rating.count": "from {n} ratings",
   "rating.adjusted": "adjusted for small numbers",
-
   "reports.title": "Community reports",
   "reports.confirmed": "Confirmed issue: {category}",
   "reports.confirmedOn": "confirmed {date}",
@@ -324,7 +289,6 @@
   "reports.unverifiedNote": "Unverified reports don't change the plant's official status.",
   "reports.resolved": "{n} problems resolved in the last 90 days.",
   "reports.none": "No open community reports.",
-
   "record.title": "About this record",
   "record.demo": "Demonstration record — not taken from any real source.",
   "record.file": "Source file",
@@ -338,9 +302,31 @@
   "record.noMissing": "Nothing listed as missing.",
   "record.valuesTitle": "Values exactly as recorded",
   "record.sourcesTitle": "Sources",
-
   "diagram.title": "Illustrative treatment diagram",
   "diagram.intake": "Water source:",
   "diagram.noStages": "No treatment stages could be read from the recorded technology ({raw}).",
-  "diagram.otherStages": "Other treatment stages, if any, are not recorded."
+  "diagram.otherStages": "Other treatment stages, if any, are not recorded.",
+  "combo.listOnly": "No map position · list only",
+  "combo.submitHint": "Press Search to also look up street addresses.",
+  "areaPanel.listN": "Show the {n} plants listed in {area}",
+  "areaPanel.listTownN": "Show all {n} plants listed in {area}",
+  "results.eyebrowTown": "All plants listed in",
+  "results.areaFallback": "Plants listed in this area",
+  "notice.outsideTitle": "This location is outside the area we cover.",
+  "notice.outside": "The plant list covers Faisalabad District. Distances from here are very long and may not be useful — try a place inside the district.",
+  "notice.generic": "Please note: some results may be limited. See About the data for details.",
+  "notice.browseTown": "Browse the full text list for:",
+  "notice.townNoPos": "Many plants in this town are listed only by an area that has no map position, so distances and directions aren't available here. They're listed by plant ID.",
+  "list.titleTown": "{n} plants listed in this town",
+  "list.more": "Show more plants ({shown} of {total} shown)",
+  "list.loaded": "{n} of {total} plants shown.",
+  "map.areaLabelPartial": "At least {n} plants listed in {area} — exact sites not recorded. Show details",
+  "capacity.mainGpd": "{n} gallons per day",
+  "capacity.mainLph": "{n} litres per hour",
+  "capacity.mainLpd": "{n} litres per day",
+  "capacity.basisPlain": "production capacity as recorded.",
+  "capacity.litresDay": "About {n} litres per day.",
+  "route.reason.no_route": "no road route was found between these points.",
+  "mode.two_wheeler": "Motorbike",
+  "distance.timeTwo": "{time} by motorbike"
 }

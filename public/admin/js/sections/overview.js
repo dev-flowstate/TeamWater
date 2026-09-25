@@ -42,20 +42,23 @@ export default {
       if (!ctx.isCurrent()) return;
 
       const total = num(pick(s, 'plants.total', 'plantsTotal', 'plants_total', 'totalPlants', 'plants.count'));
-      const exact = num(pick(s, 'plants.exact', 'plantsExact', 'plants.exactLocation', 'plants.withExactLocation', 'exact'));
-      const area = num(pick(s, 'plants.area', 'plantsArea', 'plants.areaOnly'));
-      const none = num(pick(s, 'plants.noLocation', 'plantsNoLocation', 'plants.none'));
+      const exact = num(pick(s, 'plants.location.exact', 'plants.exact', 'plantsExact', 'plants.exactLocation', 'plants.withExactLocation', 'exact'));
+      const area = num(pick(s, 'plants.location.area', 'plants.area', 'plantsArea', 'plants.areaOnly'));
+      const none = num(pick(s, 'plants.location.none', 'plants.noLocation', 'plantsNoLocation', 'plants.none'));
       const review = num(pick(s, 'plants.needsReview', 'plantsNeedsReview', 'needsReview'));
       const demo = num(pick(s, 'plants.demo', 'plantsDemo', 'demoPlants'));
       const tests = num(pick(s, 'waterTests.total', 'tests.total', 'waterTests', 'testsTotal'));
       const queue = num(pick(s, 'reports.reviewQueue', 'reports.queue', 'reviewQueue', 'reportsReviewQueue'));
-      const pending = num(pick(s, 'reports.pending', 'reportsPending'));
-      const ratings = num(pick(s, 'ratings.pending', 'ratingsPending'));
-      const appeals = num(pick(s, 'appeals.open', 'appealsOpen'));
+      const pending = num(pick(s, 'reports.byStatus.pending', 'reports.pending', 'reportsPending'));
+      const verified = num(pick(s, 'plants.verified', 'plantsVerified'));
+      const geoPending = num(pick(s, 'plants.location.pendingReview'));
+      const ratings = num(pick(s, 'ratings.byStatus.pending', 'ratings.pending', 'ratingsPending'));
+      const appealsOpen = num(pick(s, 'appeals.byStatus.open', 'appeals.open', 'appealsOpen'));
+      const appeals = appealsOpen === null ? null : appealsOpen + (num(pick(s, 'appeals.byStatus.in_progress')) || 0);
       const dups = num(pick(s, 'duplicates.open', 'duplicatesOpen', 'duplicates'));
-      const areasReview = num(pick(s, 'areas.needsReview', 'areasNeedsReview', 'areas.unresolved'));
-      const lastImport = pick(s, 'imports.lastImportAt', 'lastImportAt', 'imports.lastCommittedAt', 'imports.last.committedAt');
-      const sourceFile = pick(s, 'imports.sourceFile', 'sourceFile', 'imports.last.sourceFilename', 'imports.last.filename');
+      const areasReview = num(pick(s, 'areas.needsReview', 'areasNeedsReview', 'areas.unresolved')) ?? ((num(pick(s, 'areas.byGeocodeStatus.ambiguous')) || 0) + (num(pick(s, 'areas.byGeocodeStatus.not_found')) || 0) + (num(pick(s, 'areas.byGeocodeStatus.not_attempted')) || 0));
+      const lastImport = pick(s, 'lastImport.at', 'imports.lastImportAt', 'lastImportAt', 'imports.lastCommittedAt', 'imports.last.committedAt');
+      const sourceFile = pick(s, 'lastImport.sourceFile', 'imports.sourceFile', 'sourceFile', 'imports.last.sourceFilename', 'imports.last.filename');
       const batches = num(pick(s, 'imports.batches', 'imports.total', 'importBatches'));
 
       const tiles = h('ul', { class: 'stats-grid', 'aria-label': 'Key counts' },
@@ -64,6 +67,7 @@ export default {
         stat('Area-level only', area, 'approximate area centre', 'area'),
         stat('No location at all', none, 'text list only', 'none'),
         stat('Flagged for data review', review, null, 'review'),
+        verified !== null ? stat('Verified by staff', verified, 'plants with a verification date', 'verified') : null,
         tests !== null ? stat('Water tests recorded', tests, null, 'tests') : null,
         queue !== null ? stat('Reports in review queue', queue, pending !== null ? `${formatNumber(pending)} pending` : null, 'queue') : null,
         dups !== null ? stat('Open duplicate candidates', dups, null, 'dups') : null);
@@ -74,12 +78,13 @@ export default {
           h('span', null, h('strong', null, `${formatNumber(exact)} of ${formatNumber(total)}`), ' plants have exact coordinates. The rest can only be shown as area-level approximations.'),
           'Fix locations', ctx.can('plants:read') ? '#/incomplete' : null));
       }
+      if (geoPending) links.append(quick('warn', h('span', null, h('strong', null, formatNumber(geoPending)), ' geocoded positions are waiting for review (not public until verified).'), 'Review positions', '#/plants?coord=pending'));
       if (review) links.append(quick('warn', h('span', null, h('strong', null, formatNumber(review)), ' plants are flagged for data review (inconsistent or implausible source values).'), 'Review flagged plants', '#/plants?needsReview=1'));
       if (queue !== null && ctx.can('reports:read')) links.append(quick(queue > 0 ? 'warn' : 'ok', h('span', null, h('strong', null, formatNumber(queue)), ` report${queue === 1 ? '' : 's'} waiting in the review queue.`), 'Open review queue', '#/reports?queue=1'));
       if (ratings && ctx.can('reports:moderate')) links.append(quick('info', h('span', null, h('strong', null, formatNumber(ratings)), ' ratings awaiting a decision.'), 'Review ratings', '#/ratings'));
       if (appeals && ctx.can('appeals')) links.append(quick('info', h('span', null, h('strong', null, formatNumber(appeals)), ' open appeals or correction requests.'), 'Open appeals', '#/appeals'));
       if (dups && ctx.can('duplicates')) links.append(quick('warn', h('span', null, h('strong', null, formatNumber(dups)), ' possible duplicate records need a decision.'), 'Resolve duplicates', '#/duplicates'));
-      if (areasReview && ctx.can('plants:read')) links.append(quick('warn', h('span', null, h('strong', null, formatNumber(areasReview)), ' areas are ambiguous or could not be found on the map.'), 'Review areas', '#/areas'));
+      if (areasReview && ctx.can('plants:read')) links.append(quick('warn', h('span', null, h('strong', null, formatNumber(areasReview)), ' areas need location review (ambiguous, not found or not yet geocoded).'), 'Review areas', '#/areas'));
       if (ctx.can('imports')) {
         links.append(quick('info', lastImport
           ? h('span', null, 'Last import ', h('strong', null, formatDate(lastImport)), sourceFile ? h('span', null, ' from ', h('code', null, String(sourceFile))) : null, batches !== null ? ` · ${formatNumber(batches)} batch${batches === 1 ? '' : 'es'} in history` : '', '.')

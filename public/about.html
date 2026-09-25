@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>About the data — Team Water</title>
+  <meta name="description" content="Where Team Water's plant information and maps come from, what the source spreadsheet does and doesn't include, and how distances are worked out.">
+  <meta name="theme-color" content="#f6f1e7">
+  <link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/css/app.css">
+  <script type="module" src="/js/app.js"></script>
+</head>
+<body data-page="about">
+  <header id="tw-header" class="tw-header"></header>
+  <main id="main" tabindex="-1">
+    <section class="doc-hero">
+      <div class="wrap">
+        <p class="eyebrow" data-i18n="about.hero.eyebrow">About the data</p>
+        <h1 data-i18n="about.hero.title">Where the information comes from</h1>
+        <p class="hero-hand" data-i18n="about.hero.accent">honest about what we don't know</p>
+        <p class="doc-lead" data-i18n="about.hero.lead">Team Water puts two separate things on one screen: a base map from a map provider, and our own list of water filtration plants imported from a spreadsheet. This page explains both, and what they can't tell you.</p>
+        <ul class="doc-toc">
+          <li><a href="#layers" data-i18n="about.toc.layers">Two layers</a></li>
+          <li><a href="#spreadsheet" data-i18n="about.toc.spreadsheet">The spreadsheet</a></li>
+          <li><a href="#caveats" data-i18n="about.toc.caveats">Caveats</a></li>
+          <li><a href="#areas" data-i18n="about.toc.areas">Area positions</a></li>
+          <li><a href="#distances" data-i18n="about.toc.distances">Distances</a></li>
+          <li><a href="#quality" data-i18n="about.toc.quality">Water quality &amp; ratings</a></li>
+          <li><a href="#reports" data-i18n="about.toc.reports">Reports</a></li>
+        </ul>
+      </div>
+    </section>
+
+    <div class="wrap doc">
+      <div id="demo-note" class="notice notice-warn" role="note" hidden>
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 3h6M10 3v6L4.5 19a1.3 1.3 0 0 0 1.1 2h12.8a1.3 1.3 0 0 0 1.1-2L14 9V3"/></svg>
+        <p data-i18n="about.demo">Demonstration data is switched on for this site. Plants whose ID starts with DEMO are made up for testing and are counted in the figures below. They are always labelled "DEMO — not a real plant".</p>
+      </div>
+
+      <section id="layers" aria-labelledby="layers-h">
+        <h2 id="layers-h" data-i18n="about.layers.title">Two separate layers</h2>
+        <p data-i18n="about.layers.intro">The map underneath and the plants on top come from different places, are updated by different people, and can be wrong in different ways.</p>
+        <div class="layers">
+          <div class="layer layer-map">
+            <span class="eyebrow" data-i18n="about.layers.map.eyebrow">Layer 1 · Base map</span>
+            <h3 data-i18n="about.layers.map.title">Streets, shops and landmarks</h3>
+            <p data-i18n="about.layers.map.text">Drawn by the map provider, not by us. Not every street, shop or landmark is present, names may differ from local usage, and the provider updates it on its own schedule.</p>
+            <dl>
+              <div><dt data-i18n="about.layers.map.provider">Provider</dt><dd><bdi data-stat="providerName">—</bdi></dd></div>
+              <div><dt data-i18n="about.layers.map.credit">Credit</dt><dd data-stat="attribution">—</dd></div>
+              <div><dt data-i18n="about.layers.map.coverage">Coverage</dt><dd><bdi data-stat="coverageNote">—</bdi></dd></div>
+              <div><dt data-i18n="about.layers.map.updates">Updates</dt><dd><bdi data-stat="updatedNote">—</bdi></dd></div>
+            </dl>
+            <p class="source-meta"><a href="https://www.openstreetmap.org/fixthemap" rel="noopener" target="_blank" data-i18n="about.layers.map.fix">Report a problem with the base map</a></p>
+          </div>
+          <div class="layer layer-plants">
+            <span class="eyebrow" data-i18n="about.layers.plants.eyebrow">Layer 2 · Plant database</span>
+            <h3 data-i18n="about.layers.plants.title">Water filtration plants</h3>
+            <p data-i18n="about.layers.plants.text">Our own records, imported from a spreadsheet and corrected only by site staff, with every change logged. Plants are drawn on top of the base map; they are never taken from the map provider.</p>
+            <dl>
+              <div><dt data-i18n="about.layers.plants.file">Source file</dt><dd><bdi data-stat="sourceFile">—</bdi></dd></div>
+              <div><dt data-i18n="about.layers.plants.imported">Last import</dt><dd><bdi data-stat="lastImportAt">—</bdi></dd></div>
+              <div><dt data-i18n="about.layers.plants.count">Plants listed</dt><dd><bdi data-stat="plantsTotal">—</bdi></dd></div>
+            </dl>
+          </div>
+        </div>
+      </section>
+
+      <section id="spreadsheet" aria-labelledby="sheet-h">
+        <h2 id="sheet-h" data-i18n="about.sheet.title">The source spreadsheet</h2>
+        <p data-i18n="about.sheet.intro">The plant list comes from one Excel file with a single sheet of 1,000 rows and 8 columns: Plant ID, Town/Tehsil, Area/Union Council, Operating Entity Type, Water Source, Filtration Technology, Capacity (Gallons Per Hour) and Operational Status. We keep every original value exactly as recorded and show it under "About this record" on each plant.</p>
+        <div class="stat-grid">
+          <div class="stat"><span class="stat-num" data-stat="plantsTotal">—</span><span class="stat-label" data-i18n="about.stats.total">plants in the database</span></div>
+          <div class="stat"><span class="stat-num" data-stat="plantsExact">—</span><span class="stat-label" data-i18n="about.stats.exact">with an exact recorded site</span></div>
+          <div class="stat"><span class="stat-num" data-stat="plantsArea">—</span><span class="stat-label" data-i18n="about.stats.area">placed only at an approximate area centre</span></div>
+          <div class="stat"><span class="stat-num" data-stat="plantsNoLocation">—</span><span class="stat-label" data-i18n="about.stats.none">with no usable position (text list only)</span></div>
+        </div>
+        <h3 style="margin-top:28px" data-i18n="about.sheet.missingTitle">What the spreadsheet doesn't include</h3>
+        <p data-i18n="about.sheet.missing">Plant names, street addresses, landmarks, map coordinates, opening hours, how much water one person may collect, the operator's actual name (only a type is given), contact details, accessibility, water-test results or dates, source documents, and verification dates. Where a value is missing we say "Not provided" — we never fill it in.</p>
+      </section>
+
+      <section id="caveats" aria-labelledby="caveats-h">
+        <h2 id="caveats-h" data-i18n="about.caveats.title">Caveats, in plain language</h2>
+        <ul class="caveats">
+          <li data-i18n="about.caveats.location">No plant has an exact location in the file. Nearest-plant results can only point to the centre of the plant's listed area until staff pin a plant or a future file supplies coordinates.</li>
+          <li data-i18n="about.caveats.status">Every row says "Fully Functional", with no date. We show this as "listed as operational in the source spreadsheet — undated, not verified". It is not a promise the plant is working today.</li>
+          <li data-i18n="about.caveats.sector">Every area is written as "Area - Sector N". The sector number is applied the same way to city areas and rural chaks, and isn't a known official subdivision. No union-council numbers are given.</li>
+          <li data-i18n="about.caveats.generic">Some area names aren't places you can find on a map: "Saline Zone A–D", "Kachi Abadi" (a general term for an informal settlement) and "Factory Area".</li>
+          <li data-i18n="about.caveats.typo">"Chalk 224 RB" is probably a typing error for "Chak 224 RB". We keep the original and let you search either spelling.</li>
+          <li data-i18n="about.caveats.town">The Town/Tehsil column mixes city towns (Lyallpur, Jinnah, Iqbal, Madina) with tehsils (Jaranwala, Samundri, Tandlianwala, Chak Jhumra). Faisalabad Sadar/City tehsil doesn't appear.</li>
+          <li data-i18n="about.caveats.operator">The operator column mixes kinds of values. "Saline Water Treatment RO" describes a plant type, not who runs it. "PSPA" is an unexplained acronym, so we don't expand it.</li>
+          <li data-i18n="about.caveats.capacity">Capacity is a production rate in gallons per hour, not a per-person or per-day allowance. The file doesn't say US or imperial gallons, so we don't convert to litres. 25,000 GPH is unusually large for a community water point and is flagged for checking.</li>
+          <li data-i18n="about.caveats.even">The values are spread very evenly, which suggests the file may have been modelled or generated rather than surveyed. We recommend checking it with the issuing authority.</li>
+        </ul>
+      </section>
+
+      <section id="areas" aria-labelledby="areas-h">
+        <h2 id="areas-h" data-i18n="about.areas.title">Where area positions come from</h2>
+        <p data-i18n="about.areas.text1">To rank plants by distance we need a rough position for each area. Our area list (gazetteer) has 49 entries, but only 17 have a usable position: 11 areas, 5 towns and the airport. The rest are flagged for staff to review and position by hand.</p>
+        <p data-i18n="about.areas.text2">Every area position is approximate. We draw it as a circle, never as a pin, and never present it as a plant's exact site. Plants whose area has no position can't be ranked by distance — search for their area or town by name to see them in a text list.</p>
+        <p class="source-meta" lang="en" dir="ltr">Area positions: <a href="https://whosonfirst.org/docs/licenses/" rel="noopener" target="_blank">Who's On First</a> (https://whosonfirst.org/docs/licenses/), including data from <a href="https://www.geonames.org/" rel="noopener" target="_blank">GeoNames</a> (CC BY, https://www.geonames.org/) and Wikidata (CC0). Tehsil checks: geoBoundaries (ODbL). Map data © <a href="https://www.openstreetmap.org/copyright" rel="noopener" target="_blank">OpenStreetMap contributors</a>, available under the Open Database License (https://www.openstreetmap.org/copyright).</p>
+      </section>
+
+      <section id="distances" aria-labelledby="dist-h">
+        <h2 id="dist-h" data-i18n="about.dist.title">How distances are worked out</h2>
+        <ul class="method-list">
+          <li><strong data-i18n="about.dist.straight.title">Approximate straight-line distance</strong><span data-i18n="about.dist.straight.text">For plants with an exact site: the distance "as the crow flies" from the place you chose. Real journeys are longer.</span></li>
+          <li><strong data-i18n="about.dist.area.title">Approximate distance to area centre</strong><span data-i18n="about.dist.area.text">For plants listed only by area: the distance to the rough centre of that area. The plant itself could be anywhere in the area.</span></li>
+          <li><strong data-i18n="about.dist.route.title">Travel distance by road</strong><span data-i18n="about.dist.route.text">Only when a routing service is switched on and answering, and only for plants with an exact site. If it isn't available we say so and fall back to straight-line distance — we never guess a route.</span></li>
+        </ul>
+        <p style="margin-top:14px" data-i18n="about.dist.order">"Nearest" orders plants by these distances (ties are broken by plant ID, so the order is always the same). "Recommended" also weighs verified status, dated test evidence, confirmed problems and ratings, and explains its reasons on each card. Your search location is used to answer the request and is not stored.</p>
+      </section>
+
+      <section id="quality" aria-labelledby="quality-h">
+        <h2 id="quality-h" data-i18n="about.quality.title">Water quality evidence is not a rating</h2>
+        <div class="split">
+          <div class="split-quality">
+            <h3 data-i18n="about.quality.tests.title">Water quality evidence</h3>
+            <p data-i18n="about.quality.tests.text">Comes only from recorded laboratory tests, with the sample date and the standard used. It is historical: a past test doesn't guarantee the water today. With no test on record we say "Unknown" — never "safe".</p>
+          </div>
+          <div class="split-rating">
+            <h3 data-i18n="about.quality.rating.title">Community experience rating</h3>
+            <p data-i18n="about.quality.rating.text">Stars from people who used the plant — about queues, cleanliness of the site, and service. It is not a water-safety measure. Below 3 ratings we show "Too few ratings", and scores are adjusted so a handful of votes can't dominate.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="reports" aria-labelledby="reports-h">
+        <h2 id="reports-h" data-i18n="about.reports.title">Community reports are unverified until reviewed</h2>
+        <p data-i18n="about.reports.text1">Anyone can report a problem with a plant. A report is not a finding: it never changes a plant's official status by itself. Plant cards show how many unverified reports are under review, separately from issues staff have confirmed.</p>
+        <p data-i18n="about.reports.text2">A plant's status only changes after a staff member records a documented assessment. If you think a record is wrong, report it from the plant's card, or ask for a correction.</p>
+        <p style="margin-top:16px"><a class="btn btn-ghost" href="/status.html#appeal" data-i18n="about.reports.correction">Ask for a correction</a></p>
+      </section>
+    </div>
+  </main>
+  <footer id="tw-footer" class="tw-footer"></footer>
+</body>
+</html>

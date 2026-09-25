@@ -1,7 +1,10 @@
 // Home search: place combobox (debounced /api/geocode, listbox semantics), "Use my location" (permission is
 // requested only after the click, with the explanation shown first), and "Choose on map" (tap/click to pin,
 // drag to adjust, or "Use map centre" from the keyboard).
-//   initSearch({ config, onSubmit({ lat, lng, label }), onAreaList({ areaId, label }) })
+//   initSearch({ config, onSubmit({ lat, lng, label }), onAreaList({ areaId, town, label }) })
+// Geocoding: as-you-type requests hit only the local gazetteer (/api/geocode?q=). Only an explicit submit
+// (Enter / the search button, with no suggestion chosen) adds &submit=1, which may query the external
+// geocoder — Nominatim's usage policy forbids autocomplete against it.
 import { t, getLang, onLangChange, formatNumber } from '/js/i18n.js';
 import { getJSON, isAbort } from '/js/api.js';
 import { h, $, icon, debounce, announce, formatDistance } from '/js/util.js';
@@ -59,7 +62,7 @@ export function initSearch({ config, onSubmit, onAreaList }) {
   function optionEl(r, i) {
     const noPos = r.lat === null || r.lat === undefined || r.lng === null || r.lng === undefined;
     const meta = [];
-    if (noPos) meta.push(h('span', { class: 'opt-tag tag-warn' }, t('search.combo.noPosition')));
+    if (noPos) meta.push(h('span', { class: 'opt-tag tag-warn' }, t('search.combo.listOnly')));
     else if (r.precision === 'area') meta.push(h('span', { class: 'opt-tag' }, t('search.combo.approx')));
     if (Number.isFinite(r.plantCount)) meta.push(h('span', { class: 'opt-count' }, t('search.combo.plants', { n: formatNumber(r.plantCount) })));
     const sub = [r.sublabel ? h('bdi', {}, r.sublabel) : null];
@@ -84,6 +87,7 @@ export function initSearch({ config, onSubmit, onAreaList }) {
         h('span', {}, h('strong', {}, t('search.combo.noMatches', { q: res.query || lastQuery })), ' ', t('search.combo.noMatchesTip'))));
     }
     if (res.providers?.external === 'unavailable') foot.push(h('p', { class: 'combo-note' }, icon('info'), t('search.combo.externalDown')));
+    else if (!didYouMean && results.length && res.providers?.external === 'skipped') foot.push(h('p', { class: 'combo-note' }, icon('info'), t('search.combo.submitHint')));
     popFoot.replaceChildren(...foot);
     popFoot.hidden = !foot.length;
     setOpen(true);
@@ -102,11 +106,12 @@ export function initSearch({ config, onSubmit, onAreaList }) {
     announce(live, t('search.combo.error'));
   }
 
-  async function geocode(q) {
+  async function geocode(q, { submit = false } = {}) {
     ctrl?.abort();
     ctrl = new AbortController();
     lastQuery = q;
-    return getJSON(`/api/geocode?q=${encodeURIComponent(q)}&lang=${getLang()}`, { signal: ctrl.signal, timeoutMs: 8000 });
+    const extra = submit ? '&submit=1' : '';
+    return getJSON(`/api/geocode?q=${encodeURIComponent(q)}&lang=${getLang()}${extra}`, { signal: ctrl.signal, timeoutMs: submit ? 12000 : 8000 });
   }
 
   const suggest = debounce(async () => {
@@ -167,14 +172,19 @@ export function initSearch({ config, onSubmit, onAreaList }) {
 
   function showAreaPanel(r) {
     areaPanel.hidden = false;
+    const isTown = r.kind === 'town';
+    const canList = isTown || (r.areaId !== null && r.areaId !== undefined);
+    const n = Number.isFinite(r.plantCount) ? formatNumber(r.plantCount) : null;
+    const listLabel = n !== null ? t(isTown ? 'search.areaPanel.listTownN' : 'search.areaPanel.listN', { n, area: r.label }) : t('search.areaPanel.list');
     areaPanel.replaceChildren(
       h('div', { class: 'notice notice-info', 'data-testid': 'area-no-position' }, icon('info'),
         h('div', {},
           h('p', { class: 'notice-title' }, t('search.areaPanel.title', { area: r.label })),
           h('p', {}, t('search.areaPanel.text')),
           h('div', { class: 'notice-actions' },
-            r.areaId !== null && r.areaId !== undefined
-              ? h('button', { type: 'button', class: 'btn btn-primary btn-sm', on: { click: () => onAreaList?.({ areaId: r.areaId, label: r.label }) } }, icon('list'), t('search.areaPanel.list'))
+            canList
+              ? h('button', { type: 'button', class: 'btn btn-primary btn-sm', 'data-testid': 'area-list-btn',
+                on: { click: () => onAreaList?.(isTown ? { town: r.label, label: r.label } : { areaId: r.areaId, label: r.label }) } }, icon('list'), listLabel)
               : null,
             h('button', { type: 'button', class: 'btn btn-ghost btn-sm', on: { click: () => openPicker() } }, icon('map'), t('search.pick.button'))))));
   }
@@ -333,7 +343,7 @@ export function initSearch({ config, onSubmit, onAreaList }) {
     if (!q) { showError(t('search.form.needLocation')); input.focus(); return; }
     suggest.cancel();
     try {
-      const res = await geocode(q);
+      const res = await geocode(q, { submit: true });
       const rs = res.results || [];
       if (!rs.length) { renderOptions(res); input.focus(); return; }
       if (rs.length === 1 && !res.ambiguous) {

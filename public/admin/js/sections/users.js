@@ -51,7 +51,7 @@ export default {
         try { await withBusy(btn, () => patch(u, { role: sel.value, reason }, `${U.username(u)} is now ${ROLES[sel.value].label.toLowerCase()}.`)); }
         catch (err) { ctx.toast(`Could not change role: ${err.message}`, 'error'); }
       });
-      return h('span', { class: 'nowrap' }, sel, ' ', btn, self ? h('span', { class: 'hint', style: 'display:block' }, 'You cannot change your own role.') : null);
+      return h('div', { class: 'inline-control' }, sel, btn, self ? h('span', { class: 'hint', style: 'display:block' }, 'You cannot change your own role.') : null);
     }
 
     function activeControl(u) {

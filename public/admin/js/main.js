@@ -233,6 +233,8 @@ function markNav(m) {
 }
 
 function openMenu() {
+  const bottom = Math.max(0, Math.round(document.querySelector('.topbar').getBoundingClientRect().bottom));
+  document.documentElement.style.setProperty('--drawer-top', `${bottom}px`);
   document.body.classList.add('nav-open');
   $('menu-toggle').setAttribute('aria-expanded', 'true');
   $('sidenav').querySelector('.nav-link:not([hidden])')?.focus();
@@ -362,6 +364,10 @@ async function boot() {
   window.addEventListener('tw-admin:unauthenticated', () => {
     if (state.user) showLogin('Your session has ended. Please sign in again.');
   });
+
+  const topbar = document.querySelector('.topbar');
+  const setTopbarHeight = () => document.documentElement.style.setProperty('--topbar-h', `${topbar.offsetHeight}px`);
+  if (typeof ResizeObserver === 'function') new ResizeObserver(setTopbarHeight).observe(topbar);
 
   getPublicConfig().then((cfg) => { if (cfg && cfg.demoMode) $('demo-banner').hidden = false; });
 

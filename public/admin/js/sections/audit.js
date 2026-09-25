@@ -3,7 +3,7 @@ import { h, pick, listOf, pageHeader, card, formField, pager, loadingBlock, erro
 import { auditTable } from '../audit-view.js';
 
 const ENTITY_TYPES = ['plant', 'area', 'water_test', 'import_batch', 'duplicate', 'admin_user', 'report', 'reporter', 'rating', 'appeal', 'investigation', 'photo', 'export', 'maintenance'];
-const ACTIONS = ['plant.update', 'plant.coordinates', 'plant.status', 'plant.verify', 'water_test', 'import', 'area.update', 'duplicate.resolve', 'admin.login', 'admin_user', 'report.decision', 'contact.reveal', 'export'];
+const ACTIONS = ['plant.*', 'plant.update', 'plant.create', 'plant.coordinates.set', 'plant.coordinates.clear', 'plant.status', 'plant.verify', 'plant.test.create', 'plant.test.delete', 'plant.source.add', 'area.update', 'import.*', 'import.upload', 'import.commit', 'import.cancel', 'duplicate.*', 'admin.login', 'admin_user.*', 'report.*', 'contact.reveal', 'export.*'];
 
 export default {
   id: 'audit',
@@ -16,10 +16,10 @@ export default {
     el.append(pageHeader({ title: 'Audit log', subtitle: 'Every administrative change, who made it, when, and why. Contact details are never stored here.' }));
 
     const listId = (id, values) => h('datalist', { id }, values.map((v) => h('option', { value: v })));
-    const fType = formField({ label: 'Entity type', name: 'entityType', value: st.entityType, attrs: { list: 'audit-types', autocomplete: 'off' } });
-    const fId = formField({ label: 'Entity ID', name: 'entityId', value: st.entityId, hint: 'e.g. FSD-WFP-0001', attrs: { autocomplete: 'off' } });
-    const fActor = formField({ label: 'Actor (username)', name: 'actor', value: st.actor, attrs: { autocomplete: 'off' } });
-    const fAction = formField({ label: 'Action', name: 'action', value: st.action, attrs: { list: 'audit-actions', autocomplete: 'off' } });
+    const fType = formField({ label: 'Entity type', name: 'entityType', value: st.entityType, hint: 'e.g. plant, area, import_batch', attrs: { list: 'audit-types', autocomplete: 'off' } });
+    const fId = formField({ label: 'Entity ID', name: 'entityId', value: st.entityId, hint: 'Exact, e.g. FSD-WFP-0001', attrs: { autocomplete: 'off' } });
+    const fActor = formField({ label: 'Actor (username)', name: 'actor', value: st.actor, hint: 'Exact username, e.g. admin or setup', attrs: { autocomplete: 'off' } });
+    const fAction = formField({ label: 'Action', name: 'action', value: st.action, hint: 'Exact, or end with * for a prefix (plant.*)', attrs: { list: 'audit-actions', autocomplete: 'off' } });
     const form = h('form', { class: 'toolbar', role: 'search', 'aria-label': 'Filter audit log' },
       fType, fId, fActor, fAction, listId('audit-types', ENTITY_TYPES), listId('audit-actions', ACTIONS),
       h('button', { type: 'submit', class: 'btn btn-primary' }, 'Filter'),

@@ -118,7 +118,7 @@ export async function createLeafletMap(el, config, opts = {}) {
           radius: a.radiusM || 1000, color: COLORS.teal, weight: 2, dashArray: '6 6', fillColor: COLORS.cyan, fillOpacity: 0.12, className: 'tw-area-circle',
         }).addTo(plantLayer);
         const badgeEl = span('tw-area-badge');
-        badgeEl.append(span('tw-area-badge-count', String(plants.length)), span('tw-area-badge-name', labels.areaShort ? labels.areaShort(group) : a.name));
+        badgeEl.append(span('tw-area-badge-count', labels.areaCount ? labels.areaCount(group) : String(plants.length)), span('tw-area-badge-name', labels.areaShort ? labels.areaShort(group) : a.name));
         const aria = labels.area ? labels.area(group) : `${plants.length} — ${a.name}`;
         const badge = L.marker([a.lat, a.lng], {
           icon: L.divIcon({ className: 'tw-area-badge-wrap', html: badgeEl, iconSize: null }),

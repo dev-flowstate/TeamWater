@@ -63,5 +63,9 @@
   "stage.chlorination": "Chlorination",
   "stage.remineralization": "Remineralisation",
   "stage.storage": "Storage tank",
-  "stage.dispensing": "Dispensing taps"
+  "stage.dispensing": "Dispensing taps",
+  "issue.duplicate_plant_code": "This Plant ID appeared more than once in the source. The extra copy was kept separately for staff review.",
+  "issue.geocoded_location_unverified": "The location was found from an address and hasn't been verified by staff yet.",
+  "issue.geocode_ambiguous": "The address matched several different places.",
+  "issue.geocode_approximate": "The address matched only approximately."
 }

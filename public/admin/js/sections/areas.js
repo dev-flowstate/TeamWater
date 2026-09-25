@@ -208,12 +208,30 @@ export default {
         const reason = fReason.control.value.trim();
         if (!reason) { setFieldError(fReason.control, 'Please give a reason.'); bad = true; }
         if (bad) { showFormError(form, 'Check the highlighted fields.', { focus: false }); form.querySelector('[aria-invalid="true"]')?.focus(); return; }
+        if (reason && reason.length < 3) { setFieldError(fReason.control, 'The reason must be at least 3 characters.'); showFormError(form, 'Check the highlighted fields.', { focus: false }); fReason.control.focus(); return; }
+        if (rad !== null && (rad < 50 || rad > 20000)) { setFieldError(fRad.control, 'Radius must be between 50 and 20,000 metres.'); showFormError(form, 'Check the highlighted fields.', { focus: false }); fRad.control.focus(); return; }
         if (la !== null && !inDistrict(la, ln)) {
-          const { confirmed } = await ctx.confirmDialog({ title: 'Centre is outside Faisalabad district', body: 'Save this position anyway?', confirmLabel: 'Save anyway' });
-          if (!confirmed) return;
+          const msg = inDistrict(ln, la) ? 'These values look swapped: latitude is about 31 and longitude about 73 in Faisalabad.' : 'The centre is outside the Faisalabad service area.';
+          setFieldError(fLat.control, msg); showFormError(form, msg, { focus: false }); fLat.control.focus(); return;
         }
         const aliases = fAl.control.value.split('\n').map((s) => s.trim()).filter(Boolean);
-        const body = { latitude: la === null ? null : round6(la), longitude: ln === null ? null : round6(ln), radiusM: rad, nameUr: fUr.control.value.trim() || null, aliases, reason };
+        const nameUr = fUr.control.value.trim() || null;
+        // Send only what changed: clearing a position turns the area into "not geocodable" on the server.
+        const body = { reason };
+        const same = (x, y) => (x === null && y === null) || (x !== null && y !== null && Math.abs(x - y) < 1e-9);
+        if (!same(la, A.lat(a)) || !same(ln, A.lng(a))) { body.latitude = la === null ? null : round6(la); body.longitude = ln === null ? null : round6(ln); }
+        if (!same(rad, A.radius(a))) body.radiusM = rad;
+        if (nameUr !== (A.ur(a) || null)) body.nameUr = nameUr;
+        if (JSON.stringify(aliases) !== JSON.stringify(A.aliases(a))) body.aliases = aliases;
+        if (Object.keys(body).length === 1) {
+          const { confirmed } = await ctx.confirmDialog({ title: 'Mark as reviewed without changes?', body: A.lat(a) !== null ? 'The current centre will be recorded as reviewed by you (status becomes “Manual (reviewed)”).' : 'Nothing is changed; your review and reason are recorded.', confirmLabel: 'Mark reviewed' });
+          if (!confirmed) return;
+          if (A.lat(a) !== null) { body.latitude = A.lat(a); body.longitude = A.lng(a); } else body.nameUr = A.ur(a) || null;
+        }
+        if (body.latitude === null && A.lat(a) !== null) {
+          const { confirmed } = await ctx.confirmDialog({ title: 'Remove this area’s position?', body: 'Plants in this area will no longer appear in area-level results. The area will be marked “not geocodable”.', confirmLabel: 'Remove position', danger: true });
+          if (!confirmed) return;
+        }
         const btn = form.querySelector('button[type=submit]');
         try {
           await withBusy(btn, () => ctx.api(`/areas/${encodeURIComponent(A.id(a))}`, { method: 'PATCH', json: body }), 'Saving…');

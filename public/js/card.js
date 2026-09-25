@@ -67,7 +67,7 @@ export function directionsUrls(origin, plant, mode) {
   if (plant?.location?.precision !== 'exact' || lat === null || lat === undefined || lng === null || lng === undefined) return null;
   // Plant coordinates are used exactly as stored (String(number) — never rounded).
   const dest = `${String(lat)},${String(lng)}`;
-  const travel = mode === 'walking' ? 'walking' : 'driving';
+  const travel = mode === 'walking' ? 'walking' : 'driving'; // Google Maps URLs have no two-wheeler mode
   let google = `https://www.google.com/maps/dir/?api=1&destination=${dest}&travelmode=${travel}`;
   let osm = `https://www.openstreetmap.org/directions?engine=fossgis_osrm_${travel === 'walking' ? 'foot' : 'car'}&route=`;
   if (origin && Number.isFinite(origin.lat) && Number.isFinite(origin.lng)) {
@@ -83,15 +83,20 @@ function capacityBlock(c) {
   if (!c || c.value === null || c.value === undefined) {
     return c?.raw ? h('span', {}, t('search.capacity.rawOnly'), ' ', bdi(c.raw, 'mono')) : notProvided();
   }
-  const isGph = c.unit === 'gallons_per_hour';
-  const gallon = c.gallonType === 'us' ? t('search.capacity.gallonUs') : c.gallonType === 'imperial' ? t('search.capacity.gallonImperial') : t('search.capacity.gallonUnspecified');
+  const UNIT_KEY = { gallons_per_hour: 'main', gallons_per_day: 'mainGpd', litres_per_hour: 'mainLph', litres_per_day: 'mainLpd' };
+  const unitKey = UNIT_KEY[c.unit];
+  const isGallons = c.unit === 'gallons_per_hour' || c.unit === 'gallons_per_day';
+  const known = c.gallonType === 'us' || c.gallonType === 'imperial';
+  const gallon = !isGallons ? null : c.gallonType === 'us' ? t('search.capacity.gallonUs') : c.gallonType === 'imperial' ? t('search.capacity.gallonImperial') : t('search.capacity.gallonUnspecified');
+  // Litres only when the gallon type is known (the server computes them; nothing is assumed here).
+  let litres = null;
+  if (isGallons && known && c.unit === 'gallons_per_hour' && Number.isFinite(c.litresPerHour)) litres = t('search.capacity.litres', { n: formatNumber(Math.round(c.litresPerHour)) });
+  if (isGallons && known && c.unit === 'gallons_per_day' && Number.isFinite(c.litresPerDay)) litres = t('search.capacity.litresDay', { n: formatNumber(Math.round(c.litresPerDay)) });
   return h('div', { class: 'capacity' },
     h('p', { class: 'capacity-main' },
-      h('strong', {}, isGph ? t('search.capacity.main', { n: formatNumber(c.value) }) : bdi(c.raw || String(c.value))),
-      ' — ', t('search.capacity.basis', { gallon })),
-    c.litresPerHour !== null && c.litresPerHour !== undefined && (c.gallonType === 'us' || c.gallonType === 'imperial')
-      ? h('p', { class: 'capacity-litres' }, t('search.capacity.litres', { n: formatNumber(Math.round(c.litresPerHour)) }))
-      : null,
+      h('strong', {}, unitKey ? t(`search.capacity.${unitKey}`, { n: formatNumber(c.value) }) : bdi(c.raw || String(c.value))),
+      ' — ', gallon ? t('search.capacity.basis', { gallon }) : t('search.capacity.basisPlain')),
+    litres ? h('p', { class: 'capacity-litres' }, litres) : null,
     h('p', { class: 'capacity-warn' }, icon('info'), h('strong', {}, t('search.capacity.notAllowance'))));
 }
 
@@ -306,7 +311,7 @@ export function renderCard(p, detail, ctx = {}) {
       h('p', { class: 'dist-value' }, bdi(formatDistance(p.distanceM))),
       h('p', { class: 'dist-method' }, methodLabel(p.distanceMethod) || ''),
       Number.isFinite(p.durationS)
-        ? h('p', { class: 'dist-time' }, icon('clock'), t(ctx.mode === 'walking' ? 'search.distance.timeWalk' : 'search.distance.timeDrive', { time: formatDuration(p.durationS) }))
+        ? h('p', { class: 'dist-time' }, icon('clock'), t(ctx.mode === 'walking' ? 'search.distance.timeWalk' : ctx.mode === 'two_wheeler' ? 'search.distance.timeTwo' : 'search.distance.timeDrive', { time: formatDuration(p.durationS) }))
         : null);
   } else if (ctx.listMode) {
     distance = h('div', { class: 'card-distance is-none' }, h('p', { class: 'dist-method' }, t('search.distance.none')));
@@ -417,12 +422,12 @@ export function renderCard(p, detail, ctx = {}) {
         routeSlot.replaceChildren(icon('route'), h('span', {}, t('search.route.ok', {
           dist: formatDistance(info.distanceM) || NP(),
           time: formatDuration(info.durationS) || NP(),
-          mode: t(info.mode === 'walking' ? 'search.mode.walking' : 'search.mode.driving').toLowerCase(),
+          mode: t(`search.mode.${['walking', 'two_wheeler'].includes(info.mode) ? info.mode : 'driving'}`),
         })));
         return;
       }
       routeSlot.classList.add('is-straight');
-      const reason = t(`search.route.reason.${info.reason || 'provider_unavailable'}`);
+      const reason = info.detail === 'no_route' ? t('search.route.reason.no_route') : t(`search.route.reason.${info.reason || 'provider_unavailable'}`);
       routeSlot.replaceChildren(icon('info'), h('span', {}, h('strong', {}, t('search.route.straightLabel')), ' — ', reason));
     },
     destroy() {

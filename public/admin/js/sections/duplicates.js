@@ -30,7 +30,7 @@ const REASONS = {
   near_identical: 'Near-identical records',
   nearby_position: 'Positions very close together',
 };
-const STATUS = { open: ['Open', 'warn'], merged: ['Merged', 'info'], kept_separate: ['Kept separate', 'success'], dismissed: ['Dismissed', 'unknown'] };
+const STATUS = { open: ['Open', 'warn'], merged: ['Merged', 'info'], kept_separate: ['Kept separate', 'success'], dismissed: ['Dismissed', 'unknown'], all: ['All', 'neutral'] };
 
 export default {
   id: 'duplicates',
@@ -55,6 +55,8 @@ export default {
     async function sides(c) {
       let left = pick(c, 'plant', 'a', 'left');
       let right = pick(c, 'otherPlant', 'other_plant', 'other', 'b', 'right');
+      const rowPlant = pick(c, 'importRow.plant', 'row.plant');
+      if ((!right || typeof right !== 'object') && rowPlant && typeof rowPlant === 'object') right = { ...rowPlant, code: pick(c, 'importRow.plantCode', 'row.plantCode'), fromImportRow: true };
       const raw = maybeJson(pick(c, 'importRow.raw', 'import_row.raw', 'importRow.values', 'raw', 'rawRow', 'importRow.raw_json'));
       if (!left || typeof left !== 'object') left = await plantByCode(pick(c, 'plantCode', 'plant_code'));
       if (!right || typeof right !== 'object') right = await plantByCode(pick(c, 'otherPlantCode', 'other_plant_code'));
@@ -64,7 +66,7 @@ export default {
     async function candidateCard(c) {
       const id = pick(c, 'id');
       const { left, right, raw, row } = await sides(c);
-      const rightLabel = right ? `Record B: ${plantCode(right) || '—'}` : raw ? `Import row${row ? ` ${row}` : ''} (not imported)` : 'Record B';
+      const rightLabel = right && !right.fromImportRow ? `Record B: ${plantCode(right) || '—'}` : (right || raw) ? `Import row${row ? ` ${row}` : ''} (held for review)` : 'Record B';
       const leftLabel = left ? `Record A: ${plantCode(left) || '—'}` : 'Record A';
       const rows = FIELDS.map((f) => {
         const a = left ? f.get(left) : undefined;
@@ -83,17 +85,19 @@ export default {
         rows,
       });
       const reason = pick(c, 'reason');
+      const detail = pick(c, 'reasonDetail', 'reason_detail');
+      const counts = (p) => { const k = p && pick(p, 'counts'); return k && typeof k === 'object' ? Object.entries(k).filter(([, v]) => v).map(([n, v]) => `${v} ${n}`).join(', ') : ''; };
       const score = pick(c, 'score');
       const st = STATUS[pick(c, 'status')] || [pick(c, 'status') || '—', 'neutral'];
       const links = h('p', { class: 'small' },
         left && plantCode(left) ? h('a', { href: `#/plants/${encodeURIComponent(plantCode(left))}` }, `Open ${plantCode(left)}`) : null,
-        right && plantCode(right) ? [' · ', h('a', { href: `#/plants/${encodeURIComponent(plantCode(right))}` }, `Open ${plantCode(right)}`)] : null);
+        right && !right.fromImportRow && plantCode(right) ? [' · ', h('a', { href: `#/plants/${encodeURIComponent(plantCode(right))}` }, `Open ${plantCode(right)}`)] : null);
 
       let form = null;
       if (pick(c, 'status') === 'open' || !pick(c, 'status')) {
         const name = uid('dup-action');
         const opts = [
-          ['keep_separate', 'Keep separate', 'They are different plants. Both records stay.'],
+          ['keep_separate', 'Keep separate', right && right.fromImportRow ? 'They are different plants. The held row is imported under a derived code (e.g. …-DUP1).' : 'They are different plants. Both records stay.'],
           ['merge', 'Merge', 'They are the same plant. Record B (or the import row) is merged into record A.'],
           ['dismiss', 'Dismiss', 'Not a real duplicate signal (e.g. coincidence). No change to either record.'],
         ];
@@ -112,7 +116,7 @@ export default {
           const action = form.querySelector(`input[name="${name}"]:checked`)?.value;
           const note = fNote.control.value.trim();
           if (!action) { showFormError(form, 'Choose a decision.'); form.querySelector(`input[name="${name}"]`).focus(); return; }
-          if (!note) { setFieldError(fNote.control, 'A note is required.'); showFormError(form, 'Explain your decision in the note.', { focus: false }); fNote.control.focus(); return; }
+          if (note.length < 3) { setFieldError(fNote.control, 'A note of at least 3 characters is required.'); showFormError(form, 'Explain your decision in the note.', { focus: false }); fNote.control.focus(); return; }
           if (action === 'merge') {
             const { confirmed } = await ctx.confirmDialog({ title: 'Merge these records?', body: 'Merging combines the two records. It is recorded in the audit log but cannot be undone from the dashboard.', confirmLabel: 'Merge records', danger: true });
             if (!confirmed) return;
@@ -131,7 +135,10 @@ export default {
       const node = card(`Candidate #${id}`,
         h('p', { class: 'badges' }, badge(st[0], st[1]), reason ? badge(REASONS[reason] || keyLabel(reason), 'neutral') : null, score !== undefined && score !== null ? badge(`Similarity ${Math.round(Number(score) * 100)}%`, 'accent') : null,
           (left && isDemo(left)) || (right && isDemo(right)) ? badge('Includes demo data', 'demo') : null),
-        table, links, form);
+        detail && detail !== reason ? h('p', { class: 'small' }, h('strong', null, 'Why flagged: '), h('span', { dir: 'auto' }, String(detail))) : null,
+        table,
+        (counts(left) || counts(right)) ? h('p', { class: 'small muted' }, left && counts(left) ? `Record A has ${counts(left)}. ` : '', right && counts(right) ? `Record B has ${counts(right)}. ` : '', 'Merging moves these onto record A.') : null,
+        links, form);
       node.classList.add('dup-card');
       return node;
     }

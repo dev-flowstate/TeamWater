@@ -77,7 +77,7 @@ export function mountResults(root, { config, onChangeLocation }) {
     const listMode = ctx.mode === 'arealist';
     const title = h('h1', { class: 'results-title', id: 'results-title', tabindex: '-1' }, ctx.label ? h('bdi', {}, ctx.label) : t('search.results.locating'));
     const where = h('div', { class: 'results-where' },
-      h('p', { class: 'eyebrow' }, listMode ? t('search.results.eyebrowArea') : t('search.results.eyebrow')),
+      h('p', { class: 'eyebrow' }, listMode ? t(s.town ? 'search.results.eyebrowTown' : 'search.results.eyebrowArea') : t('search.results.eyebrow')),
       title,
       h('p', { class: 'results-where-note' }, listMode ? t('search.results.areaListNote') : ctx.labelKind === 'approx' ? t('search.results.approxNote') : t('search.results.pointNote')),
       h('button', { type: 'button', class: 'btn btn-ghost btn-sm', 'data-testid': 'change-location', on: { click: () => onChangeLocation?.() } }, icon('search'), t('search.results.change')));
@@ -115,8 +115,9 @@ export function mountResults(root, { config, onChangeLocation }) {
     const modes = routing.modes || {};
     const off = !routing.provider || routing.provider === 'none';
     const allUnsupported = off || (!modes.driving && !modes.walking);
+    const list = ['driving', 'walking', ...('two_wheeler' in modes ? ['two_wheeler'] : [])];
     const select = h('select', { id: 'mode-select', 'aria-describedby': 'mode-note', disabled: allUnsupported, 'data-testid': 'mode-select' },
-      ['driving', 'walking'].map((m) => h('option', { value: m, selected: ctx.state.mode === m, disabled: !allUnsupported && !modes[m] },
+      list.map((m) => h('option', { value: m, selected: ctx.state.mode === m, disabled: !allUnsupported && !modes[m] },
         t(`search.mode.${m}`) + (!allUnsupported && !modes[m] ? ` — ${t('search.mode.unavailableShort')}` : ''))));
     select.addEventListener('change', () => navigate({ ...ctx.state, mode: select.value, plant: null }));
     let note = '';
@@ -175,8 +176,14 @@ export function mountResults(root, { config, onChangeLocation }) {
     const d = ctx.data;
     const stats = config?.stats;
     if (ctx.mode === 'search' && d) {
-      if (!d.exact.length) {
-        const noCoords = !stats || stats.plantsExact === 0;
+      // Server notice codes (null | origin_outside_coverage | no_exact_locations_recorded | no_exact_nearby).
+      const code = d.notice || (!d.exact.length ? (stats && stats.plantsExact > 0 ? 'no_exact_nearby' : 'no_exact_locations_recorded') : null);
+      if (code === 'origin_outside_coverage') {
+        out.push(h('div', { class: 'notice notice-warn', 'data-testid': 'notice-outside' }, icon('alert'),
+          h('div', {}, h('p', { class: 'notice-title' }, t('search.notice.outsideTitle')), h('p', {}, t('search.notice.outside')))));
+      }
+      if (!d.exact.length && code !== 'origin_outside_coverage') {
+        const noCoords = code === 'no_exact_locations_recorded';
         out.push(h('div', { class: 'notice notice-info', 'data-testid': 'notice-no-exact' }, icon('info'),
           h('div', {}, h('p', { class: 'notice-title' }, noCoords ? t('search.notice.noCoordsTitle') : t('search.notice.noExactTitle')),
             h('p', {}, noCoords ? t('search.notice.noCoords') : t('search.notice.noExact')),
@@ -184,14 +191,14 @@ export function mountResults(root, { config, onChangeLocation }) {
       } else if (ctx.group === 'area' && d.area.length) {
         out.push(h('div', { class: 'notice notice-info' }, icon('info'), h('p', {}, t('search.notice.areaGroup'))));
       }
-      if (d.excluded?.noLocation > 0) {
-        out.push(h('p', { class: 'notice-inline' }, icon('info'), h('span', {}, t('search.notice.noLocation', { n: formatNumber(d.excluded.noLocation) }))));
+      if (d.notice && !['origin_outside_coverage', 'no_exact_locations_recorded', 'no_exact_nearby'].includes(d.notice)) {
+        out.push(h('div', { class: 'notice notice-info' }, icon('info'), h('p', {}, t('search.notice.generic'))));
       }
-      if (d.notice) out.push(h('div', { class: 'notice notice-info' }, icon('info'), h('p', {}, h('bdi', {}, String(d.notice)))));
+      if (d.excluded?.noLocation > 0) out.push(townBrowse(d));
     }
     if (ctx.mode === 'arealist' && ctx.data) {
       out.push(h('div', { class: 'notice notice-info', 'data-testid': 'notice-missing-coords' }, icon('info'),
-        h('div', {}, h('p', { class: 'notice-title' }, t('search.notice.areaNoPosTitle')), h('p', {}, t('search.notice.areaNoPos')))));
+        h('div', {}, h('p', { class: 'notice-title' }, t('search.notice.areaNoPosTitle')), h('p', {}, t(ctx.state.town ? 'search.notice.townNoPos' : 'search.notice.areaNoPos')))));
     }
     return out.length ? h('div', { class: 'results-notices' }, out) : null;
   }
@@ -221,10 +228,64 @@ export function mountResults(root, { config, onChangeLocation }) {
 
   function listBlock() {
     const listMode = ctx.mode === 'arealist';
+    const total = listMode ? ctx.data?.total ?? ctx.list.length : ctx.list.length;
+    const more = listMode && ctx.list.length < total;
     return h('div', { class: 'results-list-wrap', 'data-testid': 'results-list' },
-      h('h2', { class: 'list-title' }, listMode ? t('search.list.titleArea', { n: formatNumber(ctx.list.length) }) : t('search.list.title', { n: formatNumber(ctx.list.length) })),
+      h('h2', { class: 'list-title' }, listMode ? t(ctx.state.town ? 'search.list.titleTown' : 'search.list.titleArea', { n: formatNumber(total) }) : t('search.list.title', { n: formatNumber(ctx.list.length) })),
       h('p', { class: 'hint' }, listMode ? t('search.list.hintArea') : ctx.group === 'area' ? t('search.list.hintAreaGroup') : t('search.list.hint')),
-      h('ol', { class: 'rlist' }, ctx.list.map(listRow)));
+      h('ol', { class: 'rlist' }, ctx.list.map(listRow)),
+      more ? h('button', { type: 'button', class: 'btn btn-ghost list-more', 'data-testid': 'list-more', on: { click: loadMore } },
+        t('search.list.more', { shown: formatNumber(ctx.list.length), total: formatNumber(total) })) : null);
+  }
+
+  /** Text-list links by town: the only way to reach plants whose area has no usable map position. */
+  function townBrowse(d) {
+    const towns = [];
+    const seen = new Set();
+    const add = (name) => { const k = (name || '').trim(); if (k && !seen.has(k.toLowerCase()) && !/^DEMO/.test(k)) { seen.add(k.toLowerCase()); towns.push(k); } };
+    for (const p of [...d.area, ...d.exact]) add(p.town);
+    return h('div', { class: 'notice notice-plain', 'data-testid': 'town-browse' }, icon('list'),
+      h('div', {},
+        h('p', {}, t('search.notice.noLocation', { n: formatNumber(d.excluded.noLocation) })),
+        towns.length ? h('div', { class: 'town-chips' },
+          h('span', { class: 'town-chips-label' }, t('search.notice.browseTown')),
+          towns.slice(0, 8).map((town) => h('a', { class: 'town-chip', href: townHref(town), on: { click: (e) => { e.preventDefault(); openTown(town); } } }, h('bdi', {}, town)))) : null));
+  }
+  function townHref(town) {
+    const q = new URLSearchParams({ town, label: town });
+    const lang = new URLSearchParams(location.search).get('lang');
+    if (lang) q.set('lang', lang);
+    return `/?${q}`;
+  }
+  function openTown(town) {
+    navigate({ lat: null, lng: null, area: null, town, label: town, sort: ctx.state.sort, mode: ctx.state.mode, view: 'list', plant: null, group: null, technology: null, operatorType: null, hideClosed: false });
+    window.scrollTo({ top: 0 });
+    document.getElementById('results-title')?.focus({ preventScroll: true });
+  }
+
+  async function loadMore() {
+    const d = ctx.data;
+    if (!d || ctx.mode !== 'arealist') return;
+    const page = (d.page || 1) + 1;
+    try {
+      const r = await getJSON(listUrl(ctx.state, page), { timeoutMs: 15000 });
+      d.items = d.items.concat(r.items || []);
+      d.page = page;
+      d.total = r.total ?? d.total;
+      ctx.list = d.items;
+      const keep = ctx.index;
+      render();
+      if (keep >= 0) select(keep, { via: 'init', announceIt: false });
+      announce(live, t('search.list.loaded', { n: formatNumber(ctx.list.length), total: formatNumber(d.total) }));
+    } catch {
+      announce(live, t('search.card.detailError'));
+    }
+  }
+  function listUrl(s, page = 1) {
+    const q = new URLSearchParams({ pageSize: '100', page: String(page) });
+    if (s.area) q.set('area', s.area);
+    else if (s.town) q.set('town', s.town);
+    return `/api/plants?${q}`;
   }
 
   function emptyState() {
@@ -446,9 +507,18 @@ export function mountResults(root, { config, onChangeLocation }) {
       origin: t('search.map.origin'),
       straightLine: t('search.route.straightLabel'),
       exact: (p) => t('search.map.markerLabel', { rank: formatNumber(ctx.list.indexOf(p) + 1), name: p.name || p.code, dist: formatDistance(p.distanceM) || '' }),
-      area: (g) => t('search.map.areaLabel', { n: formatNumber(g.plants.length), area: g.area.name }),
+      area: (g) => t(isPartial(g) ? 'search.map.areaLabelPartial' : 'search.map.areaLabel', { n: formatNumber(g.plants.length), area: g.area.name }),
       areaShort: (g) => g.area.name,
+      areaCount: (g) => (isPartial(g) ? `${formatNumber(g.plants.length)}+` : formatNumber(g.plants.length)),
     };
+  }
+
+  /** The area list is capped at SEARCH_LIMIT; the last area group may then be incomplete ("24+"). */
+  function isPartial(g) {
+    const a = ctx.data?.area;
+    if (!a || a.length < SEARCH_LIMIT || ctx.group !== 'area') return false;
+    const last = a[a.length - 1]?.location?.area;
+    return !!last && String(last.id ?? `${last.lat},${last.lng}`) === g.key;
   }
 
   function ensureMapIfShown() { return currentView() === 'map' ? ensureMap() : Promise.resolve(ctx.map); }
@@ -521,7 +591,8 @@ export function mountResults(root, { config, onChangeLocation }) {
   }
 
   async function resolveLabel(s) {
-    if (s.label) { ctx.label = s.label; ctx.labelKind = /approx|تقریب/i.test(s.label) ? 'approx' : 'point'; return; }
+    if (s.label) { ctx.label = s.label; ctx.labelKind = /approx|تقریب|تخمینی/i.test(s.label) ? 'approx' : 'point'; return; }
+    if (s.lat === null) { ctx.label = s.town || t('search.results.areaFallback'); ctx.labelKind = 'list'; return; }
     ctx.label = t('search.results.pinnedAt', { lat: formatNumber(s.lat, { maximumFractionDigits: 4 }), lng: formatNumber(s.lng, { maximumFractionDigits: 4 }) });
     ctx.labelKind = 'point';
     if (s.lat === null) return;
@@ -570,8 +641,8 @@ export function mountResults(root, { config, onChangeLocation }) {
         data.exact = Array.isArray(data.exact) ? data.exact : [];
         data.area = Array.isArray(data.area) ? data.area : [];
       } else {
-        const r = await getJSON(`/api/plants?area=${encodeURIComponent(s.area)}&pageSize=200`, { signal: ctrl.signal, timeoutMs: 15000 });
-        data = { items: r.items || [], total: r.total };
+        const r = await getJSON(listUrl(s, 1), { signal: ctrl.signal, timeoutMs: 15000 });
+        data = { items: r.items || [], total: r.total ?? (r.items || []).length, page: 1 };
       }
       if (seq !== ctx.loadSeq) return;
       ctx.data = data;

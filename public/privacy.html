@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Privacy — Team Water</title>
+  <meta name="description" content="What Team Water collects, how long it is kept, and how to ask for correction or deletion.">
+  <meta name="theme-color" content="#f6f1e7">
+  <link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/css/app.css">
+  <script type="module" src="/js/app.js"></script>
+</head>
+<body data-page="privacy">
+  <header id="tw-header" class="tw-header"></header>
+  <main id="main" tabindex="-1">
+    <section class="doc-hero">
+      <div class="wrap">
+        <p class="eyebrow" data-i18n="about.privacy.eyebrow">Privacy</p>
+        <h1 data-i18n="about.privacy.title">What we keep, and for how long</h1>
+        <p class="doc-lead" data-i18n="about.privacy.lead">You can find plants without an account and without giving us anything. We only collect information when you choose to report a problem or rate a plant.</p>
+        <ul class="doc-toc">
+          <li><a href="#search" data-i18n="about.privacy.toc.search">Searching</a></li>
+          <li><a href="#collect" data-i18n="about.privacy.toc.collect">Reports &amp; ratings</a></li>
+          <li><a href="#photos" data-i18n="about.privacy.toc.photos">Photos</a></li>
+          <li><a href="#retention" data-i18n="about.privacy.toc.retention">How long</a></li>
+          <li><a href="#rights" data-i18n="about.privacy.toc.rights">Correction &amp; deletion</a></li>
+        </ul>
+      </div>
+    </section>
+
+    <div class="wrap doc">
+      <section id="search" aria-labelledby="search-h">
+        <h2 id="search-h" data-i18n="about.privacy.search.title">Searching for plants</h2>
+        <p data-i18n="about.privacy.search.text1">The place you search for, or your device location if you choose "Use my location", is sent to our server only to find nearby plants. It is not stored and not written to our logs. Your browser asks your permission before sharing your location, and you can always search by name or pick a spot on the map instead.</p>
+        <p data-i18n="about.privacy.search.text2">The map itself is loaded from the map provider shown at the bottom of every page, which receives the usual technical information any website receives when it serves map images.</p>
+      </section>
+
+      <section id="collect" aria-labelledby="collect-h">
+        <h2 id="collect-h" data-i18n="about.privacy.collect.title">When you report a problem or rate a plant</h2>
+        <ul>
+          <li data-i18n="about.privacy.collect.report">What you tell us: the plant, the kind of problem, your description, when you saw it, and an optional star rating.</li>
+          <li data-i18n="about.privacy.collect.phone">Your phone number, so staff can follow up and to limit abuse. It is stored encrypted, is visible only to authorised staff (every time it is viewed is logged), and is never shown publicly or to other users.</li>
+          <li data-i18n="about.privacy.collect.proximity">If you choose to share that you are near the plant, we keep only the distance between you and the plant — not your position.</li>
+        </ul>
+      </section>
+
+      <section id="photos" aria-labelledby="photos-h">
+        <h2 id="photos-h" data-i18n="about.privacy.photos.title">Photos</h2>
+        <p data-i18n="about.privacy.photos.text">Hidden information inside photos — including GPS location and camera details — is removed when you upload them. Photos are not public: staff review them, and a photo is shown on the site only if staff approve it for publication. Please avoid photographing people's faces.</p>
+      </section>
+
+      <section id="retention" aria-labelledby="ret-h">
+        <h2 id="ret-h" data-i18n="about.privacy.retention.title">How long we keep things</h2>
+        <div class="retention">
+          <div><strong data-i18n="about.privacy.retention.search.value">Not stored</strong><p data-i18n="about.privacy.retention.search.text">Search locations and "Use my location" results.</p></div>
+          <div><strong data-i18n="about.privacy.retention.reports.value">2 years</strong><p data-i18n="about.privacy.retention.reports.text">Report text and photos are kept for 2 years, then redacted.</p></div>
+          <div><strong data-i18n="about.privacy.retention.phone.value">180 days</strong><p data-i18n="about.privacy.retention.phone.text">Phone numbers are erased 180 days after your last activity.</p></div>
+        </div>
+      </section>
+
+      <section id="rights" aria-labelledby="rights-h">
+        <div class="callout">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3 4.5 6v5.5c0 4.6 3.1 8.4 7.5 9.5 4.4-1.1 7.5-4.9 7.5-9.5V6L12 3Z"/><path d="m9 12 2.2 2.2L15.5 10"/></svg>
+          <div>
+            <h2 id="rights-h" data-i18n="about.privacy.rights.title">Ask for a correction or deletion</h2>
+            <p data-i18n="about.privacy.rights.text">You can ask us to correct a plant record, appeal a decision about your report, or delete your phone number and the reports linked to it. Use your report reference and the last four digits of your phone number.</p>
+            <a class="btn btn-primary" href="/status.html#appeal" data-i18n="about.privacy.rights.button">Request correction or deletion</a>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+  <footer id="tw-footer" class="tw-footer"></footer>
+</body>
+</html>

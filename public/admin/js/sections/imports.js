@@ -140,6 +140,7 @@ export default {
       const form = h('form', { novalidate: true, 'aria-label': 'Choose sheet' },
         h('h3', null, 'Step 2 — Choose the sheet'),
         h('p', { class: 'muted' }, 'File: ', h('strong', null, st.batch.filename), ` · batch #${st.batch.batchId}`),
+        pick(st.batch, 'previouslyCommitted.batchId') ? notice('info', h('p', null, `This exact file was already imported in batch #${pick(st.batch, 'previouslyCommitted.batchId')} (${ctx.formatDate(pick(st.batch, 'previouslyCommitted.committedAt'))}). Re-importing it is safe: unchanged rows are left as they are.`)) : null,
         h('fieldset', null, h('legend', null, 'Sheets in this file'),
           h('ul', { class: 'check-list' }, sheets.map((s) => {
             const id = uid('sh');
@@ -286,7 +287,7 @@ export default {
           rowAttrs: (r) => ({ class: R.outcome(r) === 'rejected' ? 'row-highlight' : null }),
           columns: [
             { key: 'row', label: 'Row', rowHeader: true, align: 'end', render: (r) => String(R.row(r) ?? '—') },
-            { key: 'code', label: 'Plant ID', render: (r) => (R.code(r) ? h('span', { class: 'mono' }, String(R.code(r))) : h('span', { class: 'np' }, 'Missing')) },
+            { key: 'code', label: 'Plant ID', render: (r) => (R.code(r) ? h('span', { class: 'mono nowrap' }, String(R.code(r))) : h('span', { class: 'np' }, 'Missing')) },
             { key: 'outcome', label: 'Outcome', render: (r) => { const o = OUTCOMES[R.outcome(r)] || { label: R.outcome(r) || '—', tone: 'neutral' }; return h('span', { class: 'badges' }, badge(o.label, o.tone), R.incomplete(r) ? badge('Incomplete', 'warn') : null); } },
             { key: 'errors', label: 'Errors', render: (r) => messages(R.errors(r), 'danger') || h('span', { class: 'np' }, '—') },
             { key: 'warnings', label: 'Warnings', render: (r) => messages(R.warnings(r), 'warn') || h('span', { class: 'np' }, '—') },

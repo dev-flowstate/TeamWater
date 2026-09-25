@@ -108,7 +108,7 @@ export async function createGoogleMap(el, config, opts = {}) {
         const center = { lat: a.lat, lng: a.lng };
         const circle = new Circle({ map, center, radius: a.radiusM || 1000, strokeColor: COLORS.teal, strokeWeight: 2, fillColor: COLORS.cyan, fillOpacity: 0.12 });
         const content = span('tw-area-badge tw-area-badge--g');
-        content.append(span('tw-area-badge-count', String(group.plants.length)), span('tw-area-badge-name', labels.areaShort ? labels.areaShort(group) : a.name));
+        content.append(span('tw-area-badge-count', labels.areaCount ? labels.areaCount(group) : String(group.plants.length)), span('tw-area-badge-name', labels.areaShort ? labels.areaShort(group) : a.name));
         const title = labels.area ? labels.area(group) : a.name;
         const badge = marker({ position: center, content, title, label: { text: String(group.plants.length), color: '#ffffff', fontWeight: '700' },
           icon: { path: gm.SymbolPath.CIRCLE, scale: 15, fillColor: COLORS.teal, fillOpacity: 1, strokeColor: '#fff', strokeWeight: 2 } });

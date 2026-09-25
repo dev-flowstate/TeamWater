@@ -289,8 +289,10 @@ export default {
       const { lat, lng } = latLng(plant);
       const cs = coordStatus(plant);
       const has = lat !== null && lng !== null;
-      const areaLat = areaInfo ? Number(pick(areaInfo, 'lat', 'latitude')) : NaN;
-      const areaLng = areaInfo ? Number(pick(areaInfo, 'lng', 'longitude')) : NaN;
+      const toNum = (v) => (v === null || v === undefined || v === '' ? NaN : Number(v));
+      const areaUsable = areaInfo ? pick(areaInfo, 'usable') !== false : false;
+      const areaLat = areaInfo && areaUsable ? toNum(pick(areaInfo, 'latitude', 'lat')) : NaN;
+      const areaLng = areaInfo && areaUsable ? toNum(pick(areaInfo, 'longitude', 'lng')) : NaN;
       const areaName = areaInfo ? pick(areaInfo, 'name') : null;
       const info = defList([
         ['Location status', cs ? badge(COORD_LABEL[cs] || cs, cs === 'verified' ? 'success' : cs === 'missing' ? 'unknown' : 'warn') : null],
@@ -298,7 +300,7 @@ export default {
         ['Longitude', has ? h('span', { class: 'mono' }, String(lng)) : null],
         ['Position source', pick(plant, 'coord_source', 'coordSource')],
         ['Position note', pick(plant, 'coord_note', 'coordNote')],
-        ['Approximate area', areaName ? h('span', { dir: 'auto' }, `${areaName}${Number.isFinite(areaLat) ? ' (area centre known — approximate only)' : ' (no area position)'}`) : null],
+        ['Approximate area', areaName ? h('span', { dir: 'auto' }, `${areaName}${Number.isFinite(areaLat) ? ' (area centre known — approximate only)' : ' (area has no usable position)'}`, areaInfo && pick(areaInfo, 'id') ? h('span', null, ' · ', h('a', { href: `#/areas?id=${encodeURIComponent(pick(areaInfo, 'id'))}` }, 'Review area')) : null) : null],
       ]);
       const mapEl = h('div', { class: 'map', role: 'application', 'aria-label': 'Map: drag the pin or click to place it. The latitude and longitude fields below do the same.' });
       const mapWrap = h('div', { class: 'map-wrap' }, mapEl);
