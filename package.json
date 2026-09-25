@@ -8,11 +8,11 @@
     "node": ">=22.13"
   },
   "scripts": {
-    "start": "node --disable-warning=ExperimentalWarning server/index.js",
-    "dev": "node --disable-warning=ExperimentalWarning --watch server/index.js",
-    "setup": "node --disable-warning=ExperimentalWarning scripts/setup.js",
-    "import:xlsx": "node --disable-warning=ExperimentalWarning scripts/import-xlsx.js",
-    "admin:create": "node --disable-warning=ExperimentalWarning scripts/create-admin.js",
+    "start": "node --env-file-if-exists=.env --disable-warning=ExperimentalWarning server/index.js",
+    "dev": "node --env-file-if-exists=.env --disable-warning=ExperimentalWarning --watch server/index.js",
+    "setup": "node --env-file-if-exists=.env --disable-warning=ExperimentalWarning scripts/setup.js",
+    "import:xlsx": "node --env-file-if-exists=.env --disable-warning=ExperimentalWarning scripts/import-xlsx.js",
+    "admin:create": "node --env-file-if-exists=.env --disable-warning=ExperimentalWarning scripts/create-admin.js",
     "test": "node --disable-warning=ExperimentalWarning --test --test-concurrency=1 \"test/**/*.test.js\"",
     "test:e2e": "node --disable-warning=ExperimentalWarning test/e2e/run.js"
   },
