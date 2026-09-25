@@ -74,7 +74,8 @@
   --tw-font-display: 'DM Serif Display', Georgia, 'Times New Roman', serif;
   --tw-font-hand: 'Gochi Hand', 'Comic Sans MS', cursive;
   --tw-font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  --tw-font-urdu: 'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', 'Urdu Typesetting', serif;
+  /* Nastaliq only covers Arabic-script glyphs (unicode-range), so Latin text (plant IDs, names) falls through to Inter. */
+  --tw-font-urdu: 'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', 'Urdu Typesetting', 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
 
   /* Shape & depth */
   --tw-radius-sm: 8px;
