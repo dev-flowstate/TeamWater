@@ -148,7 +148,7 @@ const DATA_ISSUES = {
   sector_suffix_unverified: { datasetWide: true, description: 'The area includes a "Sector N" suffix that does not correspond to a known official subdivision; it is shown as recorded but not used for location.' },
   operator_type_is_plant_type: { datasetWide: false, description: 'The recorded operator type describes a kind of plant (for example "Saline Water Treatment RO") rather than who operates it, so the operator is unknown.' },
   operator_type_technology_mismatch: { datasetWide: false, description: 'The operator type names a technology (for example "Private Commercial RO") that differs from the recorded filtration technology.' },
-  operator_acronym_unexplained: { datasetWide: false, description: 'The operator type contains an acronym (for example "PSPA") that the source does not explain. It is shown as recorded and not expanded.' },
+  operator_acronym_unexplained: { datasetWide: true, description: 'The operator type contains an acronym (for example "PSPA") that the source does not explain. It is shown as recorded and not expanded.' },
   capacity_gallon_type_unspecified: { datasetWide: true, description: 'Capacity is recorded in gallons without saying US or imperial gallons, so it is not converted to litres.' },
   capacity_unusually_high: { datasetWide: false, description: 'The recorded capacity is unusually high for a community filtration point (above 20,000 gallons per hour or equivalent). It is shown as recorded and needs a plausibility check.' },
   status_undated: { datasetWide: true, description: 'The source gives an operational status without a date, so it is not known when the status applied.' },

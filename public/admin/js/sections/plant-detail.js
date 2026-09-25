@@ -46,7 +46,11 @@ const EDIT_FIELDS = [
   { col: 'neighborhood', label: 'Neighbourhood / mohalla', max: 200 },
   { col: 'landmark', label: 'Landmark', max: 200 },
   { col: 'operator_name', label: 'Operator name', max: 200, hint: 'The actual operating organisation. The source only records an operator type.' },
+  { col: 'operator_type', label: 'Operator type (correction)', max: 200, hint: 'Corrects the recorded type. The original stays in the source values.' },
+  { col: 'water_source', label: 'Water source (correction)', max: 200, hint: 'The original stays in the source values.' },
+  { col: 'technology_raw', label: 'Filtration technology (correction)', max: 200, hint: 'Treatment stages are re-derived only for known technologies.' },
   { col: 'opening_hours_text', label: 'Opening hours', max: 300, hint: 'As confirmed, e.g. “Daily 08:00–20:00”.' },
+  { col: 'collection_limit_raw', label: 'Collection limit as stated', max: 200, hint: 'e.g. “20 litres per visit”, as written by the operator or a notice.' },
   { col: 'collection_limit_value', label: 'Collection limit (per person)', type: 'number', attrs: { min: '0', step: 'any' }, hint: 'Leave empty if unknown. This is separate from production capacity.' },
   { col: 'collection_limit_unit', label: 'Collection limit unit', type: 'select', options: [{ value: '', label: 'Not set' }, { value: 'litres', label: 'Litres' }, { value: 'gallons', label: 'Gallons' }] },
   { col: 'collection_limit_period', label: 'Collection limit period', type: 'select', options: [{ value: '', label: 'Not set' }, { value: 'per_visit', label: 'Per visit' }, { value: 'per_day', label: 'Per day' }] },
@@ -108,6 +112,8 @@ export default {
     async function fetchPlant() {
       data = await ctx.api(`/plants/${encodeURIComponent(code)}`);
       plant = data && data.plant && typeof data.plant === 'object' ? { ...data, ...data.plant } : data;
+      const loc = pick(data, 'summary.location');
+      if (loc && !pick(plant, 'location')) plant.location = loc;
       areaInfo = pick(plant, 'area', 'location.area');
       if ((!areaInfo || typeof areaInfo !== 'object') && pick(plant, 'area_id', 'areaId')) {
         try {
@@ -267,7 +273,7 @@ export default {
         }
         if (Object.keys(changes).length === 0) { showFormError(form, 'Nothing has changed — edit a field before saving.'); return; }
         const r = reason.control.value.trim();
-        if (!r) { setFieldError(reason.control, 'Please give a reason for this change.'); showFormError(form, 'A reason is required for every change.', { focus: false }); reason.control.focus(); return; }
+        if (r.length < 3) { setFieldError(reason.control, 'Please give a reason for this change (at least 3 characters).'); showFormError(form, 'A reason is required for every change.', { focus: false }); reason.control.focus(); return; }
         const btn = form.querySelector('button[type=submit]');
         try {
           await withBusy(btn, () => ctx.api(`/plants/${encodeURIComponent(code)}`, { method: 'PATCH', json: { ...changes, reason: r } }), 'Saving…');
@@ -330,16 +336,16 @@ export default {
         if (fLat.control.value.trim() === '' || !Number.isFinite(la) || la < -90 || la > 90) { setFieldError(fLat.control, 'Enter a latitude between -90 and 90.'); bad = true; }
         if (fLng.control.value.trim() === '' || !Number.isFinite(ln) || ln < -180 || ln > 180) { setFieldError(fLng.control, 'Enter a longitude between -180 and 180.'); bad = true; }
         const note = fNote.control.value.trim();
-        if (!note) { setFieldError(fNote.control, 'Say how the position was confirmed.'); bad = true; }
+        if (note.length < 3) { setFieldError(fNote.control, 'Say how the position was confirmed (at least 3 characters).'); bad = true; }
         if (bad) { showFormError(form, 'Check the highlighted fields.', { focus: false }); form.querySelector('[aria-invalid="true"]')?.focus(); return; }
         if (!inDistrict(la, ln)) {
-          const swapped = inDistrict(ln, la);
-          const { confirmed } = await ctx.confirmDialog({
-            title: 'Position is outside Faisalabad district',
-            body: swapped ? 'These values look swapped (latitude and longitude reversed). Save anyway?' : 'This position is outside the Faisalabad district area. Save anyway?',
-            confirmLabel: 'Save anyway',
-          });
-          if (!confirmed) return;
+          const msg = inDistrict(ln, la)
+            ? 'These values look swapped: latitude should be about 31 and longitude about 73 in Faisalabad.'
+            : 'This position is outside the Faisalabad service area. Check the numbers or move the pin.';
+          setFieldError(fLat.control, msg);
+          showFormError(form, msg, { focus: false });
+          fLat.control.focus();
+          return;
         }
         const btn = form.querySelector('button[type=submit]');
         try {
@@ -391,7 +397,6 @@ export default {
           { key: 'change', label: 'Change', rowHeader: true, render: (r) => { const o = pick(r, 'oldStatus', 'old_status', 'from'); const n = pick(r, 'newStatus', 'new_status', 'to', 'status'); return h('span', null, STATUS_LABEL[o] || o || '—', ' → ', h('strong', null, STATUS_LABEL[n] || n || '—')); } },
           { key: 'assessment', label: 'Assessment', render: (r) => h('span', { dir: 'auto' }, redactPhones(pick(r, 'assessment') || '')) },
           { key: 'evidence', label: 'Evidence', render: (r) => { const ids = maybeJson(pick(r, 'evidenceReportIds', 'evidence_report_ids_json', 'evidence')); const inv = pick(r, 'investigationId', 'investigation_id'); const parts = []; if (Array.isArray(ids) && ids.length) parts.push(`Reports: ${ids.join(', ')}`); if (inv) parts.push(`Investigation #${inv}`); return parts.length ? parts.join(' · ') : h('span', { class: 'np' }, '—'); } },
-          { key: 'verified', label: 'Verified', render: (r) => { const v = pick(r, 'verified'); return v === undefined || v === null ? '—' : v ? badge('Verified', 'success') : 'No'; } },
           { key: 'by', label: 'By', render: (r) => { let a = pick(r, 'actor', 'actorLabel', 'actor_label', 'actorUsername', 'actor_username'); if (a && typeof a === 'object') a = a.username; return a || '—'; } },
         ],
         rows: history,
@@ -497,7 +502,7 @@ export default {
       const last = pick(plant, 'last_verified_at', 'lastVerifiedAt');
       const info = defList([
         ['Last verified', last ? ctx.formatDate(last) : h('span', { class: 'np' }, 'Not verified')],
-        ['Verified by', pick(plant, 'last_verified_by_name', 'lastVerifiedBy', 'last_verified_by')],
+        ['Verified by', (() => { const v = pick(plant, 'last_verified_by_name', 'lastVerifiedByName', 'last_verified_by', 'lastVerifiedBy'); return v === null || v === undefined ? null : typeof v === 'number' ? `User #${v}` : v; })()],
         ['Verification note', pick(plant, 'verification_note', 'verificationNote')],
       ]);
       let form = null;
@@ -513,7 +518,7 @@ export default {
           const note = fNote.control.value.trim();
           let bad = false;
           if (!/^\d{4}-\d{2}-\d{2}$/.test(d)) { setFieldError(fDate.control, 'Choose a date.'); bad = true; } else if (d > todayIso()) { setFieldError(fDate.control, 'The date cannot be in the future.'); bad = true; }
-          if (!note) { setFieldError(fNote.control, 'Describe what was verified.'); bad = true; }
+          if (note.length < 3) { setFieldError(fNote.control, 'Describe what was verified (at least 3 characters).'); bad = true; }
           if (bad) { showFormError(form, 'Check the highlighted fields.', { focus: false }); form.querySelector('[aria-invalid="true"]')?.focus(); return; }
           const btn = form.querySelector('button[type=submit]');
           try {
@@ -578,7 +583,7 @@ export default {
 
     function testForm() {
       const fDate = formField({ label: 'Sample date', name: 'sampleDate', type: 'date', required: true, attrs: { max: todayIso() } });
-      const fLab = formField({ label: 'Laboratory / organisation', name: 'laboratory', attrs: { maxlength: '200' }, dir: 'auto' });
+      const fLab = formField({ label: 'Laboratory / organisation', name: 'laboratory', required: true, attrs: { maxlength: '200' }, dir: 'auto' });
       const fSrc = formField({ label: 'Where the sample was taken', name: 'sourceDescription', hint: 'e.g. “Tap at dispensing point”.', attrs: { maxlength: '300' }, dir: 'auto' });
       const fStd = formField({ label: 'Standard name', name: 'standardName', hint: 'Required for “met limits” or “issue detected”, e.g. “PSQCA PS 4639” or “WHO GDWQ”.', attrs: { maxlength: '200' } });
       const fStdV = formField({ label: 'Standard version', name: 'standardVersion', attrs: { maxlength: '100' } });
@@ -587,7 +592,7 @@ export default {
       const outcomes = [['not_assessed', 'Not assessed'], ['met_limits', 'Met limits'], ['issue_detected', 'Issue detected']];
       const outcomeSet = h('fieldset', null, h('legend', null, 'Outcome'),
         h('div', { class: 'radio-row' }, outcomes.map(([v, l], i) => h('label', null, h('input', { type: 'radio', name: 'outcome', value: v, checked: i === 0, 'data-group': outcomeName }), l))));
-      const ruleStd = h('li', null, '“Met limits” and “Issue detected” need a named standard.');
+      const ruleStd = h('li', null, '“Met limits”, “Issue detected”, or any parameter marked within/outside a limit, need a named standard.');
       const ruleAll = h('li', null, '“Met limits” needs at least one parameter and every parameter marked “within limit: yes”.');
       const rules = h('ul', { class: 'rules', 'aria-live': 'polite' }, ruleStd, ruleAll);
 
@@ -618,6 +623,7 @@ export default {
       addRow();
       const fFile = formField({ label: 'Lab report (PDF, JPEG or PNG, up to 15 MB)', name: 'report', type: 'file', attrs: { accept: 'application/pdf,image/jpeg,image/png,.pdf,.jpg,.jpeg,.png' } });
       const fNotes = formField({ label: 'Notes', name: 'notes', type: 'textarea', rows: 2, dir: 'auto' });
+      const fReason = formField({ label: 'Reason for recording this test', name: 'reason', type: 'textarea', rows: 2, required: true, dir: 'auto', hint: 'Required, e.g. “Lab certificate received from WASA on 2 Sep”. Recorded in the audit log.' });
 
       const form = h('form', { novalidate: true, 'aria-label': 'Add water test', class: 'test-form' },
         h('h3', null, 'Add a water test'),
@@ -626,7 +632,7 @@ export default {
         outcomeSet, rules,
         paramTable,
         h('div', { class: 'form-actions', style: 'margin-top:0;margin-bottom:12px' }, h('button', { type: 'button', class: 'btn btn-secondary btn-sm', onClick: () => addRow(true) }, '+ Add parameter')),
-        h('div', { class: 'form-grid' }, fFile), fNotes,
+        h('div', { class: 'form-grid' }, fFile), fNotes, fReason,
         h('div', { class: 'form-actions' }, h('button', { type: 'submit', class: 'btn btn-primary' }, 'Save water test')));
 
       const outcome = () => form.querySelector('input[name=outcome]:checked')?.value || 'not_assessed';
@@ -636,7 +642,7 @@ export default {
       }).filter((r) => r.parameter || r.valueText || r.valueNum || r.unit || r.limitText || r.within);
       function updateRules() {
         const o = outcome();
-        const needStd = o !== 'not_assessed';
+        const needStd = o !== 'not_assessed' || readRows().some((r) => r.within);
         const stdOk = !!fStd.control.value.trim();
         ruleStd.className = needStd ? (stdOk ? 'rule-ok' : 'rule-bad') : '';
         const rows = readRows();
@@ -656,8 +662,12 @@ export default {
         else if (d > todayIso()) { setFieldError(fDate.control, 'The sample date cannot be in the future.'); problems.push('Sample date is in the future.'); }
         const o = outcome();
         const std = fStd.control.value.trim();
-        if (o !== 'not_assessed' && !std) { setFieldError(fStd.control, 'Name the standard used for this outcome.'); problems.push('A standard is required for this outcome.'); }
         const rows = readRows();
+        if (!fLab.control.value.trim()) { setFieldError(fLab.control, 'Name the laboratory or organisation.'); problems.push('The laboratory is required.'); }
+        if (o !== 'not_assessed' && !std) { setFieldError(fStd.control, 'Name the standard used for this outcome.'); problems.push('A standard is required for this outcome.'); }
+        else if (!std && rows.some((r) => r.within)) { setFieldError(fStd.control, 'Name the standard the limits come from.'); problems.push('A standard is required when a parameter is marked within or outside a limit.'); }
+        const testReason = fReason.control.value.trim();
+        if (testReason.length < 3) { setFieldError(fReason.control, 'Give a reason (at least 3 characters).'); problems.push('A reason is required.'); }
         for (const r of rows) {
           if (!r.parameter) { r.tr.querySelector('[name=parameter]').setAttribute('aria-invalid', 'true'); problems.push('Every parameter row needs a parameter name.'); }
           if (!r.valueText) { r.tr.querySelector('[name=valueText]').setAttribute('aria-invalid', 'true'); problems.push('Every parameter row needs a value (as written).'); }
@@ -685,6 +695,7 @@ export default {
           if (c.control.value.trim()) fd.append(k, c.control.value.trim());
         }
         fd.append('outcome', o);
+        fd.append('reason', testReason);
         fd.append('results', JSON.stringify(rows.map((r) => {
           const out = { parameter: r.parameter, valueText: r.valueText, withinLimit: r.within === 'yes' ? true : r.within === 'no' ? false : null };
           if (r.valueNum) out.valueNum = Number(r.valueNum);
@@ -723,7 +734,8 @@ export default {
         const fTitle = formField({ label: 'Title', name: 'title', required: true, attrs: { maxlength: '200' }, dir: 'auto' });
         const fUrl = formField({ label: 'URL', name: 'url', type: 'url', hint: 'http or https only.', attrs: { maxlength: '1000', placeholder: 'https://' } });
         const fNote = formField({ label: 'Note', name: 'note', attrs: { maxlength: '500' }, dir: 'auto' });
-        form = h('form', { novalidate: true, 'aria-label': 'Add a source' }, h('h3', null, 'Add a source'), h('div', { class: 'form-grid' }, fTitle, fUrl, fNote),
+        const fSReason = formField({ label: 'Reason', name: 'reason', required: true, attrs: { maxlength: '1000' }, dir: 'auto', hint: 'Required. Why this source supports the record.' });
+        form = h('form', { novalidate: true, 'aria-label': 'Add a source' }, h('h3', null, 'Add a source'), h('div', { class: 'form-grid' }, fTitle, fUrl, fNote, fSReason),
           h('div', { class: 'form-actions' }, h('button', { type: 'submit', class: 'btn btn-primary' }, 'Add source')));
         form.addEventListener('submit', async (e) => {
           e.preventDefault();
@@ -732,10 +744,12 @@ export default {
           const url = fUrl.control.value.trim();
           let bad = false;
           if (!title) { setFieldError(fTitle.control, 'Enter a title.'); bad = true; }
+          const sReason = fSReason.control.value.trim();
+          if (sReason.length < 3) { setFieldError(fSReason.control, 'Give a reason (at least 3 characters).'); bad = true; }
           if (url && !/^https?:\/\//i.test(url)) { setFieldError(fUrl.control, 'Use a full http:// or https:// address.'); bad = true; }
           else if (url && !safeUrl(url)) { setFieldError(fUrl.control, 'This is not a valid web address.'); bad = true; }
           if (bad) { showFormError(form, 'Check the highlighted fields.', { focus: false }); form.querySelector('[aria-invalid="true"]')?.focus(); return; }
-          const body = { title };
+          const body = { title, reason: sReason };
           if (url) body.url = url;
           if (fNote.control.value.trim()) body.note = fNote.control.value.trim();
           const btn = form.querySelector('button[type=submit]');
@@ -754,7 +768,11 @@ export default {
       const rc = pick(data, 'reportCounts', 'report_counts', 'reports', 'reportsSummary');
       let content;
       if (rc && typeof rc === 'object' && !Array.isArray(rc)) {
-        const entries = Object.entries(rc).filter(([, v]) => typeof v === 'number');
+        const entries = [];
+        for (const [k, v] of Object.entries(rc)) {
+          if (typeof v === 'number') entries.push([k, v]);
+          else if (v && typeof v === 'object' && !Array.isArray(v)) for (const [k2, v2] of Object.entries(v)) if (typeof v2 === 'number') entries.push([k2, v2]);
+        }
         content = entries.length
           ? h('ul', { class: 'chips' }, entries.map(([k, v]) => h('li', { class: 'chip' }, h('span', { class: 'chip-value' }, formatNumber(v)), h('span', { class: 'chip-label' }, keyLabel(k)))))
           : h('p', { class: 'np' }, 'No report counts available.');
