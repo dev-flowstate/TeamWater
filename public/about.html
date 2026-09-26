@@ -21,7 +21,7 @@
         <p class="hero-hand" data-i18n="about.hero.accent">honest about what we don't know</p>
         <p class="doc-lead" data-i18n="about.hero.lead">Team Water puts two separate things on one screen: a base map from a map provider, and our own list of water filtration plants imported from a spreadsheet. This page explains both, and what they can't tell you.</p>
         <ul class="doc-toc">
-          <li><a href="#layers" data-i18n="about.toc.layers">Two layers</a></li>
+          <li><a href="#layers">Map layer</a></li>
           <li><a href="#areas" data-i18n="about.toc.areas">Area positions</a></li>
           <li><a href="#distances" data-i18n="about.toc.distances">Distances</a></li>
           <li><a href="#quality" data-i18n="about.toc.quality">Water quality &amp; ratings</a></li>
@@ -37,20 +37,22 @@
       </div>
 
       <section id="layers" aria-labelledby="layers-h">
-        <h2 id="layers-h" data-i18n="about.layers.title">Two separate layers</h2>
-        <p data-i18n="about.layers.intro">The map underneath and the plants on top come from different places, are updated by different people, and can be wrong in different ways.</p>
+        <h2 id="layers-h">Map layer</h2>
+        <p>The map underneath the plants shows streets, neighbourhoods, markets, shops and landmarks. It comes from a map provider, not from us.</p>
         <div class="layers">
           <div class="layer layer-map">
-            <span class="eyebrow" data-i18n="about.layers.map.eyebrow">Layer 1 · Base map</span>
-            <h3 data-i18n="about.layers.map.title">Streets, shops and landmarks</h3>
-            <p data-i18n="about.layers.map.text">Drawn by the map provider, not by us. Not every street, shop or landmark is present, names may differ from local usage, and the provider updates it on its own schedule.</p>
+            <span class="eyebrow">Layer · Base map</span>
+            <h3>Streets, shops and landmarks</h3>
+            <p>Drawn by OpenStreetMap, a free map built and updated by volunteers worldwide. Not every street, shop or landmark in Faisalabad may be present, and names may differ from local usage.</p>
             <dl>
-              <div><dt data-i18n="about.layers.map.provider">Provider</dt><dd><bdi data-stat="providerName">—</bdi></dd></div>
-              <div><dt data-i18n="about.layers.map.credit">Credit</dt><dd data-stat="attribution">—</dd></div>
-              <div><dt data-i18n="about.layers.map.coverage">Coverage</dt><dd><bdi data-stat="coverageNote">—</bdi></dd></div>
-              <div><dt data-i18n="about.layers.map.updates">Updates</dt><dd><bdi data-stat="updatedNote">—</bdi></dd></div>
+              <div><dt>Provider</dt><dd>OpenStreetMap</dd></div>
+              <div><dt>Credit</dt><dd>© <a href="https://www.openstreetmap.org/copyright" rel="noopener" target="_blank">OpenStreetMap</a> contributors</dd></div>
+              <div><dt>Licence</dt><dd>Open Database Licence (ODbL)</dd></div>
+              <div><dt>Coverage</dt><dd>Faisalabad city and district, including Jaranwala, Samundri, Tandlianwala and Chak Jhumra. Detail varies by area.</dd></div>
+              <div><dt>Updates</dt><dd>Edited continuously by contributors; the map shows the provider's current data.</dd></div>
+              <div><dt>Directions</dt><dd>"Get directions" opens Google Maps or OpenStreetMap using the plant's recorded location.</dd></div>
             </dl>
-            <p class="source-meta"><a href="https://www.openstreetmap.org/fixthemap" rel="noopener" target="_blank" data-i18n="about.layers.map.fix">Report a problem with the base map</a></p>
+            <p class="source-meta"><a href="https://www.openstreetmap.org/fixthemap" rel="noopener" target="_blank">Report a problem with the base map</a></p>
           </div>
         </div>
       </section>
