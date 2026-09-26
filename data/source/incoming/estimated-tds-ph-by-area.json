@@ -1,0 +1,214 @@
+{
+ "source": "faisalabad_estimated_tds_ph_by_area.pdf (owner-supplied, consulted 26 September 2026)",
+ "kind": "screening estimates for untreated groundwater/tube-well water — not measurements of any plant",
+ "units": {
+  "tds": "mg/L (ppm)",
+  "ph": "pH"
+ },
+ "areas": [
+  {
+   "area": "Ghulam Muhammad Abad",
+   "tds": "900–2,000",
+   "ph": "7.5–8.4",
+   "note": "Often high TDS; mildly alkaline likely"
+  },
+  {
+   "area": "Rasool Nagar",
+   "tds": "800–1,800",
+   "ph": "7.4–8.3",
+   "note": "Variable urban groundwater"
+  },
+  {
+   "area": "Jinnah Colony",
+   "tds": "700–1,600",
+   "ph": "7.4–8.3",
+   "note": "Moderate to high TDS possible"
+  },
+  {
+   "area": "Gulberg",
+   "tds": "700–1,600",
+   "ph": "7.4–8.3",
+   "note": "Moderate to high TDS possible"
+  },
+  {
+   "area": "People’s Colony No. 1",
+   "tds": "600–1,400",
+   "ph": "7.3–8.2",
+   "note": "Variable; supply source matters strongly"
+  },
+  {
+   "area": "People’s Colony No. 2",
+   "tds": "700–1,600",
+   "ph": "7.3–8.3",
+   "note": "Variable; bore water may be higher"
+  },
+  {
+   "area": "Madina Town",
+   "tds": "600–1,400",
+   "ph": "7.3–8.2",
+   "note": "Moderate range; source-dependent"
+  },
+  {
+   "area": "Susan Road",
+   "tds": "700–1,700",
+   "ph": "7.4–8.4",
+   "note": "Urban/roadside bore water can be elevated"
+  },
+  {
+   "area": "Samanabad",
+   "tds": "800–1,800",
+   "ph": "7.4–8.4",
+   "note": "Moderate to high TDS possible"
+  },
+  {
+   "area": "D-Type Colony",
+   "tds": "800–1,800",
+   "ph": "7.4–8.4",
+   "note": "Moderate to high TDS possible"
+  },
+  {
+   "area": "Nisar Colony",
+   "tds": "900–2,000",
+   "ph": "7.5–8.5",
+   "note": "Higher risk of saline groundwater"
+  },
+  {
+   "area": "Sir Syed Town",
+   "tds": "800–1,800",
+   "ph": "7.4–8.4",
+   "note": "Moderate to high TDS possible"
+  },
+  {
+   "area": "Allama Iqbal Colony",
+   "tds": "900–2,000",
+   "ph": "7.5–8.5",
+   "note": "Higher-priority area for testing"
+  },
+  {
+   "area": "Batala Colony",
+   "tds": "1,000–2,300",
+   "ph": "7.5–8.6",
+   "note": "High-risk; industrial/urban influence possible"
+  },
+  {
+   "area": "Warispura",
+   "tds": "1,000–2,500",
+   "ph": "7.5–8.6",
+   "note": "High-risk; test bore water"
+  },
+  {
+   "area": "Ayub Colony",
+   "tds": "800–1,800",
+   "ph": "7.4–8.4",
+   "note": "Moderate to high TDS possible"
+  },
+  {
+   "area": "Nishatabad",
+   "tds": "1,200–3,000",
+   "ph": "7.6–8.7",
+   "note": "Higher risk; industrial influence may affect groundwater"
+  },
+  {
+   "area": "Millat Town",
+   "tds": "900–2,000",
+   "ph": "7.5–8.5",
+   "note": "High variation between wells"
+  },
+  {
+   "area": "Mansoorabad",
+   "tds": "900–2,000",
+   "ph": "7.5–8.5",
+   "note": "Moderate to high TDS possible"
+  },
+  {
+   "area": "Nigehban Pura",
+   "tds": "1,000–2,500",
+   "ph": "7.5–8.6",
+   "note": "Higher-risk groundwater estimate"
+  },
+  {
+   "area": "Sargodha Road",
+   "tds": "1,000–2,500",
+   "ph": "7.5–8.6",
+   "note": "High variability; roadside/industrial influence"
+  },
+  {
+   "area": "Canal Road",
+   "tds": "500–1,300",
+   "ph": "7.2–8.1",
+   "note": "Canal recharge may lower TDS in some wells"
+  },
+  {
+   "area": "Factory Area",
+   "tds": "1,500–3,500+",
+   "ph": "7.6–8.8",
+   "note": "Very high-risk; do not assume bore water is drinkable"
+  },
+  {
+   "area": "Jaranwala Road",
+   "tds": "900–2,200",
+   "ph": "7.5–8.6",
+   "note": "Variable; outer industrial stretches can be worse"
+  },
+  {
+   "area": "Chak 224 RB",
+   "tds": "700–1,800",
+   "ph": "7.4–8.4",
+   "note": "Agricultural-area variation; test local source"
+  },
+  {
+   "area": "Lathianwala / Chak 194–200 RB",
+   "tds": "700–1,800",
+   "ph": "7.4–8.4",
+   "note": "Variable rural groundwater"
+  },
+  {
+   "area": "Chak 7 JB",
+   "tds": "800–2,000",
+   "ph": "7.5–8.5",
+   "note": "Variable, often moderately saline"
+  },
+  {
+   "area": "Sadhar",
+   "tds": "800–2,000",
+   "ph": "7.5–8.5",
+   "note": "Rural/peri-urban groundwater can be high"
+  },
+  {
+   "area": "Dijkot",
+   "tds": "900–2,200",
+   "ph": "7.5–8.6",
+   "note": "Moderate to high likely"
+  },
+  {
+   "area": "Chak Jhumra",
+   "tds": "2,500–7,500+",
+   "ph": "7.7–8.8",
+   "note": "Very high TDS risk; strongly brackish conditions reported"
+  },
+  {
+   "area": "Jaranwala City",
+   "tds": "900–2,200",
+   "ph": "7.5–8.6",
+   "note": "Moderate to high likely; source matters"
+  },
+  {
+   "area": "Samundri City",
+   "tds": "1,000–2,500",
+   "ph": "7.5–8.6",
+   "note": "Higher risk; salts and TDS can be elevated"
+  },
+  {
+   "area": "Tandlianwala City",
+   "tds": "1,000–2,500",
+   "ph": "7.5–8.6",
+   "note": "Higher risk; test before relying on groundwater"
+  },
+  {
+   "area": "Mamukanjan",
+   "tds": "900–2,200",
+   "ph": "7.5–8.5",
+   "note": "Moderate to high likely"
+  }
+ ]
+}

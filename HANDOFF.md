@@ -78,7 +78,8 @@ It has three parts:
      - **Some links are wrong**. For example, row 3 "055 JB BABA BAKALAH" points to 21.47, 80.19, which is in India. The importer flags anything outside the Faisalabad bounds, so don't store those.
      - There's no ID column, so generate a stable `UMAR-###` from `SR#`.
      - Treat these as RO plants with an unknown status.
-  3. `faisalabad_estimated_tds_ph_by_area.pdf` is the newer version and adds **estimated pH** by area. The older `faisalabad_estimated_tds_by_area.pdf` is kept too. The same rules apply to both: these are estimates, not lab tests.
+  3. **DONE:** `/water-estimates.html` (linked in the nav as "Area water estimates") shows all 34 areas from this PDF, with its warnings. The data is also in `data/source/incoming/estimated-tds-ph-by-area.json`. It is NOT attached to plants as test results. Still to do: Urdu text for that page, and optionally an "area estimate" line on plant cards, clearly labelled as groundwater context.
+     `faisalabad_estimated_tds_ph_by_area.pdf` is the newer version and adds **estimated pH** by area. The older `faisalabad_estimated_tds_by_area.pdf` is kept too. The same rules apply to both: these are estimates, not lab tests.
      Older file: `faisalabad_estimated_tds_by_area.pdf` holds **estimated** TDS by area. It is **not** a lab test. Don't put it into `water_tests` as measured results, and never show it as "met limits". At most, show it as area context: "Estimated TDS for this area (not a measurement of this plant)", with its source cited. That would need a new small table or `about.html` content; decide carefully.
 - **Possible overlap:** plants in the new files may duplicate the 1,000-row file. Its IDs look modelled, not surveyed, so it has no matching IDs. Use the duplicate-review queue; don't auto-merge.
 

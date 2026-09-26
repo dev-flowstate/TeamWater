@@ -10,6 +10,7 @@ import { getConfig } from '/js/api.js';
 const NAV = [
   { key: 'find', href: '/', label: 'common.nav.find' },
   { key: 'status', href: '/status.html', label: 'common.nav.status' },
+  { key: 'water', href: '/water-estimates.html', label: 'common.nav.water' },
   { key: 'about', href: '/about.html', label: 'common.nav.about' },
   { key: 'privacy', href: '/privacy.html', label: 'common.nav.privacy' },
 ];
