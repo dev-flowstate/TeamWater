@@ -204,7 +204,9 @@ router.get('/plants', (req, res) => {
 router.get('/plants/:code', (req, res) => {
   const row = findPlant(req.params.code);
   if (!row) throw new HttpError(404, 'not_found', 'Plant not found.');
-  res.json(toDetail(row, areaFor(row)));
+  // Source traceability, original spreadsheet values and data-quality flags are internal (admin only).
+  const { traceability, sourceValues, dataIssues, ...publicDetail } = toDetail(row, areaFor(row));
+  res.json(publicDetail);
 });
 
 // ── GET /api/route ──

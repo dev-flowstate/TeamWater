@@ -219,10 +219,11 @@ test('core api', async (t) => {
       raw: '1000 GPH', value: 1000, unit: 'gallons_per_hour', unitLabel: 'GPH', gallonType: 'unspecified', basis: null, litresPerHour: null, litresPerDay: null,
     });
     assert.equal(body.rank, undefined, 'no ranking fields in detail');
-    assert.deepEqual(body.dataIssues, ['status_undated', 'capacity_gallon_type_unspecified']);
+    // Internal source details are not exposed publicly.
+    assert.equal(body.dataIssues, undefined);
     assert.deepEqual(body.missingFields, ['name', 'address', 'openingHours', 'collectionLimit', 'contact', 'accessibility', 'waterTests']);
-    assert.deepEqual(body.traceability, { sourceFile: 'Filter.xlsx', sheet: 'Sheet1', row: 7, importedAt: null });
-    assert.deepEqual(body.sourceValues, { 'Plant ID': 'CORE-E001' });
+    assert.equal(body.traceability, undefined);
+    assert.equal(body.sourceValues, undefined);
     assert.deepEqual(body.waterQuality, { state: 'unknown', latestSampleDate: null, testCount: 0 });
     assert.deepEqual(body.reportsSummary, { unverifiedOpen: 0, underReview: 0, confirmedOpenIssues: [], resolvedLast90d: 0 });
     for (const k of ['operatorName', 'neighborhood', 'publicPhone', 'publicContactNote', 'accessibility', 'waterTests', 'sources']) assert.ok(k in body, k);
