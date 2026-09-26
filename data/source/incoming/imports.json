@@ -1,3 +1,11 @@
 [
-  { "file": "Faisalabad_Water_Plants_100Plus_Expanded.xlsx", "sheet": "All Locations" }
+  {
+    "file": "Faisalabad_Water_Plants_100Plus_Expanded.xlsx",
+    "sheet": "All Locations",
+    "ownerConfirmation": {
+      "status": "operational",
+      "verifiedAt": "2026-09-26",
+      "note": "Site owner confirmed on 26 Sept 2026 that all plants in this list are operating and the data is verified."
+    }
+  }
 ]

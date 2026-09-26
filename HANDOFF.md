@@ -83,6 +83,10 @@ It has three parts:
      Older file: `faisalabad_estimated_tds_by_area.pdf` holds **estimated** TDS by area. It is **not** a lab test. Don't put it into `water_tests` as measured results, and never show it as "met limits". At most, show it as area context: "Estimated TDS for this area (not a measurement of this plant)", with its source cited. That would need a new small table or `about.html` content; decide carefully.
 - **Possible overlap:** plants in the new files may duplicate the 1,000-row file. Its IDs look modelled, not surveyed, so it has no matching IDs. Use the duplicate-review queue; don't auto-merge.
 
+## Owner decisions (26 Sept 2026)
+- The owner confirmed that **all plants in `Faisalabad_Water_Plants_100Plus_Expanded.xlsx` are operating and their data is verified**. This is recorded through `ownerConfirmation` in `data/source/incoming/imports.json` and applied by `scripts/setup.js`: status is operational (`admin_verified`), last verified 2026-09-26, and the coordinates are verified. An audit entry records it.
+- "RO (2000 LPH)" now maps to the RO stage and a capacity of 2000 litres per hour.
+
 ## Next steps, in priority order
 
 1. **DONE for the 139-plant file.** `scripts/setup.js` now imports it through `data/source/incoming/imports.json`, and 122 plants appear as exact locations in nearest search with directions. Remaining work: "RO (2000 LPH)" is stored as `technology_raw`, but the capacity isn't split out and the stages come back as `[]`; fix the parsing in `server/import/normalize.js`. **Still to do:** the UMAR file (below).

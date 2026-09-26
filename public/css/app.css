@@ -881,3 +881,7 @@ body.is-results .tw-footer { margin-top: 56px; }
 .callout p { color: rgba(255, 255, 255, 0.86); }
 .callout .btn { margin-top: 14px; }
 .callout .icon { width: 30px; height: 30px; color: var(--tw-teal-200); flex: none; }
+
+/* Long values (file names, codes, addresses) wrap inside the card instead of being clipped. */
+.plant-card, .plant-card * { min-width: 0; }
+.plant-card dd, .plant-card li, .plant-card p, .plant-card td { overflow-wrap: anywhere; }

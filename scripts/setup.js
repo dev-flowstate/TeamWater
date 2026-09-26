@@ -10,6 +10,24 @@ const { getDb } = require('../server/lib/db');
 const { loadKeys } = require('../server/lib/crypto');
 const { createAdmin } = require('./create-admin');
 
+// The site owner confirmed (outside the spreadsheet) that every plant in a file is operating and its
+// data verified. Recorded as a dated verification with the owner as the source; admins can still
+// change any plant's status afterwards with a documented assessment.
+function applyOwnerConfirmation(db, file, { status = 'operational', verifiedAt, note }) {
+  const { audit } = require('../server/lib/audit');
+  const { nowIso } = require('../server/lib/time');
+  const now = nowIso();
+  const r = db.prepare(`UPDATE plants SET status = ?, status_source = 'admin_verified', status_updated_at = ?, status_note = ?,
+      last_verified_at = ?, verification_note = ?,
+      coord_status = CASE WHEN latitude IS NOT NULL AND coord_status = 'source' THEN 'verified' ELSE coord_status END,
+      coord_source = CASE WHEN latitude IS NOT NULL AND coord_status = 'source' THEN 'spreadsheet (confirmed by site owner)' ELSE coord_source END,
+      updated_at = ?
+    WHERE source_file = ? AND (status_source IN ('none', 'spreadsheet') OR status <> ?)`)
+    .run(status, verifiedAt, note, verifiedAt, note, now, file, status);
+  if (r.changes) audit(null, { action: 'plant.owner_confirmation', entityType: 'source_file', entityId: file, after: { status, verifiedAt, plants: r.changes }, reason: note, actorLabel: 'site owner (via setup)' });
+  return { updated: r.changes };
+}
+
 async function runSetup({ quiet = false } = {}) {
   const log = quiet ? () => {} : console.log;
   loadKeys();
@@ -35,6 +53,7 @@ async function runSetup({ quiet = false } = {}) {
     for (const item of JSON.parse(fs.readFileSync(extraCfg, 'utf8'))) {
       const summary = await pipeline.importFromFile({ filePath: path.join(srcDir, 'incoming', item.file), sheet: item.sheet, actorLabel: 'setup' });
       log(`Import summary (${item.file}):`, JSON.stringify({ new: summary.new, update: summary.update, rejected: summary.rejected }));
+      if (item.ownerConfirmation) log('Owner confirmation:', JSON.stringify(applyOwnerConfirmation(db, item.file, item.ownerConfirmation)));
     }
   }
 

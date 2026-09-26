@@ -190,8 +190,12 @@ const TECHNOLOGY_STAGES = new Map([
   ['ultrafiltrationuf', ['ultrafiltration']],
   ['ultrafiltration', ['ultrafiltration']],
 ]);
+TECHNOLOGY_STAGES.set('ro', ['reverse_osmosis']);
+TECHNOLOGY_STAGES.set('roplant', ['reverse_osmosis']);
+TECHNOLOGY_STAGES.set('uf', ['ultrafiltration']);
 function mapTechnology(raw) {
-  const stages = TECHNOLOGY_STAGES.get(techKey(raw));
+  // "RO (2000 LPH)": the parenthetical is a capacity, not part of the technology name.
+  const stages = TECHNOLOGY_STAGES.get(techKey(raw)) || TECHNOLOGY_STAGES.get(techKey(String(raw || '').replace(/\([^)]*\)/g, '')));
   return stages ? { stages: [...stages], recognised: true } : { stages: [], recognised: false };
 }
 
@@ -397,7 +401,16 @@ function normalizeRow(values, mapping, ctx) {
 
   // Capacity (production rate) — kept strictly separate from the collection limit
   const capHeader = headerOf('capacity');
-  const cap = capHeader ? parseCapacity(get('capacity'), capHeader) : null;
+  let cap = capHeader ? parseCapacity(get('capacity'), capHeader) : null;
+  // No capacity column, but the technology cell records one in brackets, e.g. "RO (2000 LPH)".
+  if (!cap && tech) {
+    const m = String(tech).match(/\(([^)]*\d[^)]*)\)/);
+    const techHeader = headerOf('technology_raw');
+    if (m) {
+      const parsed = parseCapacity(m[1], techHeader);
+      if (parsed && parsed.unit) cap = { ...parsed, basis: `As recorded in brackets in source column '${techHeader}'; whether this is rated or measured output is not stated.` };
+    }
+  }
   if (cap) {
     Object.assign(plant, {
       capacity_raw: cap.raw, capacity_value: cap.value, capacity_unit: cap.unit, capacity_unit_label: cap.unitLabel,
