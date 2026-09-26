@@ -375,8 +375,8 @@ export function mountResults(root, { config, onChangeLocation }) {
     nextBtn.replaceChildren(h('span', { class: 'arrow-text' }, t('search.card.next')), icon(nextArrow()));
     prevBtn.setAttribute('aria-label', t('search.card.prevLabel'));
     nextBtn.setAttribute('aria-label', t('search.card.nextLabel'));
-    const atStart = i <= 0;
-    const atEnd = i >= n - 1;
+    const atStart = i <= 0 || targetIndex(-1) < 0;
+    const atEnd = i >= n - 1 || targetIndex(1) >= n;
     prevBtn.disabled = atStart;
     nextBtn.disabled = atEnd;
     position.textContent = n ? t('search.card.position', { n: formatNumber(i + 1), total: formatNumber(n) }) : '';
@@ -384,8 +384,30 @@ export function mountResults(root, { config, onChangeLocation }) {
     if ((prevBtn.disabled && document.activeElement === prevBtn) || (nextBtn.disabled && document.activeElement === nextBtn)) cardRegion.focus({ preventScroll: true });
   }
 
+  // In the approximate (area) list every plant in one area shares the same distance — the area centre —
+  // so Next/Previous jump to the next/previous nearest AREA rather than stepping through plants of the
+  // same area. The exact list steps plant by plant in distance order from the chosen location.
+  const areaKeyOf = (p) => (p?.location?.area?.id ?? p?.areaName ?? p?.code);
+  const byArea = () => ctx.mode === 'search' && ctx.group === 'area';
+
+  function targetIndex(delta) {
+    if (!byArea()) return ctx.index + delta;
+    const list = ctx.list;
+    const cur = areaKeyOf(list[ctx.index]);
+    let i = ctx.index;
+    if (delta > 0) {
+      while (i < list.length && areaKeyOf(list[i]) === cur) i++;
+      return i;
+    }
+    while (i >= 0 && areaKeyOf(list[i]) === cur) i--;
+    if (i < 0) return -1;
+    const prevKey = areaKeyOf(list[i]);
+    while (i > 0 && areaKeyOf(list[i - 1]) === prevKey) i--;
+    return i;
+  }
+
   function step(delta, { keyboard = false } = {}) {
-    const next = ctx.index + delta;
+    const next = targetIndex(delta);
     if (next < 0 || next >= ctx.list.length) return;
     select(next, { direction: delta, via: keyboard ? 'keyboard' : 'arrow' });
   }
