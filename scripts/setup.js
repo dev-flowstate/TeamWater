@@ -29,6 +29,15 @@ async function runSetup({ quiet = false } = {}) {
     log('Import summary:', JSON.stringify(summary));
   }
 
+  // 2b. Additional owner-supplied files (see data/source/incoming/imports.json)
+  const extraCfg = path.join(srcDir, 'incoming', 'imports.json');
+  if (fs.existsSync(extraCfg) && typeof pipeline.importFromFile === 'function') {
+    for (const item of JSON.parse(fs.readFileSync(extraCfg, 'utf8'))) {
+      const summary = await pipeline.importFromFile({ filePath: path.join(srcDir, 'incoming', item.file), sheet: item.sheet, actorLabel: 'setup' });
+      log(`Import summary (${item.file}):`, JSON.stringify({ new: summary.new, update: summary.update, rejected: summary.rejected }));
+    }
+  }
+
   // 3. Demonstration data (off by default)
   const demo = require('../server/lib/demo');
   if (typeof demo.syncDemoData === 'function') log('Demo data:', JSON.stringify(demo.syncDemoData(config.demoData)));

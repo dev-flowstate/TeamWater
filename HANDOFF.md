@@ -83,7 +83,8 @@ It has three parts:
 
 ## Next steps, in priority order
 
-1. **Import the two new spreadsheets.** Use `npm run import:xlsx -- <file> --dry-run --errors e.csv` or the admin import wizard with column mapping. For UMAR, first write a small converter that pulls the coordinates out of the URLs into Latitude/Longitude columns. Make `scripts/setup.js` import every file in `data/source/` and `data/source/incoming/`, so Vercel cold starts include them. Test that exact-location plants then appear in `/api/search` in the `exact` group, with directions.
+1. **DONE for the 139-plant file.** `scripts/setup.js` now imports it through `data/source/incoming/imports.json`, and 122 plants appear as exact locations in nearest search with directions. Remaining work: "RO (2000 LPH)" is stored as `technology_raw`, but the capacity isn't split out and the stages come back as `[]`; fix the parsing in `server/import/normalize.js`. **Still to do:** the UMAR file (below).
+   Original instruction: **Import the two new spreadsheets.** Use `npm run import:xlsx -- <file> --dry-run --errors e.csv` or the admin import wizard with column mapping. For UMAR, first write a small converter that pulls the coordinates out of the URLs into Latitude/Longitude columns. Make `scripts/setup.js` import every file in `data/source/` and `data/source/incoming/`, so Vercel cold starts include them. Test that exact-location plants then appear in `/api/search` in the `exact` group, with directions.
 2. Decide whether the original 1,000-row modelled file should stay public, now that real sourced data exists. Ask the owner. You could hide it behind a flag.
 3. Translate `public/i18n/about.ur.json`, which has only 5 of 96 keys, so the About and Privacy pages are fully Urdu.
 4. Compact the result controls on mobile (see the note in the Public UI report).

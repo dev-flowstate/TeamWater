@@ -51,10 +51,10 @@ function headerHint(s) {
 
 const SYNONYMS = {
   plant_code: ['plant id', 'plant code', 'plant no', 'plant number', 'plant #', 'id', 'code', 'site id', 'site code', 'facility id', 'facility code', 'station id', 'wfp id', 'filter plant id', 'plant ref', 'reference', 'ref'],
-  name: ['name', 'plant name', 'site name', 'facility name', 'filter plant name', 'station name', 'title'],
-  town: ['town', 'tehsil', 'town/tehsil', 'town tehsil', 'tehsil/town', 'city', 'sub division', 'subdivision', 'town name'],
+  name: ['name', 'plant name', 'plant / project name', 'plant project name', 'project name', 'site name', 'facility name', 'filter plant name', 'station name', 'title'],
+  town: ['town', 'tehsil', 'tehsil / area', 'tehsil area', 'town/tehsil', 'town tehsil', 'tehsil/town', 'city', 'sub division', 'subdivision', 'town name'],
   area_raw: ['area', 'area/union council', 'area / uc', 'area/uc', 'union council', 'uc', 'locality', 'area name', 'location', 'area union council'],
-  address: ['address', 'street address', 'full address', 'location address', 'site address', 'plant address'],
+  address: ['address', 'address / location', 'address location', 'street address', 'full address', 'location address', 'site address', 'plant address'],
   neighborhood: ['neighborhood', 'neighbourhood', 'mohalla', 'mohallah', 'colony', 'block'],
   landmark: ['landmark', 'nearby landmark', 'near', 'nearest landmark', 'land mark'],
   latitude: ['lat', 'latitude', 'y', 'lat dd', 'gps lat', 'gps latitude', 'latitude dd', 'lat (n)', 'northing'],
@@ -62,7 +62,7 @@ const SYNONYMS = {
   operator_type: ['operator type', 'operating entity type', 'entity type', 'ownership', 'ownership type', 'owner type', 'operator category', 'managed by type', 'sector type', 'type of operator'],
   operator_name: ['operator', 'operator name', 'operating entity', 'operating entity name', 'managed by', 'owner', 'owner name', 'organisation', 'organization', 'agency'],
   water_source: ['water source', 'source', 'source water', 'raw water source', 'source of water', 'intake', 'water supply source'],
-  technology_raw: ['technology', 'filtration technology', 'treatment technology', 'treatment', 'filtration type', 'filtration', 'treatment type', 'filter type', 'plant technology'],
+  technology_raw: ['technology', 'plant type', 'filtration technology', 'treatment technology', 'treatment', 'filtration type', 'filtration', 'treatment type', 'filter type', 'plant technology'],
   capacity: ['capacity', 'plant capacity', 'production capacity', 'rated capacity', 'output', 'production', 'flow rate', 'design capacity'],
   collection_limit: ['collection limit', 'per person limit', 'limit per person', 'allowance', 'quota', 'max collection', 'maximum collection', 'collection limit per person', 'per visit limit', 'daily limit'],
   opening_hours_text: ['opening hours', 'hours', 'timings', 'timing', 'operating hours', 'open hours', 'schedule', 'working hours', 'hours of operation'],
