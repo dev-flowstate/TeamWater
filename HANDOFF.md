@@ -42,7 +42,7 @@ It has three parts:
 - **Repo:** `dev-flowstate/TeamWater`, branch `claude/compassionate-albattani-bgi6iq`. It's the only branch.
 - **Live demo:** https://team-water.vercel.app/ (Vercel Hobby).
   - **Vercel env vars** (set in the Vercel project): `PHONE_ENC_KEY`, `HMAC_KEY`, `ADMIN_PASSWORD`. The admin username is `admin`.
-  - **Vercel limitation:** the disk is temporary. `api/index.js` rebuilds the SQLite DB in `/tmp` from the bundled spreadsheet on every cold start, so reports and admin edits don't persist. For durable data, deploy to a host with a disk (see `render.yaml` and the README).
+  - **Vercel limitation:** the disk is temporary. `api/index.js` rebuilds the SQLite DB in `/tmp` from the bundled spreadsheet on every cold start, so reports and admin edits don't persist, **unless** `FIREBASE_DATABASE_URL` and `FIREBASE_SERVICE_ACCOUNT` are set: then `server/lib/persist.js` saves the DB and uploads to a Firebase Realtime Database after every change, restores them on start, and reloads when another instance saved (README → Deploy). Setup re-runs on a restored DB only when the bundled data files change. Supabase was not used because the owner's Supabase projects are at their limit.
 - **Stack:** Node ≥ 22.13, Express 5, and SQLite via built-in `node:sqlite`. No bundler; the public folder is plain ES modules.
   - **Run it:** `npm install && npm run setup && npm start`
   - **Tests:** `npm test` (95 unit/API tests) and `npm run test:e2e` (4 Playwright suites). Everything passed at handoff.

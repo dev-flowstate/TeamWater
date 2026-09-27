@@ -70,6 +70,11 @@ UPLOAD_MAX_IMPORT_MB=20
 RETENTION_REPORT_DAYS=730
 RETENTION_CONTACT_DAYS=180
 
+# ── Durable storage on Vercel (Firebase Realtime Database) ──────────────
+# Set both to keep reports, ratings and admin edits across Vercel restarts (see README → Deploy).
+FIREBASE_DATABASE_URL=
+FIREBASE_SERVICE_ACCOUNT=
+
 # ── Public data ──────────────────────────────────────────────────────────
 # 1 = show a made-up TDS value and green/yellow/red dot on every plant card (hackathon demo; always labelled as
 # demo, never stored or counted as a water test). 0 = off.

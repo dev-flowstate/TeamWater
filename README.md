@@ -50,7 +50,13 @@ npm run test:e2e                           # browser tests (Playwright + Chromiu
 - `PHONE_ENC_KEY` and `HMAC_KEY`: any random strings of 32+ characters, e.g. from `openssl rand -base64 32`
 - `ADMIN_PASSWORD`: 12+ characters; the admin username is `admin`
 
-Vercel's disk is temporary. On each cold start the database is rebuilt from the bundled spreadsheet, so search and browsing always work, but **reports and admin edits don't persist**. Use it for demos only.
+Vercel's disk is temporary. On each cold start the database is rebuilt from the bundled spreadsheet, so search and browsing always work, but **reports and admin edits don't persist** unless you connect Firebase:
+
+1. In the [Firebase console](https://console.firebase.google.com), create a project, then **Build → Realtime Database → Create database** (locked mode is fine; the server signs in with a service account, which bypasses the rules).
+2. **Project settings → Service accounts → Generate new private key** downloads a JSON key.
+3. In Vercel, add `FIREBASE_DATABASE_URL` (the database URL shown in the console, e.g. `https://<project>-default-rtdb.firebaseio.com`) and `FIREBASE_SERVICE_ACCOUNT` (the whole JSON key, pasted as one value), then redeploy.
+
+The database and uploaded photos are then saved to Firebase after every change and restored on each start (`server/lib/persist.js`). If two instances save at the same moment, the later save wins; fine for demo traffic.
 
 **Durable hosting:** any Node 22 host with a persistent disk, e.g. Render (`render.yaml` included; paid plan plus disk), Railway, Fly.io, or a VPS. Run `npm ci && npm run setup && npm start`, with `DATA_DIR` on the persistent disk.
 

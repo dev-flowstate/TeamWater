@@ -116,6 +116,12 @@ const config = {
   publicHiddenSourceFiles: (env.PUBLIC_HIDDEN_SOURCE_FILES ?? 'Filter_palnts_in_Faisalabad_1000_1.xlsx')
     .split(',').map((s) => s.trim()).filter(Boolean),
 
+  // Durable storage on hosts with a temporary disk (Vercel): see server/lib/persist.js. Unset = off.
+  firebase: {
+    databaseUrl: env.FIREBASE_DATABASE_URL || '',
+    serviceAccount: env.FIREBASE_SERVICE_ACCOUNT || '',
+  },
+
   timezone: 'Asia/Karachi',
 };
 
