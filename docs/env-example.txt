@@ -74,6 +74,9 @@ RETENTION_CONTACT_DAYS=180
 # 1 = show a made-up TDS value and green/yellow/red dot on every plant card (hackathon demo; always labelled as
 # demo, never stored or counted as a water test). 0 = off.
 DEMO_WATER_QUALITY=1
+# 1 = fill blank opening hours, water source, capacity, collection limit and operator type with made-up values,
+# each tagged "demo" on the card (hackathon demo; never stored). 0 = off.
+DEMO_FACTS=1
 
 # Source files whose plants are kept for administrators but hidden from the public site (comma-separated).
 # Default: the original 1,000-row file (no names, addresses or coordinates). Leave empty to show every plant.

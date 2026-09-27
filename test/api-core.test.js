@@ -944,3 +944,23 @@ test('demo water quality: labelled, stable, banded, separate from real tests, sw
   require('../server/config').demoWaterQuality = false;
   assert.equal(demoWaterQuality(codes[0]), null);
 });
+
+test('demo facts: blanks filled and listed in demoFields, real values win, switchable', async (t) => {
+  const s = await startTestServer({ env: { DEMO_FACTS: '1' } });
+  t.after(() => s.close());
+  const blank = s.insertPlant({ capacity_raw: null, capacity_value: null, capacity_unit: null, capacity_unit_label: null });
+  const real = s.insertPlant({ water_source: 'Canal', opening_hours_text: '6 am – 6 pm', operator_type: 'WASA' });
+  const get = async (code) => (await s.fetch(`/api/plants/${code}`)).json();
+
+  const b = await get(blank.plant_code);
+  assert.deepEqual([...b.demoFields].sort(), ['capacity', 'collectionLimit', 'openingHours', 'operator', 'waterSource']);
+  assert.ok(b.openingHours.text && b.waterSource && b.capacity.value && b.collectionLimit.raw && b.operator.type);
+  assert.equal(b.openingHours.openNow, null, 'demo hours never claim open/closed');
+  const r = await get(real.plant_code);
+  assert.deepEqual([r.waterSource, r.openingHours.text, r.operator.type, r.capacity.raw], ['Canal', '6 am – 6 pm', 'WASA', '1000 GPH']);
+  assert.deepEqual(r.demoFields, ['collectionLimit']);
+  assert.deepEqual(await get(blank.plant_code), b, 'stable per plant');
+
+  require('../server/config').demoFacts = false;
+  assert.equal((await get(blank.plant_code)).demoFields, undefined);
+});

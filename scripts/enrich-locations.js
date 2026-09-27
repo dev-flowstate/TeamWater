@@ -8,10 +8,13 @@
 //   2. Otherwise OpenStreetMap Nominatim is searched with the address / link text / name / chak number. Only a
 //      village-, neighbourhood- or place-level match inside the district counts; a whole town, city or road does not.
 //      These are flagged approximate and labelled so on the site.
+//   Positions found by an earlier run (the existing enrichment.json) are reused; pass --refresh to search again.
+// Addresses, only for plants with none: a reverse lookup of the plant's position on OpenStreetMap, e.g.
+//   "Jhang Road, Partab Nagar, Faisalabad"; "Near …" for searched positions. A tehsil or city alone is not used.
 // Landmarks, only for plants with none:
 //   1. "Near X" in the plant's own name or address.
-//   2. Otherwise the nearest named school, mosque, hospital, park … on OpenStreetMap within 250 m of a
-//      non-approximate position, e.g. "Govt. High School (about 120 m, OpenStreetMap)".
+//   2. Otherwise the nearest named school, mosque, hospital, park, fuel station … on OpenStreetMap within 1 km of
+//      the position, e.g. "Govt. High School (about 120 m away)".
 // OpenStreetMap data © OpenStreetMap contributors, ODbL. Google Maps is not used (its terms forbid storing its data).
 const fs = require('node:fs');
 const os = require('node:os');
@@ -21,7 +24,7 @@ const OUTPUT = path.join(__dirname, '..', 'data', 'source', 'incoming', 'enrichm
 const OLC_ALPHABET = '23456789CFGHJMPQRVWX';
 const OLC_RES = [20, 1, 0.05, 0.0025, 0.000125];
 const PLUS_CODE_RE = /\b([23456789CFGHJMPQRVWX]{4,8}\+[23456789CFGHJMPQRVWX]{2,3})\b/i;
-const LANDMARK_RADIUS_M = 250;
+const LANDMARK_RADIUS_M = 1000;
 // Nominatim match types that are too coarse to stand for a plant's position.
 const TOO_COARSE = new Set(['country', 'state', 'state_district', 'region', 'province', 'county', 'district', 'municipality', 'city', 'town', 'road']);
 
@@ -132,6 +135,7 @@ async function main() {
   const plants = getDb().prepare(`SELECT * FROM plants p WHERE ${publicPlantSql('p')} ORDER BY plant_code`).all();
   const out = {};
   const put = (code, v) => { out[code] = { ...out[code], ...v }; };
+  const previous = !process.argv.includes('--refresh') && fs.existsSync(OUTPUT) ? JSON.parse(fs.readFileSync(OUTPUT, 'utf8')).plants : {};
   const [refLat, refLng] = config.map.center;
 
   // ── Positions ──
@@ -168,6 +172,11 @@ async function main() {
     && !/coordinates_out_of_bounds|coordinates_possibly_swapped/.test(p.review_reasons_json || ''));
   console.log(`${missing.length} public plants have no position.`);
   for (const p of missing) {
+    const prev = previous[p.plant_code];
+    if (prev && prev.lat !== undefined) {
+      put(p.plant_code, { lat: prev.lat, lng: prev.lng, approximate: prev.approximate, coordSource: prev.coordSource });
+      continue;
+    }
     const texts = [p.address, linkPlace(p), p.name].filter(Boolean);
     const plus = texts.map((t) => t.match(PLUS_CODE_RE)).find(Boolean);
     if (plus) {
@@ -192,11 +201,35 @@ async function main() {
     console.log(`${p.plant_code}: ${out[p.plant_code]?.coordSource || 'not found'}`);
   }
 
+  // ── Addresses (reverse lookup of each position) ──
+  const positionOf = (p) => (p.latitude !== null ? { lat: p.latitude, lng: p.longitude, approximate: false }
+    : out[p.plant_code]?.lat !== undefined ? out[p.plant_code] : null);
+  const formatAddress = (a = {}) => {
+    const road = a.road ? [a.house_number, a.road].filter(Boolean).join(' ') : null;
+    const local = a.neighbourhood || a.quarter || a.residential || a.suburb || a.hamlet;
+    if (!road && !local) return null; // a tehsil or city alone is not an address
+    const place = (a.village || a.town || a.city || a.city_district || '').replace(/\s+(City|Saddar)?\s*Tehsil$/i, '') || null;
+    const seen = new Set();
+    return [road, local, place].filter((x) => x && !seen.has(x.toLowerCase()) && seen.add(x.toLowerCase())).join(', ');
+  };
+  for (const p of plants) {
+    if (p.address) continue;
+    const pos = positionOf(p);
+    if (!pos) continue;
+    await sleep(Math.max(0, lastCall + 1100 - Date.now()));
+    lastCall = Date.now();
+    const url = `${config.geocoder.url}/reverse?${new URLSearchParams({ lat: String(pos.lat), lon: String(pos.lng), format: 'jsonv2', zoom: '17', addressdetails: '1' })}`;
+    const r = await fetch(url, { headers: { 'User-Agent': ua, 'Accept-Language': 'en' } }).then((x) => (x.ok ? x.json() : null)).catch(() => null);
+    const text = formatAddress(r?.address);
+    if (text) put(p.plant_code, { address: pos.approximate ? `Near ${text}` : text });
+  }
+  console.log(`${Object.values(out).filter((v) => v.address).length} addresses from OpenStreetMap.`);
+
   // ── Landmarks ──
   const [[s, w], [n, e]] = config.map.bounds;
   const bbox = `${s - 0.15},${w - 0.4},${n + 0.15},${e + 0.15}`;
   const query = `[out:json][timeout:180];(
-    nwr["name"]["amenity"~"^(school|college|university|hospital|clinic|place_of_worship|bank|police|post_office|marketplace|community_centre|townhall|library|bus_station)$"](${bbox});
+    nwr["name"]["amenity"~"^(school|college|university|hospital|clinic|place_of_worship|bank|police|post_office|marketplace|community_centre|townhall|library|bus_station|fuel)$"](${bbox});
     nwr["name"]["leisure"~"^(park|stadium)$"](${bbox});
     nwr["name"]["shop"="mall"](${bbox});
   );out center tags;`;
@@ -221,26 +254,26 @@ async function main() {
     if (p.landmark) continue;
     const near = nearLandmark(p.name, p.address);
     if (near) { put(p.plant_code, { landmark: near }); continue; }
-    const pos = p.latitude !== null ? { lat: p.latitude, lng: p.longitude } : out[p.plant_code]?.approximate === false ? out[p.plant_code] : null;
-    if (!pos) continue;
+    const pos = positionOf(p);
+    if (!pos || pos.approximate) continue;
     let best = null;
     for (const x of pois) {
-      if (Math.abs(x.lat - pos.lat) > 0.003 || Math.abs(x.lng - pos.lng) > 0.003) continue;
+      if (Math.abs(x.lat - pos.lat) > 0.01 || Math.abs(x.lng - pos.lng) > 0.012) continue;
       const d = haversineM(pos.lat, pos.lng, x.lat, x.lng);
       if (d <= LANDMARK_RADIUS_M && (!best || d < best.d)) best = { ...x, d };
     }
-    if (best) put(p.plant_code, { landmark: `${best.name} (about ${Math.max(10, Math.round(best.d / 10) * 10)} m, OpenStreetMap)` });
+    if (best) put(p.plant_code, { landmark: `${best.name} (about ${Math.max(10, Math.round(best.d / 10) * 10)} m away)` });
   }
 
   const sorted = Object.fromEntries(Object.keys(out).sort().map((k) => [k, out[k]]));
   fs.writeFileSync(OUTPUT, JSON.stringify({
     generatedAt: new Date().toISOString(),
-    attribution: 'Positions found by search and landmarks: © OpenStreetMap contributors, ODbL. Plus codes: from the source records.',
+    attribution: 'Positions found by search, addresses and landmarks: © OpenStreetMap contributors, ODbL. Plus codes: from the source records.',
     plants: sorted,
   }, null, 2) + '\n');
   const vals = Object.values(sorted);
   console.log(`Wrote ${path.relative(process.cwd(), OUTPUT)}: ${vals.filter((v) => v.lat !== undefined && !v.approximate).length} plus-code positions, `
-    + `${vals.filter((v) => v.approximate).length} approximate positions, ${vals.filter((v) => v.landmark).length} landmarks.`);
+    + `${vals.filter((v) => v.approximate).length} approximate positions, ${vals.filter((v) => v.address).length} addresses, ${vals.filter((v) => v.landmark).length} landmarks.`);
   closeDb();
   fs.rmSync(process.env.DATA_DIR, { recursive: true, force: true });
 }

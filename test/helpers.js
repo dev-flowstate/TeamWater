@@ -19,6 +19,9 @@ async function startTestServer({ env = {} } = {}) {
   process.env.GEOCODER_PROVIDER = env.GEOCODER_PROVIDER || 'none';
   process.env.ROUTING_PROVIDER = env.ROUTING_PROVIDER || 'none';
   process.env.SMS_PROVIDER = env.SMS_PROVIDER || 'console';
+  // Hackathon demo fill-ins are off unless a test asks for them, so contract tests see the real (blank) values.
+  process.env.DEMO_WATER_QUALITY = env.DEMO_WATER_QUALITY || '0';
+  process.env.DEMO_FACTS = env.DEMO_FACTS || '0';
   Object.assign(process.env, env);
   // Fresh module graph so config picks up the env for this file.
   for (const k of Object.keys(require.cache)) if (k.includes(`${path.sep}server${path.sep}`) || k.includes(`${path.sep}scripts${path.sep}`)) delete require.cache[k];

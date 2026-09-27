@@ -107,6 +107,9 @@ const config = {
   // Hackathon demo: a made-up TDS value with a green/yellow/red dot on every plant card, always labelled as demo and
   // never stored or counted as a water test. Set DEMO_WATER_QUALITY=0 to switch it off.
   demoWaterQuality: bool(env.DEMO_WATER_QUALITY, true),
+  // Hackathon demo: fill blank opening hours, water source, capacity, collection limit and operator type with
+  // made-up values tagged "demo" on the card (never stored). Set DEMO_FACTS=0 to switch it off.
+  demoFacts: bool(env.DEMO_FACTS, true),
 
   // Source files whose plants are kept for administrators but hidden from the public site. By default the original
   // 1,000-row file, which has no names, addresses or coordinates. Set PUBLIC_HIDDEN_SOURCE_FILES= (empty) to show it.

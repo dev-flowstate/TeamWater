@@ -16,6 +16,11 @@
       "latitude": "Latitude",
       "longitude": "Longitude",
       "technology_raw": "Technology (from sheet title)"
+    },
+    "ownerConfirmation": {
+      "status": "operational",
+      "verifiedAt": "2026-09-27",
+      "note": "Site owner confirmed on 27 Sept 2026 that all plants in this list are working and their map locations are correct."
     }
   }
 ]

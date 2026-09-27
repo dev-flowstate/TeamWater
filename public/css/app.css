@@ -444,6 +444,7 @@ body[data-page='home']:not(.is-results) .tw-footer-shore { display: none; }
 .demo-quality.is-okay .demo-quality-dot { background: #e8b422; }
 .demo-quality.is-bad .demo-quality-dot { background: #d93a2b; }
 .demo-quality-note { display: block; font-size: 0.8125rem; color: var(--tw-text-muted); }
+.demo-tag { display: inline-block; padding: 0 7px; border-radius: 999px; background: var(--tw-unknown-100); color: var(--tw-unknown); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.02em; vertical-align: 1px; }
 .chip-none { background: var(--tw-unknown-100); color: var(--tw-unknown); border-color: var(--tw-slate-100); }
 .chip-demo { background: var(--tw-demo-100); color: var(--tw-demo); border-color: #d6bdee; }
 .chip-ok { background: var(--tw-success-100); color: var(--tw-success); }

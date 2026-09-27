@@ -85,6 +85,31 @@ function demoWaterQuality(code) {
   return { tds: value, band: value < 500 ? 'good' : value <= 1000 ? 'okay' : 'bad', demo: true };
 }
 
+/**
+ * Hackathon demo (DEMO_FACTS, on by default): fill blank opening hours, water source, capacity, collection limit and
+ * operator type with plausible made-up values, stable per plant code. Real values always win; `demoFields` lists
+ * what was filled so the UI tags each one "demo". Never stored, never used for ranking or "open now".
+ */
+const DEMO_HOURS = ['8:00 am – 8:00 pm', '7:00 am – 10:00 pm', '24 hours', '9:00 am – 9:00 pm'];
+const DEMO_LIMITS = ['20 litres per visit', '40 litres per day', '2 cans (38 litres) per visit'];
+const DEMO_OPERATORS = ['Government', 'Community / NGO', 'Private'];
+function applyDemoFacts(out, code) {
+  if (!config.demoFacts || !code) return;
+  const h = require('node:crypto').createHash('sha256').update(`demo-facts|${code}`).digest();
+  const pick = (list, i) => list[h[i] % list.length];
+  const demo = [];
+  if (!out.openingHours || !out.openingHours.text) { out.openingHours = { text: pick(DEMO_HOURS, 0), structured: null, openNow: null }; demo.push('openingHours'); }
+  if (!out.waterSource) { out.waterSource = 'Groundwater (tube well)'; demo.push('waterSource'); }
+  if (!out.capacity) {
+    const v = pick([1000, 2000], 1);
+    out.capacity = { raw: `${v} LPH`, value: v, unit: 'litres_per_hour', unitLabel: 'LPH', gallonType: 'not_applicable', basis: null, litresPerHour: v, litresPerDay: null };
+    demo.push('capacity');
+  }
+  if (!out.collectionLimit) { out.collectionLimit = { raw: pick(DEMO_LIMITS, 2), value: null, unit: null, period: null }; demo.push('collectionLimit'); }
+  if (!out.operator.type && !out.operator.name) { out.operator = { type: pick(DEMO_OPERATORS, 3), name: null }; demo.push('operator'); }
+  out.demoFields = demo;
+}
+
 /** SQL condition (no leading AND) that keeps only plants shown on the public site. */
 function publicPlantSql(alias = 'p') {
   const parts = ['1 = 1'];
@@ -209,6 +234,7 @@ function toSummary(row, area, extras = {}) {
     lastVerifiedAt: row.last_verified_at ?? null,
     demoWaterQuality: demoWaterQuality(row.plant_code),
   };
+  applyDemoFacts(out, row.plant_code);
   if (extras.ranking) {
     const r = extras.ranking;
     out.rank = r.rank;

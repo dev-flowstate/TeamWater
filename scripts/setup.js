@@ -30,7 +30,7 @@ function applyOwnerConfirmation(db, file, { status = 'operational', verifiedAt, 
 }
 
 // Positions and landmarks found by scripts/enrich-locations.js (committed to data/source/incoming/enrichment.json so
-// setup never calls the network). Only fills blanks: a plant that already has coordinates or a landmark, from its
+// setup never calls the network). Only fills blanks: a plant that already has coordinates, an address or a landmark, from its
 // source or an administrator, is never changed. Searched positions are flagged coord_approximate = 1.
 function applyEnrichment(db, file) {
   const { audit } = require('../server/lib/audit');
@@ -41,13 +41,15 @@ function applyEnrichment(db, file) {
       coord_approximate = ?, coord_accuracy_m = NULL, updated_at = ?
     WHERE plant_code = ? AND coord_status = 'missing' AND latitude IS NULL`);
   const setLandmark = db.prepare('UPDATE plants SET landmark = ?, updated_at = ? WHERE plant_code = ? AND landmark IS NULL');
-  let coords = 0, landmarks = 0;
+  const setAddress = db.prepare('UPDATE plants SET address = ?, updated_at = ? WHERE plant_code = ? AND address IS NULL');
+  let coords = 0, landmarks = 0, addresses = 0;
   for (const [code, e] of Object.entries(plants)) {
     if (e.lat !== undefined) coords += setCoords.run(e.lat, e.lng, e.coordSource, `Added by scripts/enrich-locations.js: ${e.coordSource}`, e.approximate ? 1 : 0, now, code).changes;
     if (e.landmark) landmarks += setLandmark.run(e.landmark, now, code).changes;
+    if (e.address) addresses += setAddress.run(e.address, now, code).changes;
   }
-  if (coords || landmarks) audit(null, { action: 'plant.enrichment', entityType: 'source_file', entityId: path.basename(file), after: { coords, landmarks }, actorLabel: 'setup' });
-  return { coords, landmarks };
+  if (coords || landmarks || addresses) audit(null, { action: 'plant.enrichment', entityType: 'source_file', entityId: path.basename(file), after: { coords, landmarks, addresses }, actorLabel: 'setup' });
+  return { coords, landmarks, addresses };
 }
 
 async function runSetup({ quiet = false, enrichment = true } = {}) {

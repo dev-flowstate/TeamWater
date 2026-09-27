@@ -43,6 +43,9 @@ async function main() {
     SMS_PROVIDER: 'console',
     GEOCODER_PROVIDER: process.env.GEOCODER_PROVIDER || 'none',
     ROUTING_PROVIDER: process.env.ROUTING_PROVIDER || 'none',
+    // Hackathon demo fill-ins off, so the suites check the real (blank) values; see test/helpers.js.
+    DEMO_WATER_QUALITY: process.env.DEMO_WATER_QUALITY || '0',
+    DEMO_FACTS: process.env.DEMO_FACTS || '0',
     ADMIN_USERNAME: adminCredentials.username,
     ADMIN_PASSWORD: adminCredentials.password,
   };

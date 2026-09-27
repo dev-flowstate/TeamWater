@@ -300,6 +300,18 @@ function demoQualityBadge(q) {
       h('span', { class: 'demo-quality-note' }, t('search.demoQuality.note'))));
 }
 
+// Hackathon demo fill (server: plant-view applyDemoFacts): tag each made-up value "demo".
+const isDemoField = (p, field) => !!p.demoFields?.includes(field);
+function withDemoTag(p, field, value) {
+  if (!value || !isDemoField(p, field)) return value;
+  return h('span', {}, value, ' ', h('span', { class: 'demo-tag' }, t('search.demo.tag')));
+}
+function demoCapacity(c) {
+  return h('div', { class: 'capacity' },
+    h('p', { class: 'capacity-main' }, h('strong', {}, t('search.capacity.mainLph', { n: formatNumber(c.value) })), ' ', h('span', { class: 'demo-tag' }, t('search.demo.tag'))),
+    h('p', { class: 'capacity-warn' }, icon('info'), h('strong', {}, t('search.capacity.notAllowance'))));
+}
+
 export function renderCard(p, detail, ctx = {}) {
   const loc = p.location || {};
   const exact = loc.precision === 'exact';
@@ -359,12 +371,12 @@ export function renderCard(p, detail, ctx = {}) {
   const facts = h('dl', { class: 'facts' },
     fact(t('search.fact.address'), p.address ? bdi(p.address) : null, 'pin'),
     fact(t('search.fact.landmark'), p.landmark ? bdi(p.landmark) : null, 'flag'),
-    fact(t('search.fact.hours'), hoursValue(p), 'clock'),
+    fact(t('search.fact.hours'), withDemoTag(p, 'openingHours', hoursValue(p)), 'clock'),
     fact(t('search.fact.technology'), p.technology?.raw ? bdi(p.technology.raw) : null, 'filter'),
-    fact(t('search.fact.source'), p.waterSource ? bdi(p.waterSource) : null, 'drop'),
-    fact(t('search.fact.capacity'), capacityBlock(p.capacity), 'gauge'),
-    fact(t('search.fact.limit'), p.collectionLimit ? bdi(String(p.collectionLimit)) : null, 'info'),
-    fact(t('search.fact.operator'), p.operator?.type || p.operator?.name
+    fact(t('search.fact.source'), withDemoTag(p, 'waterSource', p.waterSource ? bdi(p.waterSource) : null), 'drop'),
+    fact(t('search.fact.capacity'), isDemoField(p, 'capacity') ? demoCapacity(p.capacity) : capacityBlock(p.capacity), 'gauge'),
+    fact(t('search.fact.limit'), withDemoTag(p, 'collectionLimit', p.collectionLimit ? bdi(String(p.collectionLimit.raw ?? p.collectionLimit)) : null), 'info'),
+    fact(t('search.fact.operator'), isDemoField(p, 'operator') ? withDemoTag(p, 'operator', bdi(p.operator.type)) : p.operator?.type || p.operator?.name
       ? h('span', {}, p.operator?.name ? [bdi(p.operator.name), ' · '] : null, p.operator?.type ? bdi(p.operator.type) : null, p.operator?.name ? null : h('span', { class: 'muted' }, ' ', t('search.fact.operatorTypeOnly')))
       : null, 'users'),
     fact(t('search.fact.lastVerified'), p.lastVerifiedAt ? formatDate(p.lastVerifiedAt) : h('span', { class: 'is-missing' }, t('search.value.notVerified')), 'check'));
@@ -389,7 +401,8 @@ export function renderCard(p, detail, ctx = {}) {
     actions, dirWhy, routeSlot,
     detailNote,
     facts, contactSlot,
-    h('div', { class: 'boxes' }, qualityBlock(p, d), ratingBlock(p.rating)),
+    // While the demo dot is shown, an empty "no test data" evidence box is left out; recorded tests always show.
+    h('div', { class: 'boxes' }, p.demoWaterQuality && !(p.waterQuality?.testCount > 0) ? null : qualityBlock(p, d), ratingBlock(p.rating)),
     reportsSec,
     diagramSlot,
     recordDetails);

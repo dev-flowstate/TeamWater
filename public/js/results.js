@@ -681,7 +681,7 @@ export function mountResults(root, { config, onChangeLocation }) {
     if (ctx.mode === 'search') {
       for (const p of [...d.exact, ...d.area]) {
         if (p.technology?.raw) ctx.facets.technology.add(p.technology.raw);
-        if (p.operator?.type) ctx.facets.operatorType.add(p.operator.type);
+        if (p.operator?.type && !p.demoFields?.includes('operator')) ctx.facets.operatorType.add(p.operator.type); // demo types can't be filtered server-side
       }
       // Default group: exact when available, otherwise area (true for the spreadsheet today).
       ctx.group = s.group && d[s.group]?.length ? s.group : d.exact.length ? 'exact' : 'area';

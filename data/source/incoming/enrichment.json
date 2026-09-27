@@ -1,33 +1,46 @@
 {
-  "generatedAt": "2026-09-27T13:30:40.651Z",
-  "attribution": "Positions found by search and landmarks: © OpenStreetMap contributors, ODbL. Plus codes: from the source records.",
+  "generatedAt": "2026-09-27T13:53:26.751Z",
+  "attribution": "Positions found by search, addresses and landmarks: © OpenStreetMap contributors, ODbL. Plus codes: from the source records.",
   "plants": {
     "COM-001": {
       "lat": 31.464512,
       "lng": 73.098016,
       "approximate": false,
-      "coordSource": "Plus code F37X+R62 in the source record"
+      "coordSource": "Plus code F37X+R62 in the source record",
+      "landmark": "AQ ACADEMY (about 320 m away)"
     },
     "COM-002": {
       "lat": 31.065788,
       "lng": 72.965672,
       "approximate": false,
-      "coordSource": "Plus code 3X88+877 in the source record"
+      "coordSource": "Plus code 3X88+877 in the source record",
+      "landmark": "Samundri Bus Station (about 730 m away)"
     },
     "GOV-W01": {
-      "landmark": "MADRASA (about 150 m, OpenStreetMap)"
+      "landmark": "MADRASA (about 150 m away)"
     },
     "NGO-001": {
       "lat": 31.327363,
       "lng": 73.429578,
       "approximate": false,
-      "coordSource": "Plus code 8CGH+WRW in the source record"
+      "coordSource": "Plus code 8CGH+WRW in the source record",
+      "landmark": "Ravi Hospital (about 390 m away)"
     },
     "NGO-002": {
       "lat": 31.470438,
       "lng": 73.086953,
       "approximate": false,
-      "coordSource": "Plus code F3CP+5QG in the source record"
+      "coordSource": "Plus code F3CP+5QG in the source record",
+      "landmark": "Chiniot General Hospital (about 780 m away)"
+    },
+    "PLAN-S045": {
+      "landmark": "Masjid Chak 443 GB Warraichan (about 800 m away)"
+    },
+    "PLAN-S049": {
+      "landmark": "Masjid Chak 443 GB Warraichan (about 820 m away)"
+    },
+    "PLAN-S084": {
+      "landmark": "Masjid (about 420 m away)"
     },
     "PRI-001": {
       "lat": 31.408536,
@@ -58,14 +71,14 @@
       "lng": 73.130953,
       "approximate": false,
       "coordSource": "Plus code 24HJ+V9P in the source record",
-      "landmark": "tandlianwala city bus terminal (about 220 m, OpenStreetMap)"
+      "landmark": "tandlianwala city bus terminal (about 220 m away)"
     },
     "PRI-006": {
       "lat": 31.374863,
       "lng": 73.070078,
       "approximate": false,
       "coordSource": "Plus code 93FC+W2W in the source record",
-      "landmark": "Namra Mosque (about 170 m, OpenStreetMap)"
+      "landmark": "Go Sitara Petrol Pump (about 150 m away)"
     },
     "PRI-007": {
       "lat": 31.445419,
@@ -83,136 +96,221 @@
       "lat": 31.372863,
       "lng": 72.953328,
       "approximate": false,
-      "coordSource": "Plus code 9XF3+48W in the source record"
+      "coordSource": "Plus code 9XF3+48W in the source record",
+      "landmark": "Jazzam Ghar (about 690 m away)"
+    },
+    "PSPA-R002": {
+      "landmark": "Islamia College Park (about 450 m away)"
     },
     "PSPA-R011": {
-      "landmark": "THQ Hospital Chak Jhumra (about 130 m, OpenStreetMap)"
+      "landmark": "THQ Hospital Chak Jhumra (about 130 m away)"
+    },
+    "PSPA-R012": {
+      "landmark": "Government MC higher secondary school Gulam Mohammad Abad (about 850 m away)"
+    },
+    "PSPA-R013": {
+      "landmark": "Independent University Hospital (about 610 m away)"
     },
     "PSPA-R014": {
-      "landmark": "Muslim Commercial Bank (about 100 m, OpenStreetMap)"
+      "landmark": "Muslim Commercial Bank (about 100 m away)"
     },
     "PSPA-R022": {
-      "landmark": "National Ground Faisalabad (about 100 m, OpenStreetMap)"
+      "landmark": "National Ground Faisalabad (about 100 m away)"
     },
     "PSPA-R039": {
-      "landmark": "Jamia Masjid Umer (about 30 m, OpenStreetMap)"
+      "landmark": "Jamia Masjid Umer (about 30 m away)"
     },
     "PSPA-R040": {
-      "landmark": "Dogar Pakr (about 180 m, OpenStreetMap)"
+      "landmark": "Dogar Pakr (about 180 m away)"
     },
     "PSPA-R041": {
       "landmark": "Govt MC Elementary School Nisar Colony"
     },
+    "PSPA-R042": {
+      "landmark": "Darbar Ratti Ratta Sharif (about 940 m away)"
+    },
     "PSPA-R053": {
       "landmark": "Government MC Primary School Ameen Abad"
     },
+    "PSPA-R054": {
+      "landmark": "Saddiqa Masjid (about 380 m away)"
+    },
     "PSPA-R055": {
-      "landmark": "Bilal Masjid (about 30 m, OpenStreetMap)"
+      "landmark": "Bilal Masjid (about 30 m away)"
+    },
+    "PSPA-R056": {
+      "landmark": "Presbyterian Church of Pakistan (about 250 m away)"
     },
     "PSPA-R057": {
-      "landmark": "Koya Wali Ground (about 100 m, OpenStreetMap)"
+      "landmark": "Koya Wali Ground (about 100 m away)"
     },
     "PSPA-R059": {
-      "landmark": "St Paul's Presbyterian Church (about 200 m, OpenStreetMap)"
+      "landmark": "St Paul's Presbyterian Church (about 200 m away)"
     },
     "PSPA-R060": {
       "landmark": "Govt MC Girls High School Warispura"
     },
+    "PSPA-R061": {
+      "landmark": "Doctor's Clinic (about 540 m away)"
+    },
     "PSPA-R062": {
-      "landmark": "Universal Living Rosary Center (about 220 m, OpenStreetMap)"
+      "landmark": "Universal Living Rosary Center (about 220 m away)"
     },
     "PSPA-R063": {
       "landmark": "Allama Iqbal Colony"
     },
     "UMAR-008384C3": {
-      "landmark": "Rana Park Faisalabad (about 70 m, OpenStreetMap)"
+      "address": "D Type Colony, Faisalabad",
+      "landmark": "Rana Park Faisalabad (about 70 m away)"
     },
     "UMAR-047ABF0D": {
+      "address": "Dr Aziz Ali Road, Chiniot",
       "landmark": "TIBBA LOHARAAN CHINYOT"
     },
     "UMAR-071DDB37": {
-      "landmark": "CPO Office Faisalabad (about 190 m, OpenStreetMap)"
+      "landmark": "CPO Office Faisalabad (about 190 m away)"
+    },
+    "UMAR-0732F4FD": {
+      "address": "Noor Pur Road, Muslim Town, Faisalabad",
+      "landmark": "Noorpur Park (about 520 m away)"
+    },
+    "UMAR-0AA037B8": {
+      "landmark": "Sitara Laal Plaza (about 270 m away)"
+    },
+    "UMAR-0AADAE7E": {
+      "landmark": "University of Agriculture, Faisalabad (about 600 m away)"
     },
     "UMAR-0B13B263": {
-      "landmark": "MADRASA (about 160 m, OpenStreetMap)"
+      "address": "Faisalabad-Sangla Hills Road, Abdullah Pur, Madina Town",
+      "landmark": "MADRASA (about 160 m away)"
     },
     "UMAR-0CDBF525": {
-      "landmark": "BHU 222 RB Dr. A.Sattar Gill (about 40 m, OpenStreetMap)"
+      "address": "Nowaban Wala, Faisalabad",
+      "landmark": "BHU 222 RB Dr. A.Sattar Gill (about 40 m away)"
     },
     "UMAR-0DBBE1E3": {
-      "landmark": "Government College Women University Faisalabad (about 100 m, OpenStreetMap)"
+      "address": "Irshad Road, Madina Town, Naimat Colony #1",
+      "landmark": "Government College Women University Faisalabad (about 100 m away)"
     },
     "UMAR-0E387ECF": {
-      "landmark": "Government Boys High School Masjid (about 160 m, OpenStreetMap)"
+      "landmark": "Government Boys High School Masjid (about 160 m away)"
+    },
+    "UMAR-0E3E896F": {
+      "address": "Hajvari Town, Madina Town",
+      "landmark": "Police Station Sargodha Road, Faisalabad (about 430 m away)"
     },
     "UMAR-1152B222": {
-      "landmark": "MOSQUE (about 200 m, OpenStreetMap)"
+      "address": "Nighaban pura, Madina Town",
+      "landmark": "MOSQUE (about 200 m away)"
     },
     "UMAR-140339DF": {
+      "address": "Raza Abad, Faisalabad",
       "landmark": "EID GAH"
     },
+    "UMAR-148E0CB1": {
+      "address": "Chak 238 RB, Awan Wala"
+    },
     "UMAR-149F7F62": {
-      "landmark": "Government General Hospital Samanabad (about 30 m, OpenStreetMap)"
+      "address": "Hospital Road, Samman Abad, Faisalabad",
+      "landmark": "Government General Hospital Samanabad (about 30 m away)"
     },
     "UMAR-14FCFF78": {
-      "landmark": "Usmania Park (about 60 m, OpenStreetMap)"
+      "address": "Samman Abad, Faisalabad",
+      "landmark": "Usmania Park (about 60 m away)"
     },
     "UMAR-16B7D006": {
-      "landmark": "Abdali Clinic (about 110 m, OpenStreetMap)"
+      "address": "D-Type Colony, Faisalabad",
+      "landmark": "Abdali Clinic (about 110 m away)"
+    },
+    "UMAR-17A88861": {
+      "address": "Jhang Road, Faisalabad, Faisalabad",
+      "landmark": "Anmol Hospital (about 300 m away)"
     },
     "UMAR-180038BD": {
-      "landmark": "Government Degree College For Woman (about 140 m, OpenStreetMap)"
+      "address": "Masoodabad Road, Samman Abad, Faisalabad",
+      "landmark": "Government Degree College For Woman (about 140 m away)"
+    },
+    "UMAR-1A4A0E88": {
+      "address": "Malik Pur, Malkapur",
+      "landmark": "Ladies Park (about 510 m away)"
     },
     "UMAR-1A874C12": {
-      "landmark": "Shah Burhan (about 40 m, OpenStreetMap)"
+      "address": "Mohallah Thati Gharbi, Chiniot",
+      "landmark": "Shah Burhan (about 40 m away)"
     },
     "UMAR-1CA1B8CC": {
       "lat": 31.409817,
       "lng": 73.06229,
       "approximate": true,
-      "coordSource": "OpenStreetMap Nominatim search for \"PARTAB NAGAR #10\" matched \"Partab Nagar, Faisalabad City Tehsil, Faisalabad District, Faisalabad Division, Punjab, Pakistan\" (neighbourhood)"
+      "coordSource": "OpenStreetMap Nominatim search for \"PARTAB NAGAR #10\" matched \"Partab Nagar, Faisalabad City Tehsil, Faisalabad District, Faisalabad Division, Punjab, Pakistan\" (neighbourhood)",
+      "address": "Near Street 8, Partab Nagar, Faisalabad"
     },
     "UMAR-1CDC8B76": {
-      "landmark": "Govt Technical High School (about 40 m, OpenStreetMap)"
+      "address": "Hakeem Sultan Ahmad Dawoodi Road, Peoples Colony No.01, Naimat Colony #1",
+      "landmark": "Govt Technical High School (about 40 m away)"
     },
     "UMAR-1E4FC638": {
-      "landmark": "Government College Women University Faisalabad (about 100 m, OpenStreetMap)"
+      "address": "Irshad Road, Madina Town, Naimat Colony #1",
+      "landmark": "Government College Women University Faisalabad (about 100 m away)"
     },
     "UMAR-1E965DE6": {
-      "landmark": "Madni Masjid (about 150 m, OpenStreetMap)"
+      "address": "Samman Abad, Faisalabad",
+      "landmark": "Madni Masjid (about 150 m away)"
     },
     "UMAR-1EC572C6": {
       "lat": 31.407669,
       "lng": 73.111677,
       "approximate": true,
-      "coordSource": "OpenStreetMap Nominatim search for \"COMMERCE COLLEGE PEOPLES COLONY NO 1\" matched \"Shiblee College of Commerce & Science, Hakeem Sultan Ahmad Dawoodi Road, Peoples Colony No.01, Naimat Colony #1, Faisalabad City Tehsil, Faisalabad District, Faisalabad Division, Punjab, 38000, Pakistan\" (amenity)"
+      "coordSource": "OpenStreetMap Nominatim search for \"COMMERCE COLLEGE PEOPLES COLONY NO 1\" matched \"Shiblee College of Commerce & Science, Hakeem Sultan Ahmad Dawoodi Road, Peoples Colony No.01, Naimat Colony #1, Faisalabad City Tehsil, Faisalabad District, Faisalabad Division, Punjab, 38000, Pakistan\" (amenity)",
+      "address": "Near Hakeem Sultan Ahmad Dawoodi Road, Peoples Colony No.01, Naimat Colony #1"
     },
     "UMAR-20938796": {
       "lat": 31.421356,
       "lng": 73.046501,
       "approximate": true,
-      "coordSource": "OpenStreetMap Nominatim search for \"KAMAL ABAD\" matched \"Kamal Abad Qabristan, Rehman Pura, Faisalabad City Tehsil, Faisalabad District, Faisalabad Division, Punjab, Pakistan\" (cemetery)"
+      "coordSource": "OpenStreetMap Nominatim search for \"KAMAL ABAD\" matched \"Kamal Abad Qabristan, Rehman Pura, Faisalabad City Tehsil, Faisalabad District, Faisalabad Division, Punjab, Pakistan\" (cemetery)",
+      "address": "Near ABC Road, Afghanabad, Faisalabad"
     },
     "UMAR-223D7F7B": {
-      "landmark": "Faysal Bank (about 10 m, OpenStreetMap)"
+      "address": "Rajbah Road, Faisalabad",
+      "landmark": "Faysal Bank (about 10 m away)"
     },
     "UMAR-265B603E": {
-      "landmark": "Bilal Masjid (about 250 m, OpenStreetMap)"
+      "address": "Fatima Jinnah Road, Samanabad, Faisalabad",
+      "landmark": "Bilal Masjid (about 250 m away)"
+    },
+    "UMAR-28C5A2AF": {
+      "address": "Elahi Abad, Faisalabad",
+      "landmark": "Syeda Khatoon-e-Jannat Hospital (about 650 m away)"
+    },
+    "UMAR-28F823C5": {
+      "address": "Karim Road, Faisalabad",
+      "landmark": "Asghari Rizvi Mosque Madrasah Amna Tul Banat (about 270 m away)"
     },
     "UMAR-29A6E41C": {
       "lat": 31.366348,
       "lng": 72.925924,
       "approximate": true,
-      "coordSource": "OpenStreetMap Nominatim search for \"Sadhar Faisalabad\" matched \"Sadhar Bypass, Jhang Road, Chak 74 JB Thikriwala چک 74 ج ب ٹھیکریوالہ, Thikriwala, Faisalabad Saddar Tehsil, Faisalabad District, Faisalabad Division, Punjab, Pakistan\" (highway)"
+      "coordSource": "OpenStreetMap Nominatim search for \"Sadhar Faisalabad\" matched \"Sadhar Bypass, Jhang Road, Chak 74 JB Thikriwala چک 74 ج ب ٹھیکریوالہ, Thikriwala, Faisalabad Saddar Tehsil, Faisalabad District, Faisalabad Division, Punjab, Pakistan\" (highway)",
+      "address": "Near Jhang Road, Chak 74 JB Thikriwala چک 74 ج ب ٹھیکریوالہ, Thikriwala"
     },
     "UMAR-29EFE21F": {
-      "landmark": "Holy Rosary Catholic Church (about 230 m, OpenStreetMap)"
+      "address": "Madina Town, Naimat Colony #1",
+      "landmark": "Holy Rosary Catholic Church (about 230 m away)"
+    },
+    "UMAR-2E5D3F39": {
+      "address": "Samanabad, Faisalabad",
+      "landmark": "Govt. College of Technology (about 900 m away)"
     },
     "UMAR-2F70559F": {
-      "landmark": "Syeda Khatoon-e-Jannat Hospital (about 190 m, OpenStreetMap)"
+      "address": "Rachna Town, Madina Town",
+      "landmark": "Syeda Khatoon-e-Jannat Hospital (about 190 m away)"
     },
     "UMAR-304CE5CF": {
-      "landmark": "CPO Office Faisalabad (about 190 m, OpenStreetMap)"
+      "landmark": "CPO Office Faisalabad (about 190 m away)"
+    },
+    "UMAR-32024E7A": {
+      "address": "Ghaziabad 1, 202 RB Gatti"
     },
     "UMAR-32769BAE": {
       "landmark": "FAZL HAQ ROAD"
@@ -221,16 +319,22 @@
       "lat": 31.398556,
       "lng": 73.09572,
       "approximate": true,
-      "coordSource": "OpenStreetMap Nominatim search for \"Peoples Colony No 2 Faisalabad\" matched \"Peoples Colony No.02, Allama Iqbal Colony, Faisalabad City Tehsil, Faisalabad District, Faisalabad Division, Punjab, 38000, Pakistan\" (residential)"
+      "coordSource": "OpenStreetMap Nominatim search for \"Peoples Colony No 2 Faisalabad\" matched \"Peoples Colony No.02, Allama Iqbal Colony, Faisalabad City Tehsil, Faisalabad District, Faisalabad Division, Punjab, 38000, Pakistan\" (residential)",
+      "address": "Near Peoples Colony No.02, Faisalabad"
     },
     "UMAR-342C6246": {
       "landmark": "SHAFI CHOUK LAL MILL"
     },
     "UMAR-34EEAABB": {
-      "landmark": "MC Dispensory (about 180 m, OpenStreetMap)"
+      "address": "Peoples Colony No.02, Faisalabad",
+      "landmark": "MC Dispensory (about 180 m away)"
     },
     "UMAR-37EEEE4E": {
-      "landmark": "Jamia Chishtia Masjid (about 160 m, OpenStreetMap)"
+      "landmark": "Jamia Chishtia Masjid (about 160 m away)"
+    },
+    "UMAR-3C05B9F6": {
+      "address": "Nishatabad Flyover, Malkapur",
+      "landmark": "City Medical Complex (about 680 m away)"
     },
     "UMAR-3EF52B7F": {
       "lat": 31.287821,
@@ -242,7 +346,8 @@
       "lat": 31.468088,
       "lng": 73.23486,
       "approximate": true,
-      "coordSource": "OpenStreetMap Nominatim search for \"Chak 200 RB\" matched \"Lathianwala, Faisalabad Saddar Tehsil, Faisalabad District, Faisalabad Division, Punjab, Pakistan\" (village)"
+      "coordSource": "OpenStreetMap Nominatim search for \"Chak 200 RB\" matched \"Lathianwala, Faisalabad Saddar Tehsil, Faisalabad District, Faisalabad Division, Punjab, Pakistan\" (village)",
+      "address": "Near Chak 200 RB Lathianwala, Lathianwala"
     },
     "UMAR-46ED9153": {
       "landmark": "IMAM BARGAH WARD NO 3"
@@ -254,49 +359,79 @@
       "coordSource": "OpenStreetMap Nominatim search for \"Crescent Model School Faisalabad\" matched \"Govt. Crescent Model High School Faisalabad, Lahore Sheikhupura Faisalabad Road, Faisalabad City Tehsil, Faisalabad District, Faisalabad Division, Punjab, 38700, Pakistan\" (amenity)"
     },
     "UMAR-48DF8E29": {
+      "address": "Peoples Colony No.02, Faisalabad",
       "landmark": "RABIA TRUST HOSPITAL"
     },
     "UMAR-4A0259E8": {
       "landmark": "SADHAR BY PASS JHANG ROAD"
     },
     "UMAR-4CC6A9BF": {
-      "landmark": "Ghausia Park (about 190 m, OpenStreetMap)"
+      "address": "Gulistan Colony No.02, Madina Town",
+      "landmark": "Ghausia Park (about 190 m away)"
+    },
+    "UMAR-4DD71305": {
+      "address": "Rasool Nagar, Naimat Colony #1",
+      "landmark": "The Chenab College (about 420 m away)"
     },
     "UMAR-4ECA08A9": {
-      "landmark": "Al-Madina Hospital (about 160 m, OpenStreetMap)"
+      "address": "Madina Abad, Naimat Colony #1",
+      "landmark": "Al-Madina Hospital (about 160 m away)"
     },
     "UMAR-512CB522": {
       "landmark": "BOYS HIGH SCHOOL JAMIA SALFIA ROAD"
     },
     "UMAR-526F3D91": {
-      "landmark": "Tehsil Masjid (about 50 m, OpenStreetMap)"
+      "address": "Katchary Bazar, Faisalabad",
+      "landmark": "Tehsil Masjid (about 50 m away)"
+    },
+    "UMAR-5286430B": {
+      "address": "Karim Town, Faisalabad",
+      "landmark": "St Paul's Presbyterian Church (about 580 m away)"
     },
     "UMAR-547EF102": {
-      "landmark": "Government College Women University Faisalabad (about 100 m, OpenStreetMap)"
+      "address": "Irshad Road, Madina Town, Naimat Colony #1",
+      "landmark": "Government College Women University Faisalabad (about 100 m away)"
+    },
+    "UMAR-55075C0D": {
+      "address": "Raza Abad, Faisalabad",
+      "landmark": "Chudary Rehmat Park (about 270 m away)"
     },
     "UMAR-592C27ED": {
-      "landmark": "Dogar Pakr (about 40 m, OpenStreetMap)"
+      "address": "Main Road, Allama Iqbal Colony, Faisalabad",
+      "landmark": "Dogar Pakr (about 40 m away)"
     },
     "UMAR-59FB426C": {
       "landmark": "GURUSAR"
     },
+    "UMAR-5D651A05": {
+      "address": "Samman Abad, Faisalabad",
+      "landmark": "Dakkan Park (about 280 m away)"
+    },
     "UMAR-5D8493DD": {
-      "landmark": "Urban Transport Terminal (about 190 m, OpenStreetMap)"
+      "address": "Eid Gah Road, Faisalabad",
+      "landmark": "Urban Transport Terminal (about 190 m away)"
     },
     "UMAR-5DF71B19": {
-      "landmark": "New Subhan (about 160 m, OpenStreetMap)"
+      "landmark": "New Subhan (about 160 m away)"
     },
     "UMAR-5E6B1F1A": {
-      "landmark": "Government College Women University Faisalabad (about 100 m, OpenStreetMap)"
+      "address": "Irshad Road, Madina Town, Naimat Colony #1",
+      "landmark": "Government College Women University Faisalabad (about 100 m away)"
     },
     "UMAR-5FA077B8": {
-      "landmark": "Police Station Kotwali Road (about 40 m, OpenStreetMap)"
+      "landmark": "Police Station Kotwali Road (about 40 m away)"
     },
     "UMAR-605232F7": {
+      "address": "Muneerabad, Faisalabad",
       "landmark": "WASA TENKI"
     },
+    "UMAR-630F098E": {
+      "address": "Faisalabad, Faisalabad",
+      "landmark": "Shell (about 130 m away)"
+    },
     "UMAR-63BCE31E": {
-      "landmark": "ABL (about 80 m, OpenStreetMap)"
+      "address": "Dijkot Road, Samanabad, Faisalabad",
+      "landmark": "ABL (about 80 m away)"
     },
     "UMAR-64CA2655": {
       "landmark": "KANJWANI SUGAR MILL TANDLIANWALA"
@@ -306,19 +441,26 @@
       "lng": 72.968682,
       "approximate": true,
       "coordSource": "OpenStreetMap Nominatim search for \"Eid Gah Chiniot\" matched \"Eid Gah, Al Hussain Road, Mohallah Aali, Chiniot, Chiniot Tehsil, Chiniot District, Faisalabad Division, Punjab, Pakistan\" (amenity)",
+      "address": "Near Mohallah Aali, Chiniot",
       "landmark": "MASKEEN PURA EID GAH ROAD CHINYOT"
     },
     "UMAR-692AC275": {
-      "landmark": "Govt. Girls High school (about 180 m, OpenStreetMap)"
+      "address": "Kaleem Shaheed Colony, Faisalabad",
+      "landmark": "Govt. Girls High school (about 180 m away)"
     },
     "UMAR-698D6866": {
-      "landmark": "Summit Bank (about 30 m, OpenStreetMap)"
+      "address": "Susan Road, Madina Town",
+      "landmark": "Summit Bank (about 30 m away)"
+    },
+    "UMAR-69E7032D": {
+      "landmark": "BHU 222 RB Dr. A.Sattar Gill (about 260 m away)"
     },
     "UMAR-6E44A823": {
       "landmark": "RICE SHELER"
     },
     "UMAR-6F29CB10": {
-      "landmark": "Chudary Rehmat Park (about 220 m, OpenStreetMap)"
+      "address": "Narwala Road, Fareed Colony, Faisalabad",
+      "landmark": "Chudary Rehmat Park (about 220 m away)"
     },
     "UMAR-713AEACD": {
       "landmark": "OLD DISPOSAL WARD NO 8"
@@ -328,27 +470,32 @@
       "lng": 73.060328,
       "approximate": false,
       "coordSource": "Plus code C356+F4P in the source record",
+      "address": "Street 6, Sardar Pura, Faisalabad",
       "landmark": "BOYS HIGH SCHOOL"
     },
     "UMAR-722BC1BD": {
       "lat": 31.409817,
       "lng": 73.06229,
       "approximate": true,
-      "coordSource": "OpenStreetMap Nominatim search for \"PARTAB NAGAR # 7\" matched \"Partab Nagar, Faisalabad City Tehsil, Faisalabad District, Faisalabad Division, Punjab, Pakistan\" (neighbourhood)"
+      "coordSource": "OpenStreetMap Nominatim search for \"PARTAB NAGAR # 7\" matched \"Partab Nagar, Faisalabad City Tehsil, Faisalabad District, Faisalabad Division, Punjab, Pakistan\" (neighbourhood)",
+      "address": "Near Street 8, Partab Nagar, Faisalabad"
     },
     "UMAR-74637060": {
-      "landmark": "Dogar Pakr (about 40 m, OpenStreetMap)"
+      "address": "Main Road, Allama Iqbal Colony, Faisalabad",
+      "landmark": "Dogar Pakr (about 40 m away)"
     },
     "UMAR-74FCBCD9": {
-      "landmark": "Koya Wali Ground (about 90 m, OpenStreetMap)"
+      "address": "Samman Abad, Faisalabad",
+      "landmark": "Koya Wali Ground (about 90 m away)"
     },
     "UMAR-755F374F": {
       "landmark": "JAMIYA MASJID MUHAMMADI"
     },
     "UMAR-76D9C2CA": {
-      "landmark": "Goal Masjid (about 90 m, OpenStreetMap)"
+      "landmark": "Goal Masjid (about 90 m away)"
     },
     "UMAR-7B188217": {
+      "address": "Chak 396 GB Radanwali چک 396 گ ب رداں والی, Radanwali",
       "landmark": "KOHINOOR"
     },
     "UMAR-7B50F744": {
@@ -356,22 +503,31 @@
       "lng": 72.990109,
       "approximate": true,
       "coordSource": "OpenStreetMap Nominatim search for \"Tehsil Chowk Chiniot\" matched \"Tehsil Chowk, Sargodha Road, Chiniot, Chiniot Tehsil, Chiniot District, Faisalabad Division, Punjab, Pakistan\" (junction)",
+      "address": "Near Sargodha Road, Chiniot",
       "landmark": "FAISALABAD ROAD TEHSEEL CHOK CHINYOT"
     },
     "UMAR-83207707": {
-      "landmark": "Govt. Staff Training College, Faisalabad (about 80 m, OpenStreetMap)"
+      "address": "Sitara Dr Road, Peoples Colony No.01, Naimat Colony #1",
+      "landmark": "Govt. Staff Training College, Faisalabad (about 80 m away)"
     },
     "UMAR-85E4A827": {
+      "address": "Mahmoodabad, Faisalabad",
       "landmark": "CHIBBAN ROAD"
     },
     "UMAR-86852A17": {
-      "landmark": "Gulberg Police Station (about 10 m, OpenStreetMap)"
+      "address": "Narwala Road, Faisalabad",
+      "landmark": "Gulberg Police Station (about 10 m away)"
+    },
+    "UMAR-87074BBF": {
+      "address": "Chak 238 RB, Awan Wala"
     },
     "UMAR-8DF7D444": {
-      "landmark": "Noorpur Park (about 100 m, OpenStreetMap)"
+      "address": "Officer Block, Madina Town",
+      "landmark": "Noorpur Park (about 100 m away)"
     },
     "UMAR-8F403FF2": {
-      "landmark": "Islamia College Park (about 250 m, OpenStreetMap)"
+      "address": "Hajvari Town, Faisalabad",
+      "landmark": "Islamia College Park (about 250 m away)"
     },
     "UMAR-90689C09": {
       "lat": 31.408702,
@@ -379,159 +535,292 @@
       "approximate": true,
       "coordSource": "OpenStreetMap Nominatim search for \"Farooqia Park Faisalabad\" matched \"Farooqia Park, Faisalabad City Tehsil, Faisalabad District, Faisalabad Division, Punjab, 38023, Pakistan\" (park)"
     },
+    "UMAR-917076A3": {
+      "landmark": "Pakistan State Oil (about 320 m away)"
+    },
+    "UMAR-9685350C": {
+      "address": "Ghulam Muhammad Abad, Faisalabad",
+      "landmark": "Fruit & Vegetables Market (about 370 m away)"
+    },
+    "UMAR-980CA855": {
+      "address": "Chibban, Faisalabad",
+      "landmark": "MADRASA (about 320 m away)"
+    },
     "UMAR-98FC45C9": {
-      "landmark": "Govt MC Girls High School (about 80 m, OpenStreetMap)"
+      "address": "Jinnah Colony, Faisalabad",
+      "landmark": "Govt MC Girls High School (about 80 m away)"
     },
     "UMAR-996775F0": {
+      "address": "Mandir Road, Chiniot",
       "landmark": "MANDIR ROAD CHINYOT"
     },
     "UMAR-99BE41E6": {
-      "landmark": "Jamia Masjid Tajdar e Madina (about 140 m, OpenStreetMap)"
+      "address": "D-Type Colony, Faisalabad",
+      "landmark": "Jamia Masjid Tajdar e Madina (about 140 m away)"
+    },
+    "UMAR-9BDC17EC": {
+      "address": "Chak 447 GB Kambanwanwala چک 447 گ ب کمبانوانوالہ, Kambanwanwala"
     },
     "UMAR-9CE7B1FE": {
+      "address": "Girls College Road, Chiniot",
       "landmark": "ALI HOSPITAL ROAD CHINYOT"
     },
     "UMAR-9ED71A30": {
-      "landmark": "Jalvi Market (about 80 m, OpenStreetMap)"
+      "address": "Faisalabad–Jaranwala Road, Akbar Colony, Naimat Colony #1",
+      "landmark": "Jalvi Market (about 80 m away)"
     },
     "UMAR-A1C8A6F8": {
-      "landmark": "La Salle High School (about 90 m, OpenStreetMap)"
+      "address": "Muhammad Ahkam Khan Road, Peoples Colony No.01, Madina Town",
+      "landmark": "La Salle High School (about 90 m away)"
+    },
+    "UMAR-A3AB114B": {
+      "address": "Amin Town, Malkapur",
+      "landmark": "Ladies Park (about 550 m away)"
     },
     "UMAR-A6246E47": {
-      "landmark": "Markazi Jamia Masjid (about 120 m, OpenStreetMap)"
+      "address": "Allama Iqbal Colony, Faisalabad",
+      "landmark": "Markazi Jamia Masjid (about 120 m away)"
+    },
+    "UMAR-AA4B851D": {
+      "address": "Nankana Sahib-Sangla Hill Road, Marar"
     },
     "UMAR-AB0267F9": {
       "landmark": "RURAL HELTH CENTER TANDLIANWALA ROAD"
     },
+    "UMAR-ADB687CD": {
+      "address": "Jhang Road, Partab Nagar, Faisalabad",
+      "landmark": "Naqvi Park (about 650 m away)"
+    },
     "UMAR-AE0866AA": {
-      "landmark": "Presbyterian Church of Pakistan (about 140 m, OpenStreetMap)"
+      "address": "Nisar Colony, Faisalabad",
+      "landmark": "Presbyterian Church of Pakistan (about 140 m away)"
+    },
+    "UMAR-AECA3C2D": {
+      "address": "Raza Abad, Faisalabad",
+      "landmark": "Anwari Masjid (about 460 m away)"
     },
     "UMAR-AF3CC7DF": {
+      "address": "Eid Gah Road, Mohallah Aali, Chiniot",
       "landmark": "9 GAZZA ROAD UMER HAYYAT MEHAL CHINYOT"
     },
     "UMAR-AF5D57AA": {
-      "landmark": "ABL (about 80 m, OpenStreetMap)"
+      "address": "Dijkot Road, Samanabad, Faisalabad",
+      "landmark": "ABL (about 80 m away)"
     },
     "UMAR-AF63FA94": {
-      "landmark": "Ali Hospital (about 140 m, OpenStreetMap)"
+      "landmark": "Ali Hospital (about 140 m away)"
+    },
+    "UMAR-B13A11F6": {
+      "address": "Tandianwala, Tandlianwala",
+      "landmark": "tandlianwala city bus terminal (about 390 m away)"
     },
     "UMAR-B2658773": {
       "lat": 31.720814,
       "lng": 72.990109,
       "approximate": true,
       "coordSource": "OpenStreetMap Nominatim search for \"Tehsil Chowk Chiniot\" matched \"Tehsil Chowk, Sargodha Road, Chiniot, Chiniot Tehsil, Chiniot District, Faisalabad Division, Punjab, Pakistan\" (junction)",
+      "address": "Near Sargodha Road, Chiniot",
       "landmark": "TEHSEEL CHOK CHINYOT"
     },
+    "UMAR-B3AD8A73": {
+      "address": "Samman Abad, Faisalabad",
+      "landmark": "Samanabad Police Station Faisalabad (about 310 m away)"
+    },
     "UMAR-B47E9C10": {
-      "landmark": "Government College Women University Faisalabad (about 100 m, OpenStreetMap)"
+      "address": "Irshad Road, Madina Town, Naimat Colony #1",
+      "landmark": "Government College Women University Faisalabad (about 100 m away)"
     },
     "UMAR-B6C731D4": {
       "landmark": "JANAZGAH ROAD CHINYOT"
     },
     "UMAR-B7852B8F": {
-      "landmark": "Saddiqa Masjid (about 120 m, OpenStreetMap)"
+      "address": "Nowaban Wala, Faisalabad",
+      "landmark": "Saddiqa Masjid (about 120 m away)"
+    },
+    "UMAR-B8191CCB": {
+      "address": "Nazim Abad, Faisalabad",
+      "landmark": "Muslim Park (about 360 m away)"
     },
     "UMAR-BA504433": {
       "landmark": "POLICE STATION"
+    },
+    "UMAR-BB66F57C": {
+      "address": "Okara Cantonment"
+    },
+    "UMAR-BBEE41BF": {
+      "address": "Ghulam Muhammad Abad, Faisalabad",
+      "landmark": "Goal Masjid (about 390 m away)"
     },
     "UMAR-BC364ED3": {
       "landmark": "CHANAB CHOCK"
     },
     "UMAR-BC44D563": {
-      "landmark": "Sabria Sirajia Higher Secondary School (about 80 m, OpenStreetMap)"
+      "address": "Mountain Dr Road, Peoples Colony No.02, Faisalabad",
+      "landmark": "Sabria Sirajia Higher Secondary School (about 80 m away)"
+    },
+    "UMAR-BC9909D9": {
+      "landmark": "Samundri Bus Station (about 880 m away)"
     },
     "UMAR-BCA434DF": {
+      "address": "Nao Gazah Road, Chiniot",
       "landmark": "DR AZEEZ ALI ROAD CHINYOT"
+    },
+    "UMAR-BE10643C": {
+      "address": "Rehman Pura, Faisalabad",
+      "landmark": "Zainab Marriage Hall (about 590 m away)"
     },
     "UMAR-C14CB75D": {
       "lat": 31.423259,
       "lng": 73.057915,
       "approximate": true,
-      "coordSource": "OpenStreetMap Nominatim search for \"Chishtia Park Faisalabad\" matched \"Chishtia Park, Faisalabad City Tehsil, Faisalabad District, Faisalabad Division, Punjab, 38900, Pakistan\" (park)"
+      "coordSource": "OpenStreetMap Nominatim search for \"Chishtia Park Faisalabad\" matched \"Chishtia Park, Faisalabad City Tehsil, Faisalabad District, Faisalabad Division, Punjab, 38900, Pakistan\" (park)",
+      "address": "Near Gulberg, Faisalabad"
     },
     "UMAR-C8C4AC94": {
       "lat": 31.40289,
       "lng": 73.123982,
       "approximate": true,
-      "coordSource": "OpenStreetMap Nominatim search for \"RASOOL NAGAR\" matched \"Rasool Nagar, Naimat Colony #1, Faisalabad City Tehsil, Faisalabad District, Faisalabad Division, Punjab, Pakistan\" (neighbourhood)"
+      "coordSource": "OpenStreetMap Nominatim search for \"RASOOL NAGAR\" matched \"Rasool Nagar, Naimat Colony #1, Faisalabad City Tehsil, Faisalabad District, Faisalabad Division, Punjab, Pakistan\" (neighbourhood)",
+      "address": "Near Rasool Nagar, Naimat Colony #1"
     },
     "UMAR-CB009C5B": {
-      "landmark": "Saint Raphael Hospital (about 140 m, OpenStreetMap)"
+      "landmark": "Saint Raphael Hospital (about 140 m away)"
+    },
+    "UMAR-CFAE12E9": {
+      "address": "Raza Abad, Faisalabad",
+      "landmark": "Chudary Rehmat Park (about 350 m away)"
+    },
+    "UMAR-CFC5C2FB": {
+      "landmark": "Jamia Masjid Jilania Razia St 10 (about 470 m away)"
     },
     "UMAR-D0003190": {
       "lat": 31.381832,
       "lng": 73.093876,
       "approximate": true,
-      "coordSource": "OpenStreetMap Nominatim search for \"Warispura Faisalabad\" matched \"Catholic Church Warispura, Bilal Road, Waris Pura, D Type Colony, Madina Town, Faisalabad City Tehsil, Faisalabad District, Faisalabad Division, Punjab, 38090, Pakistan\" (amenity)"
+      "coordSource": "OpenStreetMap Nominatim search for \"Warispura Faisalabad\" matched \"Catholic Church Warispura, Bilal Road, Waris Pura, D Type Colony, Madina Town, Faisalabad City Tehsil, Faisalabad District, Faisalabad Division, Punjab, 38090, Pakistan\" (amenity)",
+      "address": "Near Bilal Road, Fateh Din 24, Faisalabad"
     },
     "UMAR-D2910FDB": {
-      "landmark": "Peoples Colony Police Station (about 10 m, OpenStreetMap)"
+      "address": "Faisalabad–Jaranwala Road, Akbar Colony, Naimat Colony #1",
+      "landmark": "Peoples Colony Police Station (about 10 m away)"
     },
     "UMAR-D3A3501A": {
-      "landmark": "Govt. Commerce College, Abdullah Pur (about 90 m, OpenStreetMap)"
+      "address": "Faisalabad–Jaranwala Road, Akbar Colony, Naimat Colony #1",
+      "landmark": "Govt. Commerce College, Abdullah Pur (about 90 m away)"
     },
     "UMAR-D76CA189": {
-      "landmark": "Rail Bazar Police Station (about 140 m, OpenStreetMap)"
+      "address": "Circular Road, Faisalabad",
+      "landmark": "Rail Bazar Police Station (about 140 m away)"
     },
     "UMAR-D7E0D9CD": {
-      "landmark": "Chand Marriage Hall (about 140 m, OpenStreetMap)"
+      "address": "Mustafa Road, Faisalabad",
+      "landmark": "Chand Marriage Hall (about 140 m away)"
     },
     "UMAR-D82678F0": {
       "landmark": "GHS SCHOOL"
     },
     "UMAR-DA36CE48": {
-      "landmark": "Khudaie Plaza (about 240 m, OpenStreetMap)"
+      "address": "Gulistan Colony No.02, Madina Town",
+      "landmark": "Khudaie Plaza (about 240 m away)"
+    },
+    "UMAR-DA72FF1F": {
+      "address": "Shadab Colony",
+      "landmark": "Ahmadiyya Masjid (about 760 m away)"
+    },
+    "UMAR-DADBF8E5": {
+      "address": "Hemat Pura, Dogran Wala",
+      "landmark": "COD Shopping (about 320 m away)"
     },
     "UMAR-DD374CAC": {
-      "landmark": "Govt M.C Higher Secondary School (about 10 m, OpenStreetMap)"
+      "landmark": "Govt M.C Higher Secondary School (about 10 m away)"
     },
     "UMAR-DD86733D": {
-      "landmark": "Saddiqia Masjid (about 180 m, OpenStreetMap)"
+      "address": "Samman Abad, Faisalabad",
+      "landmark": "Saddiqia Masjid (about 180 m away)"
     },
     "UMAR-DE510F95": {
+      "address": "Chak No.07 JB Panjwar, Faisalabad",
       "landmark": "UNION COUNCIL UC11"
+    },
+    "UMAR-E076071F": {
+      "address": "Faisalabad, Faisalabad",
+      "landmark": "Ayesha Sardar Masjid (about 330 m away)"
     },
     "UMAR-E076F8C9": {
       "lat": 31.426874,
       "lng": 73.103212,
       "approximate": true,
-      "coordSource": "OpenStreetMap Nominatim search for \"TARIQ ABAD\" matched \"Tariq Abad, Madina Town, Faisalabad City Tehsil, Faisalabad District, Faisalabad Division, Punjab, Pakistan\" (neighbourhood)"
+      "coordSource": "OpenStreetMap Nominatim search for \"TARIQ ABAD\" matched \"Tariq Abad, Madina Town, Faisalabad City Tehsil, Faisalabad District, Faisalabad Division, Punjab, Pakistan\" (neighbourhood)",
+      "address": "Near Tariq Abad, Madina Town"
     },
     "UMAR-E0E19605": {
-      "landmark": "MC Dispensory Union Counsel # 244 (about 70 m, OpenStreetMap)"
+      "address": "Peoples Colony No.02, Faisalabad",
+      "landmark": "MC Dispensory Union Counsel # 244 (about 70 m away)"
+    },
+    "UMAR-E286735A": {
+      "address": "Jameelabad, Faisalabad",
+      "landmark": "Misakul Mall (about 470 m away)"
     },
     "UMAR-E2C9B35A": {
       "landmark": "SATALITE TOWN HOCKEY GROUND ROAD CHINYOT"
     },
     "UMAR-E36C395D": {
-      "landmark": "Govt General Hospital (about 10 m, OpenStreetMap)"
+      "address": "Peoples Colony No.02, Faisalabad",
+      "landmark": "Govt General Hospital (about 10 m away)"
+    },
+    "UMAR-E6ABA8E7": {
+      "address": "Tahir Road, Gulistan Colony No.02, Madina Town",
+      "landmark": "Gulfishan Girls High School (about 260 m away)"
+    },
+    "UMAR-E8134D6F": {
+      "landmark": "Minhaj ul Quran (about 520 m away)"
     },
     "UMAR-EC9B56D9": {
-      "landmark": "Samanabad Police Station (about 190 m, OpenStreetMap)"
+      "address": "Masoodabad Road, Samman Abad, Faisalabad",
+      "landmark": "Samanabad Police Station (about 190 m away)"
+    },
+    "UMAR-ED1889AC": {
+      "address": "Chak 396 GB Radanwali چک 396 گ ب رداں والی, Radanwali"
     },
     "UMAR-ED50BE30": {
+      "address": "Sabzi Mandi, Chiniot",
       "landmark": "KACHEHRY ROAD CHINYOT"
     },
     "UMAR-EE32C4B3": {
+      "address": "Samman Abad, Faisalabad",
       "landmark": "AMINIA MOSQUE"
     },
     "UMAR-EFF598E3": {
-      "landmark": "Medicare Hospital (about 130 m, OpenStreetMap)"
+      "landmark": "Medicare Hospital (about 130 m away)"
     },
     "UMAR-F0C8B3C5": {
       "lat": 31.460899,
       "lng": 73.147427,
       "approximate": true,
-      "coordSource": "OpenStreetMap Nominatim search for \"Manawala Faisalabad\" matched \"Manawala Sizing Stop, Faisalabad - Sheikhupura - Lahore Road, Faisalabad City Tehsil, Faisalabad Saddar Tehsil, Faisalabad District, Faisalabad Division, Punjab, 38070, Pakistan\" (highway)"
+      "coordSource": "OpenStreetMap Nominatim search for \"Manawala Faisalabad\" matched \"Manawala Sizing Stop, Faisalabad - Sheikhupura - Lahore Road, Faisalabad City Tehsil, Faisalabad Saddar Tehsil, Faisalabad District, Faisalabad Division, Punjab, 38070, Pakistan\" (highway)",
+      "address": "Near Yousaf Abad, Malkapur"
     },
     "UMAR-F23609D5": {
-      "landmark": "Government College Women University Faisalabad (about 100 m, OpenStreetMap)"
+      "address": "Irshad Road, Madina Town, Naimat Colony #1",
+      "landmark": "Government College Women University Faisalabad (about 100 m away)"
     },
     "UMAR-F4B4AF22": {
-      "landmark": "Rail Bazar Police Station (about 30 m, OpenStreetMap)"
+      "address": "Government College Road, Faisalabad",
+      "landmark": "Rail Bazar Police Station (about 30 m away)"
+    },
+    "UMAR-F619DD7B": {
+      "address": "Bakar Mandi Road, Faisalabad",
+      "landmark": "Farooqi Masjid (about 420 m away)"
     },
     "UMAR-F6A83DAC": {
-      "landmark": "Siddique Orthopaedic & Rehabilitation Complex (about 140 m, OpenStreetMap)"
+      "landmark": "Siddique Orthopaedic & Rehabilitation Complex (about 140 m away)"
+    },
+    "UMAR-F788B955": {
+      "address": "Okara Cantonment"
+    },
+    "UMAR-FEC59D80": {
+      "address": "Abid Shaheed Road, Madina Town, Naimat Colony #1",
+      "landmark": "Quran Academy (about 450 m away)"
     },
     "UMAR-FECADC73": {
       "lat": 31.719782,
@@ -551,13 +840,15 @@
       "lat": 31.409913,
       "lng": 73.091641,
       "approximate": false,
-      "coordSource": "Plus code C35R+XM6 in the source record"
+      "coordSource": "Plus code C35R+XM6 in the source record",
+      "landmark": "Jamia Masjid Muhammadi (about 500 m away)"
     },
     "WASA-003": {
       "lat": 31.495738,
       "lng": 73.108484,
       "approximate": false,
-      "coordSource": "Plus code F4W5+79X in the source record"
+      "coordSource": "Plus code F4W5+79X in the source record",
+      "landmark": "Allama Iqbal Open University Faisalabad campus (about 420 m away)"
     }
   }
 }
