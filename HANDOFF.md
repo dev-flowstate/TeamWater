@@ -73,11 +73,13 @@ It has three parts:
      - Columns: `Plant ID, Plant / Project Name, Ownership, Tehsil / Area, Address / Location, Contact, Latitude, Longitude, Plant Type (e.g. "RO (2000 LPH)"), Verification, Source URL, Notes`.
      - The source is the Punjab Saaf Pani rehabilitation list. Its own note says: *"Status is from rehabilitation list; re-check after rehabilitation before enabling on public nearest-plant map."* Respect that: import the coordinates as `coord_status='source'` and the status as `unknown` or temporarily closed, never as verified operational. Put the Notes and Verification text into `status_note` / `verification_note`.
      - "RO (2000 LPH)" means technology RO with a capacity of 2000 **litres per hour**. Parse it into `technology_raw` plus capacity; the importer supports mapping.
-  2. `UMAR_AFZAL_RO_SHEET.xlsx`. Sheet1 has 221 rows with columns `SR#, LOCATIONS, GOOGLE LOCATION`.
-     - The Google Maps URLs contain coordinates. Prefer the place pin `!3d<lat>!4d<lng>` over the `@lat,lng` viewport.
-     - **Some links are wrong**. For example, row 3 "055 JB BABA BAKALAH" points to 21.47, 80.19, which is in India. The importer flags anything outside the Faisalabad bounds, so don't store those.
-     - There's no ID column, so generate a stable `UMAR-###` from `SR#`.
-     - Treat these as RO plants with an unknown status.
+  2. **DONE:** `UMAR_AFZAL_RO_SHEET.xlsx`. Sheet1 has 221 rows with columns `SR#, LOCATIONS, GOOGLE LOCATION`.
+     - `scripts/convert-umar.js` turns it into `UMAR_AFZAL_RO_SHEET.converted.csv`, which setup imports through `imports.json`. **Re-run the converter and commit the CSV whenever the .xlsx changes**; a test fails if they drift apart.
+     - IDs are `UMAR-<8 hex of the LOCATIONS text>`, with `-2`, `-3` for repeats (e.g. "CENTRAL JAIL JARHANWALA ROAD" appears 6 times with the same link). `SR#` is a `SUBTOTAL()` formula that renumbers when the sheet is filtered or sorted, so it is not used. Editing a LOCATIONS text changes that plant's ID.
+     - Coordinates come only from a place pin `!3d…!4d…` (145 rows) or a dropped pin `?q=lat,lng` (2). Three Chiniot links only give a map view centre `@lat,lng`; those are not used. 71 rows have no link or an address-only link (some are plus codes such as `C356+F4P`); an admin can pin them.
+     - Result: 142 exact locations. 5 are rejected as outside the bounds (row 3 points to India; four "SHMALI … DISTRICT SARGODHA"). The two "OKARA ARMY CANT" rows sit just inside the importer's 0.1° margin and are stored; ask the owner if they belong.
+     - Many place pins are a village or landmark pin, not the plant itself. They stay `coord_status='source'` (unverified).
+     - Imported as RO (the file is titled "RO SHEET") with status `unknown`. 17 likely duplicates (same pin, similar name) are in the duplicate-review queue.
   3. **DONE:** `/water-estimates.html` (linked in the nav as "Area water estimates") shows all 34 areas from this PDF, with its warnings. The data is also in `data/source/incoming/estimated-tds-ph-by-area.json`. It is NOT attached to plants as test results. Still to do: Urdu text for that page, and optionally an "area estimate" line on plant cards, clearly labelled as groundwater context.
      `faisalabad_estimated_tds_ph_by_area.pdf` is the newer version and adds **estimated pH** by area. The older `faisalabad_estimated_tds_by_area.pdf` is kept too. The same rules apply to both: these are estimates, not lab tests.
      Older file: `faisalabad_estimated_tds_by_area.pdf` holds **estimated** TDS by area. It is **not** a lab test. Don't put it into `water_tests` as measured results, and never show it as "met limits". At most, show it as area context: "Estimated TDS for this area (not a measurement of this plant)", with its source cited. That would need a new small table or `about.html` content; decide carefully.
@@ -89,16 +91,23 @@ It has three parts:
 
 ## Next steps, in priority order
 
-1. **DONE for the 139-plant file.** `scripts/setup.js` now imports it through `data/source/incoming/imports.json`, and 122 plants appear as exact locations in nearest search with directions. Remaining work: "RO (2000 LPH)" is stored as `technology_raw`, but the capacity isn't split out and the stages come back as `[]`; fix the parsing in `server/import/normalize.js`. **Still to do:** the UMAR file (below).
-   Original instruction: **Import the two new spreadsheets.** Use `npm run import:xlsx -- <file> --dry-run --errors e.csv` or the admin import wizard with column mapping. For UMAR, first write a small converter that pulls the coordinates out of the URLs into Latitude/Longitude columns. Make `scripts/setup.js` import every file in `data/source/` and `data/source/incoming/`, so Vercel cold starts include them. Test that exact-location plants then appear in `/api/search` in the `exact` group, with directions.
-2. Decide whether the original 1,000-row modelled file should stay public, now that real sourced data exists. Ask the owner. You could hide it behind a flag.
+1. **DONE.** Both new files are imported by `scripts/setup.js` through `data/source/incoming/imports.json`: 122 exact plants from the 139-plant file and 142 from UMAR. "RO (2000 LPH)" parses to 2000 litres per hour with the RO stage. Setup's owner confirmation only touches plants whose status still comes from the file, so an admin's status change survives restarts.
+2. **DONE (owner decision, 27 Sept 2026):** the original 1,000-row file is hidden from the public site (`PUBLIC_HIDDEN_SOURCE_FILES`, see `docs/env-example.txt`); admins still see it. Set the variable to empty to show it again.
+   **Also DONE:** `scripts/enrich-locations.js` found positions and landmarks for the public plants and wrote `data/source/incoming/enrichment.json`, which setup applies (no network at start-up). Plus codes in the records are decoded exactly; other positions come from OpenStreetMap search, are flagged `coord_approximate=1` and shown as grey dashed pins labelled "approximate". Search hits must name the place (Nominatim fuzzy-matches "Chak 224 RB" to "Chak 234 GB"). Landmarks come from "Near X" in the record or the nearest named OpenStreetMap place within 250 m. Re-run the script after importing new files, check its output, and commit the JSON.
 3. Translate `public/i18n/about.ur.json`, which has only 5 of 96 keys, so the About and Privacy pages are fully Urdu.
 4. Compact the result controls on mobile (see the note in the Public UI report).
 5. Durable hosting for reports: Render or Railway with a disk. Set `SMS_PROVIDER=twilio` for verification.
 6. Optional: a security review with `/security-review`; the Google Maps provider (`MAP_PROVIDER=google` with keys).
+
+## Hackathon demo features (27 Sept 2026, owner request)
+- **Demo water-quality dot:** every plant card shows a green/yellow/red dot with a made-up TDS value (`demoWaterQuality` in `server/lib/plant-view.js`), labelled "Demo value made up for the hackathon — not a real water test". On by default; **turn it off after the hackathon** with `DEMO_WATER_QUALITY=0` (Vercel env var). The owner asked for real plants to carry these values; the alternative offered was area-groundwater colours from the TDS PDF, which were not chosen because RO plants treat that water.
+- **Hand-picked searches** for named institutions live in `data/source/incoming/enrichment-queries.json`; each hit must contain every distinctive word and number of its query.
 
 ## Gotchas
 
 - Don't run `pkill -f` with broad patterns; it can kill your own shell.
 - The sandbox may block OSM, Nominatim, OSRM and vercel.app. The app degrades gracefully, and tests use `GEOCODER_PROVIDER=none` and `ROUTING_PROVIDER=none`.
 - Commit messages must not name the model. Push to the branch above.
+- Setup must stay fast: it runs inside every Vercel cold start, and the page gives up on `/api/config` after 12 s. It used to geocode addresses via Nominatim (1 request/s), which took about 27 s and showed "We couldn't load the plant list". Setup now passes `geocoder: null`; don't add network calls to it.
+- On Windows, `core.autocrlf=true` used to corrupt the PDFs on checkout; `.gitattributes` now marks PDFs and spreadsheets as binary.
+- E2E on Windows: set `CHROME_PATH` to a local Chrome. The runner's cleanup can hit EPERM after the suites finish; check the ✔ lines.

@@ -9,6 +9,7 @@
 //   * litres are computed only when the gallon type is known (us / imperial) — never assumed.
 //   * water quality comes only from published water tests; ratings never affect it.
 //   * no reporter data (ids, phones, descriptions) is ever included.
+const config = require('../config');
 const { getDb, parseJson } = require('./db');
 const { addDays, nowIso } = require('./time');
 const { openingHoursView } = require('./hours');
@@ -60,8 +61,38 @@ function locationView(row, area) {
   const exact = exactPosition(row);
   const av = areaView(area);
   const precision = exact ? 'exact' : av && av.lat !== null ? 'area' : 'none';
-  return { precision, lat: exact ? exact.lat : null, lng: exact ? exact.lng : null, coordStatus: row.coord_status, area: av };
+  return {
+    precision, lat: exact ? exact.lat : null, lng: exact ? exact.lng : null, coordStatus: row.coord_status,
+    approximate: !!exact && row.coord_approximate === 1, // found by searching the name/address; labelled in the UI
+    area: av,
+  };
 }
+
+// Plants from these source files stay in the database for administrators but are left out of the public site
+// (PUBLIC_HIDDEN_SOURCE_FILES). Demo plants are hidden unless DEMO_DATA=1.
+const sqlText = (s) => `'${String(s).replace(/'/g, "''")}'`;
+/**
+ * Made-up TDS value for the hackathon demo (DEMO_WATER_QUALITY, on by default), derived from the plant code so it
+ * is stable. NOT a water test: never stored, never counted as water-quality evidence, and always labelled as demo in
+ * the UI. Bands follow the owner's TDS guide: below 500 mg/L good, 500–1,000 okay, above 1,000 bad.
+ */
+function demoWaterQuality(code) {
+  if (!config.demoWaterQuality || !code) return null;
+  const h = require('node:crypto').createHash('sha256').update(`demo-tds|${code}`).digest();
+  const pick = h[0] % 100, spread = h.readUInt16BE(1);
+  const tds = pick < 55 ? 60 + (spread % 430) : pick < 85 ? 500 + (spread % 490) : 1000 + (spread % 900);
+  const value = Math.round(tds / 10) * 10;
+  return { tds: value, band: value < 500 ? 'good' : value <= 1000 ? 'okay' : 'bad', demo: true };
+}
+
+/** SQL condition (no leading AND) that keeps only plants shown on the public site. */
+function publicPlantSql(alias = 'p') {
+  const parts = ['1 = 1'];
+  if (!config.demoData) parts.push(`${alias}.is_demo = 0`);
+  if (config.publicHiddenSourceFiles.length) parts.push(`IFNULL(${alias}.source_file, '') NOT IN (${config.publicHiddenSourceFiles.map(sqlText).join(', ')})`);
+  return parts.join(' AND ');
+}
+const isPublicPlant = (row) => !!row && (row.is_demo !== 1 || config.demoData) && !config.publicHiddenSourceFiles.includes(row.source_file);
 
 const precisionOf = (row, area) => (exactPosition(row) ? 'exact' : isAreaUsable(area) ? 'area' : 'none');
 
@@ -176,6 +207,7 @@ function toSummary(row, area, extras = {}) {
     waterQuality: agg.waterQuality(row.id),
     rating: agg.rating(row.id),
     lastVerifiedAt: row.last_verified_at ?? null,
+    demoWaterQuality: demoWaterQuality(row.plant_code),
   };
   if (extras.ranking) {
     const r = extras.ranking;
@@ -329,5 +361,5 @@ function areaFor(row) {
 module.exports = {
   LITRES_PER_GALLON, exactPosition, isAreaUsable, areaView, locationView, precisionOf, statusView, capacityView,
   collectionLimitView, ratingView, waterQualityView, loadAggregates, toSummary, toDetail, waterTestsFor,
-  reportsSummary, dataIssues, missingFields, stagesForTechnology, areaFor,
+  reportsSummary, dataIssues, missingFields, stagesForTechnology, areaFor, publicPlantSql, isPublicPlant, demoWaterQuality,
 };

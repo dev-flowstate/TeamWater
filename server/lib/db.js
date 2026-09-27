@@ -30,6 +30,7 @@ function open(dbPath = config.dbPath) {
 const ADDED_COLUMNS = [
   ['areas', 'kind', "TEXT NOT NULL DEFAULT 'area' CHECK (kind IN ('area', 'town', 'landmark'))"],
   ['reports', 'proximity_basis', "TEXT CHECK (proximity_basis IN ('plant', 'area_centre'))"],
+  ['plants', 'coord_approximate', 'INTEGER NOT NULL DEFAULT 0 CHECK (coord_approximate IN (0, 1))'],
 ];
 
 function migrate(conn) {

@@ -201,7 +201,7 @@ router.patch('/users/:id', requirePermission('users:manage'), (req, res) => {
 // ── Exports ──
 const EXPORT_COLUMNS = [
   'plant_code', 'name', 'town', 'area_raw', 'area_name', 'area_sector', 'area_id', 'address', 'neighborhood', 'landmark',
-  'latitude', 'longitude', 'coord_status', 'coord_source', 'coord_accuracy_m', 'coord_note',
+  'latitude', 'longitude', 'coord_status', 'coord_source', 'coord_accuracy_m', 'coord_note', 'coord_approximate',
   'operator_type', 'operator_name', 'water_source', 'technology_raw', 'treatment_stages_json',
   'capacity_raw', 'capacity_value', 'capacity_unit', 'capacity_unit_label', 'capacity_basis', 'capacity_gallon_type',
   'collection_limit_raw', 'collection_limit_value', 'collection_limit_unit', 'collection_limit_period',

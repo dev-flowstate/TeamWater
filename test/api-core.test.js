@@ -901,3 +901,46 @@ test('core api', async (t) => {
     clearRate();
   });
 });
+
+test('public site: hidden source files and approximate positions', async (t) => {
+  const s = await startTestServer({ env: { PUBLIC_HIDDEN_SOURCE_FILES: 'modelled.xlsx' } });
+  t.after(() => s.close());
+  const hidden = s.insertPlant({ source_file: 'modelled.xlsx', latitude: O.lat + 0.001, longitude: O.lng, coord_status: 'source' });
+  const approx = s.insertPlant({ source_file: 'owner.csv', latitude: O.lat + 0.002, longitude: O.lng, coord_status: 'source', coord_approximate: 1 });
+  const json = async (p, client = s) => (await client.fetch(p)).json();
+
+  const search = await json(`/api/search?lat=${O.lat}&lng=${O.lng}`);
+  assert.deepEqual(search.exact.map((p) => p.code), [approx.plant_code]);
+  assert.equal(search.exact[0].location.precision, 'exact');
+  assert.equal(search.exact[0].location.approximate, true);
+  assert.equal((await s.fetch(`/api/plants/${hidden.plant_code}`)).status, 404);
+  assert.deepEqual((await json('/api/plants?town=Test%20Town')).items.map((p) => p.code), [approx.plant_code]);
+  assert.equal((await json('/api/config')).stats.plantsTotal, 1);
+  assert.equal((await s.fetch(`/api/route?from=${O.lat},${O.lng}&to=${hidden.plant_code}`)).status, 404);
+
+  const admin = await s.login('admin');
+  const codes = (await json('/api/admin/plants?pageSize=100', admin)).items.map((p) => p.code);
+  assert.ok(codes.includes(hidden.plant_code), 'administrators still see hidden plants');
+});
+
+test('demo water quality: labelled, stable, banded, separate from real tests, switchable', async (t) => {
+  const s = await startTestServer({ env: { DEMO_WATER_QUALITY: '1' } });
+  t.after(() => s.close());
+  const codes = Array.from({ length: 40 }, () => s.insertPlant().plant_code);
+  const items = (await (await s.fetch('/api/plants?town=Test%20Town&pageSize=100')).json()).items;
+  const bands = new Set();
+  for (const p of items) {
+    const q = p.demoWaterQuality;
+    assert.equal(q.demo, true);
+    assert.equal(q.band, q.tds < 500 ? 'good' : q.tds <= 1000 ? 'okay' : 'bad');
+    assert.equal(p.waterQuality.state, 'unknown', 'demo values never count as water-quality evidence');
+    bands.add(q.band);
+  }
+  assert.deepEqual([...bands].sort(), ['bad', 'good', 'okay']);
+  const again = await (await s.fetch(`/api/plants/${codes[0]}`)).json();
+  assert.deepEqual(again.demoWaterQuality, items.find((p) => p.code === codes[0]).demoWaterQuality);
+
+  const { demoWaterQuality } = require('../server/lib/plant-view');
+  require('../server/config').demoWaterQuality = false;
+  assert.equal(demoWaterQuality(codes[0]), null);
+});

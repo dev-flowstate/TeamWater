@@ -20,7 +20,7 @@ const config = require('../config');
 const { getDb } = require('./db');
 const { haversineM, bboxAround, inBounds } = require('./geo');
 const routing = require('./routing');
-const { toSummary, loadAggregates, isAreaUsable } = require('./plant-view');
+const { toSummary, loadAggregates, isAreaUsable, publicPlantSql } = require('./plant-view');
 const { openingHoursView } = require('./hours');
 
 const EXACT_RADIUS_M = 30_000;
@@ -145,7 +145,7 @@ async function search(p) {
   // ── Filters shared by every query ──
   const where = [];
   const params = [];
-  if (!config.demoData) where.push('p.is_demo = 0');
+  where.push(publicPlantSql('p'));
   if (p.technology) { where.push('p.technology_raw = ?'); params.push(p.technology); }
   if (p.operatorType) { where.push('p.operator_type = ?'); params.push(p.operatorType); }
   const filterSql = where.length ? `AND ${where.join(' AND ')}` : '';

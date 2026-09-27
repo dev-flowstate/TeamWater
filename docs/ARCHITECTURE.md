@@ -12,11 +12,14 @@ This file is the **contract** between workstreams. If you need something outside
 2. **Never fabricate** plants, coordinates, names, addresses, treatment steps, capacities, hours, test results, ratings, reviews, or verification badges. If a value is unknown, show **"Not provided"**. If something is unconfirmed, show **"Not verified"**. If water quality has no evidence, show **"Unknown"**.
 3. **Capacity is not a collection allowance.** `5000 GPH` is a production rate in gallons per hour. It is not a per-person or per-day allowance. The gallon type (US or imperial) is **not stated**, so don't convert to litres unless `capacity_gallon_type` is set.
 4. **Location precision is explicit.** Only `coord_status IN ('source','verified')` with lat/lng counts as an **exact** plant location. Area centroids are **approximate**. Draw them as circles or area labels, never as pins, and never present them as a plant's exact position.
+   - Exception (owner decision, 27 Sept 2026, hackathon demo): positions found by searching a plant's name or address (`scripts/enrich-locations.js`, applied by setup from `data/source/incoming/enrichment.json`) are stored with `coord_status='source'` and `coord_approximate=1`. They get pins and directions, but the API sets `location.approximate: true` and the UI labels them "Approximate site (found by address search, not verified)" with a grey dashed pin. Setup only fills blanks; it never replaces a source or admin position.
 5. **Water testing evidence and community ratings are separate.** Ratings never imply safety. There's no "cleanliness %".
+   - Hackathon demo (owner decision, 27 Sept 2026): with `DEMO_WATER_QUALITY` on (the default), every plant summary carries `demoWaterQuality: { tds, band: 'good'|'okay'|'bad', demo: true }`, a made-up TDS value derived from the plant code. The card shows it as a green/yellow/red dot that always says "Demo value made up for the hackathon — not a real water test". It is never stored, never counted in `waterQuality` or ranking, and bands follow the owner's TDS guide (below 500 good, 500–1,000 okay, above 1,000 bad). Set `DEMO_WATER_QUALITY=0` to remove it.
 6. **Reports aren't findings.** An unverified report never changes a plant's official status. Changing status requires an administrator's documented assessment (`plant_status_history.assessment`).
 7. **Phone numbers are private.** They're stored encrypted. Only the `admin` role can reveal one, and every reveal is audited. They never appear in public APIs, logs, exports (unless an admin explicitly asks), or `audit_log` payloads.
 8. **Never silently replace live data with fiction.** If a provider is down, return an explicit `available:false` / `unavailable` and let the UI show a clear failure state.
-9. **Demo data** (`plants.is_demo = 1`, codes `DEMO-####`) exists only when `DEMO_DATA=1`. Every demo plant is labelled "DEMO — not a real plant", and every page shows a banner.
+9. **Hidden source files.** Plants from files in `PUBLIC_HIDDEN_SOURCE_FILES` (default: the original 1,000-row file, which has no names, addresses or coordinates) stay in the database for administrators but are left out of every public query. Use `publicPlantSql()` / `isPublicPlant()` from `server/lib/plant-view.js` in any public query.
+10. **Demo data** (`plants.is_demo = 1`, codes `DEMO-####`) exists only when `DEMO_DATA=1`. Every demo plant is labelled "DEMO — not a real plant", and every page shows a banner.
 
 ## 1. Source data findings (spreadsheet `data/source/Filter_palnts_in_Faisalabad_1000_1.xlsx`)
 
@@ -198,7 +201,7 @@ Query parameters: `lat`, `lng`, `sort=nearest|recommended`, `mode=driving|walkin
 ```json
 { "code": "FSD-WFP-0009", "name": null, "town": "Madina Town", "areaRaw": "Kohinoor City - Sector 12", "areaName": "Kohinoor City",
   "address": null, "landmark": null, "isDemo": false,
-  "location": { "precision": "exact|area|none", "lat": null, "lng": null, "coordStatus": "missing|source|verified|geocoded_pending",
+  "location": { "precision": "exact|area|none", "lat": null, "lng": null, "coordStatus": "missing|source|verified|geocoded_pending", "approximate": false,
                 "area": { "id": 7, "name": "Kohinoor City", "lat": 31.4, "lng": 73.1, "radiusM": 1500 } },
   "status": { "code": "operational", "raw": "Fully Functional", "source": "spreadsheet", "updatedAt": null, "verified": false },
   "openingHours": { "text": null, "structured": null, "openNow": null },

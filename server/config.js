@@ -104,6 +104,15 @@ const config = {
   // with is_demo=1 and every page shows a "Demonstration data" banner.
   demoData: bool(env.DEMO_DATA, false),
 
+  // Hackathon demo: a made-up TDS value with a green/yellow/red dot on every plant card, always labelled as demo and
+  // never stored or counted as a water test. Set DEMO_WATER_QUALITY=0 to switch it off.
+  demoWaterQuality: bool(env.DEMO_WATER_QUALITY, true),
+
+  // Source files whose plants are kept for administrators but hidden from the public site. By default the original
+  // 1,000-row file, which has no names, addresses or coordinates. Set PUBLIC_HIDDEN_SOURCE_FILES= (empty) to show it.
+  publicHiddenSourceFiles: (env.PUBLIC_HIDDEN_SOURCE_FILES ?? 'Filter_palnts_in_Faisalabad_1000_1.xlsx')
+    .split(',').map((s) => s.trim()).filter(Boolean),
+
   timezone: 'Asia/Karachi',
 };
 

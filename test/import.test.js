@@ -586,4 +586,32 @@ test('import: pipeline, duplicates, routes and the real file', async (t) => {
     const again = await pipeline.importFromFile({ filePath: REAL_FILE, actorLabel: 'test' });
     assert.deepEqual([again.new, again.update, again.unchanged], [0, 0, 1000]);
   });
+
+  await t.test('UMAR sheet: converted CSV is current and imports with link coordinates only', async () => {
+    const umar = require('../scripts/convert-umar');
+    const { coordinatesFromUrl: c } = umar;
+    assert.deepEqual(c('https://www.google.com/maps/place/X/@31.1,73.1,618m/data=!4m6!3m5!8m2!3d31.4856965!4d73.064542'),
+      { lat: '31.4856965', lng: '73.064542', basis: 'Place pin in the Google Maps link' });
+    assert.equal(c('https://www.google.com/maps?q=31.371881,73.084128&entry=gps').lat, '31.371881');
+    assert.equal(c('https://www.google.com/maps/@31.7243287,72.9685323,616m/data=!3m1!1e3').lat, null);
+    assert.equal(c('https://www.google.com/maps/place/Jamia+Salfia+Rd,+Faisalabad/data=!4m2').lat, null);
+    assert.equal(c('').basis, 'No link');
+
+    const eol = (s) => s.replace(/\r\n/g, '\n');
+    assert.equal(eol(fs.readFileSync(umar.OUTPUT, 'utf8')), eol(await umar.convert()), 'Re-run `node scripts/convert-umar.js` and commit the CSV.');
+
+    const cfg = JSON.parse(fs.readFileSync(path.join(path.dirname(umar.OUTPUT), 'imports.json'), 'utf8')).find((i) => i.file === path.basename(umar.OUTPUT));
+    const summary = await pipeline.importFromFile({ filePath: umar.OUTPUT, mapping: cfg.mapping, actorLabel: 'test' });
+    assert.deepEqual([summary.total, summary.new, summary.rejected, summary.duplicateReview], [221, 221, 0, 0]);
+    const plants = s.db.prepare("SELECT * FROM plants WHERE plant_code LIKE 'UMAR-%'").all();
+    assert.equal(plants.filter((p) => p.coord_status === 'source').length, 142);
+    assert.ok(plants.every((p) => p.status === 'unknown' && p.status_source === 'none' && p.technology_raw === 'RO'));
+    const india = plants.find((p) => p.name === '055 JB BABA BAKALAH');
+    assert.equal(india.latitude, null);
+    assert.ok(JSON.parse(india.review_reasons_json).includes('coordinates_out_of_bounds'));
+    const jail = plants.filter((p) => p.name === 'CENTRAL JAIL JARHANWALA ROAD').map((p) => p.plant_code).sort();
+    assert.equal(jail.length, 6);
+    assert.match(jail[0], /^UMAR-[0-9A-F]{8}$/);
+    assert.ok(jail.slice(1).every((code) => code.startsWith(`${jail[0]}-`)));
+  });
 });

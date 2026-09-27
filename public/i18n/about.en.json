@@ -94,5 +94,7 @@
   "privacy.rights.button": "Request correction or deletion",
   "stats.unavailable": "Not available right now",
   "map.coverageDefault": "Streets, shops and landmarks come from the map provider and may be incomplete.",
-  "map.updatedDefault": "The map provider updates the base map on its own schedule."
+  "map.updatedDefault": "The map provider updates the base map on its own schedule.",
+  "areas.searched": "Some plants had no position in their source record. Where a plus code was recorded we decoded it; otherwise we searched OpenStreetMap for the plant's name or address. Positions found by search are shown as grey pins labelled “approximate”. Landmarks marked “OpenStreetMap” are the nearest named place on the map. Map data © OpenStreetMap contributors, ODbL.",
+  "quality.demo": "Hackathon demo: each plant card also shows a green, yellow or red dot with a TDS value. These values are made up for the demonstration and are not water tests."
 }

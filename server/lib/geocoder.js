@@ -22,7 +22,7 @@ const config = require('../config');
 const { getDb, parseJson } = require('./db');
 const { normalizeSearch } = require('./text');
 const { haversineM, inBounds, isValidLatLng } = require('./geo');
-const { isAreaUsable } = require('./plant-view');
+const { isAreaUsable, publicPlantSql } = require('./plant-view');
 const nominatim = require('./providers/nominatim');
 const googleGeocode = require('./providers/google-geocode');
 
@@ -49,7 +49,7 @@ function externalProvider() {
 /** Effective provider name for /api/config ('none' when unusable). */
 const providerName = () => (externalProvider() ? externalProvider().name : 'none');
 
-const visibleDemoSql = () => (config.demoData ? '' : 'AND is_demo = 0');
+const visibleDemoSql = () => `AND ${publicPlantSql('plants')}`;
 
 /** Plant counts per area id and per town (open plants listed in the text list). */
 function plantCounts() {

@@ -140,6 +140,7 @@ export async function createLeafletMap(el, config, opts = {}) {
         pin.append(span('tw-pin-num', String(p.rank ?? i + 1)));
         if (p.isDemo) pin.classList.add('is-demo');
         if (p.status?.code === 'temporarily_closed') pin.classList.add('is-closed');
+        if (p.location?.approximate) pin.classList.add('is-approx');
         const label = labels.exact ? labels.exact(p) : p.code;
         const marker = L.marker([lat, lng], {
           icon: L.divIcon({ className: 'tw-pin-wrap', html: pin, iconSize: [38, 46], iconAnchor: [19, 44] }),

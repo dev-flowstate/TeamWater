@@ -289,7 +289,7 @@ const GROUPS = {
   address: ['address'],
   neighborhood: ['neighborhood'],
   landmark: ['landmark'],
-  coords: ['latitude', 'longitude', 'coord_status', 'coord_source', 'coord_accuracy_m', 'coord_note'],
+  coords: ['latitude', 'longitude', 'coord_status', 'coord_source', 'coord_accuracy_m', 'coord_note', 'coord_approximate'],
   operator_type: ['operator_type'],
   operator_name: ['operator_name'],
   water_source: ['water_source'],
@@ -366,7 +366,7 @@ function normalizeRow(values, mapping, ctx) {
     else if (lat.blank || lng.blank) warn('latitude', 'coordinates_incomplete', 'Only one of latitude and longitude is given, so neither was used.', pair);
     else if (inBounds(lat.value, lng.value)) {
       Object.assign(plant, {
-        latitude: lat.value, longitude: lng.value, coord_status: 'source', coord_source: 'spreadsheet', coord_accuracy_m: null,
+        latitude: lat.value, longitude: lng.value, coord_status: 'source', coord_source: 'spreadsheet', coord_accuracy_m: null, coord_approximate: 0,
         coord_note: `As recorded in '${ctx.sourceFile}', sheet '${ctx.sheet}', row ${ctx.rowNumber} (not verified).`,
       });
       provided.add('coords');

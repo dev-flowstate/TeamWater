@@ -313,7 +313,7 @@ function compareText(a, b) {
 }
 
 function plantCounts(db, items) {
-  const demo = config.demoData ? '' : ' AND is_demo = 0';
+  const demo = ` AND ${require('./plant-view').publicPlantSql('plants')}`; // lazy: plant-view requires this module
   const counts = new Map();
   const areaIds = items.filter((it) => it.row.kind !== 'town').map((it) => it.row.id);
   if (areaIds.length) {

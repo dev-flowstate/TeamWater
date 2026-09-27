@@ -7,5 +7,15 @@
       "verifiedAt": "2026-09-26",
       "note": "Site owner confirmed on 26 Sept 2026 that all plants in this list are operating and the data is verified."
     }
+  },
+  {
+    "file": "UMAR_AFZAL_RO_SHEET.converted.csv",
+    "mapping": {
+      "plant_code": "Plant ID",
+      "name": "LOCATIONS",
+      "latitude": "Latitude",
+      "longitude": "Longitude",
+      "technology_raw": "Technology (from sheet title)"
+    }
   }
 ]

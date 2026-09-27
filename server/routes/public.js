@@ -17,7 +17,7 @@ const { parseLatLng, isValidLatLng } = require('../lib/geo');
 const geocoder = require('../lib/geocoder');
 const routing = require('../lib/routing');
 const ranking = require('../lib/ranking');
-const { toSummary, toDetail, loadAggregates, areaFor, exactPosition, isAreaUsable } = require('../lib/plant-view');
+const { toSummary, toDetail, loadAggregates, areaFor, exactPosition, isAreaUsable, publicPlantSql, isPublicPlant } = require('../lib/plant-view');
 
 const router = express.Router();
 
@@ -47,13 +47,12 @@ function rateLimit(kind) {
   };
 }
 
-const demoVisible = () => config.demoData;
-const demoSql = (alias = 'p') => (config.demoData ? '' : `AND ${alias}.is_demo = 0`);
+const demoSql = (alias = 'p') => `AND ${publicPlantSql(alias)}`;
 
 function findPlant(code) {
   if (typeof code !== 'string' || !CODE_RE.test(code)) return null;
   const row = getDb().prepare('SELECT * FROM plants WHERE plant_code = ?').get(code);
-  if (!row || (row.is_demo === 1 && !demoVisible())) return null;
+  if (!isPublicPlant(row)) return null;
   return row;
 }
 
@@ -176,7 +175,7 @@ router.get('/plants', (req, res) => {
   const { page, pageSize, limit, offset } = paginate(req.query, { defaultSize: 25, maxSize: 100 });
   const where = ['1 = 1'];
   const params = [];
-  if (!config.demoData) where.push('p.is_demo = 0');
+  where.push(publicPlantSql('p'));
   if (!v.includeClosed) where.push("p.status NOT IN ('permanently_closed','decommissioned')");
   if (v.area !== null) { where.push('p.area_id = ?'); params.push(v.area); }
   if (v.town !== null) { where.push('p.town = ? COLLATE NOCASE'); params.push(v.town); }

@@ -129,6 +129,9 @@ function fact(label, value, iconName) {
 
 function precisionChip(p) {
   const loc = p.location || {};
+  if (loc.precision === 'exact' && loc.approximate) {
+    return h('span', { class: 'chip chip-approx' }, icon('pin'), t('search.precision.approximate'));
+  }
   if (loc.precision === 'exact') {
     return h('span', { class: 'chip chip-exact' }, icon('pin'), loc.coordStatus === 'verified' ? t('search.precision.exactVerified') : t('search.precision.exactSource'));
   }
@@ -287,6 +290,16 @@ function hoursValue(p) {
     oh.openNow === false ? h('span', { class: 'chip chip-warn chip-sm' }, t('search.hours.closedNow')) : null);
 }
 
+// Hackathon demo value (server: plant-view demoWaterQuality). Always says it is made up; never mixed with real tests.
+function demoQualityBadge(q) {
+  if (!q) return null;
+  return h('div', { class: `demo-quality is-${q.band}`, 'data-testid': 'demo-quality' },
+    h('span', { class: 'demo-quality-dot', 'aria-hidden': 'true' }),
+    h('p', {},
+      h('strong', {}, t(`search.demoQuality.${q.band}`)), ' · ', t('search.demoQuality.tds', { n: formatNumber(q.tds) }),
+      h('span', { class: 'demo-quality-note' }, t('search.demoQuality.note'))));
+}
+
 export function renderCard(p, detail, ctx = {}) {
   const loc = p.location || {};
   const exact = loc.precision === 'exact';
@@ -302,7 +315,8 @@ export function renderCard(p, detail, ctx = {}) {
     h('h2', { class: `card-name${p.name ? '' : ' is-missing'}`, id: 'card-name' }, p.name ? bdi(p.name) : t('search.card.nameMissing')),
     h('p', { class: 'card-code' }, t('search.card.plantId'), ' ', bdi(p.code, 'mono')),
     h('p', { class: 'card-area' }, icon('map'),
-      h('span', {}, p.areaRaw ? bdi(p.areaRaw) : NP(), p.town ? [' · ', bdi(p.town)] : null)));
+      h('span', {}, p.areaRaw ? bdi(p.areaRaw) : NP(), p.town ? [' · ', bdi(p.town)] : null)),
+    demoQualityBadge(p.demoWaterQuality));
 
   // Distance
   let distance = null;

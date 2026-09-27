@@ -82,6 +82,9 @@ CREATE TABLE IF NOT EXISTS plants (
   coord_source             TEXT,                       -- e.g. 'spreadsheet', 'admin map pin', 'Nominatim'
   coord_accuracy_m         REAL,
   coord_note               TEXT,
+  coord_approximate        INTEGER NOT NULL DEFAULT 0 CHECK (coord_approximate IN (0, 1)),
+                           -- 1: position found by searching the plant's name/address (scripts/enrich-locations.js),
+                           -- not recorded in the source. Shown as a pin labelled "approximate".
 
   operator_type            TEXT,                       -- e.g. 'Government (WASA)' as recorded
   operator_name            TEXT,

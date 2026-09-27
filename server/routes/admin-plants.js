@@ -295,11 +295,11 @@ router.post('/plants/:code/coordinates', requirePermission('plants:write'), (req
   const reason = reasonFrom(body, ['reason', 'note']);
   let next;
   if (clear) {
-    next = { latitude: null, longitude: null, coord_status: 'missing', coord_source: null, coord_accuracy_m: null, coord_note: reason };
+    next = { latitude: null, longitude: null, coord_status: 'missing', coord_source: null, coord_accuracy_m: null, coord_note: reason, coord_approximate: 0 };
   } else {
     const v = validate(body, { lat: num({ min: -90, max: 90 }), lng: num({ min: -180, max: 180 }), accuracyM: num({ min: 0, max: 10000, optional: true }) });
     if (!inBounds(v.lat, v.lng)) throw new HttpError(400, 'out_of_bounds', 'The position is outside the Faisalabad service area.', { field: 'lat' });
-    next = { latitude: v.lat, longitude: v.lng, coord_status: 'verified', coord_source: 'admin map pin', coord_accuracy_m: v.accuracyM, coord_note: reason };
+    next = { latitude: v.lat, longitude: v.lng, coord_status: 'verified', coord_source: 'admin map pin', coord_accuracy_m: v.accuracyM, coord_note: reason, coord_approximate: 0 };
   }
   const before = Object.fromEntries(Object.keys(next).map((k) => [k, row[k] ?? null]));
   const d = diff(before, next);

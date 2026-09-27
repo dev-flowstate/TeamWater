@@ -1,0 +1,7 @@
+# Source documents must be stored byte-for-byte; never convert line endings in them.
+*.pdf  binary
+*.xlsx binary
+*.xls  binary
+*.png  binary
+*.jpg  binary
+*.webp binary

@@ -435,6 +435,15 @@ body[data-page='home']:not(.is-results) .tw-footer-shore { display: none; }
 .chip .icon { width: 15px; height: 15px; }
 .chip-exact { background: var(--tw-success-100); color: var(--tw-success); border-color: #b5dcc6; }
 .chip-area { background: var(--tw-teal-100); color: var(--tw-teal-700); border-color: var(--tw-teal-200); }
+.chip-approx { background: var(--tw-sand-100); color: var(--tw-navy-800); border-color: var(--tw-sand-300); }
+/* Hackathon demo water-quality dot (made-up values, always labelled) */
+.demo-quality { display: flex; align-items: flex-start; gap: 10px; margin-top: 12px; padding: 10px 12px; border-radius: var(--tw-radius); border: 1px solid var(--tw-border); background: var(--tw-surface-2); }
+.demo-quality p { margin: 0; line-height: 1.4; }
+.demo-quality-dot { flex: none; width: 22px; height: 22px; margin-top: 1px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 0 1px rgba(10, 26, 51, 0.25); }
+.demo-quality.is-good .demo-quality-dot { background: #1e9e55; }
+.demo-quality.is-okay .demo-quality-dot { background: #e8b422; }
+.demo-quality.is-bad .demo-quality-dot { background: #d93a2b; }
+.demo-quality-note { display: block; font-size: 0.8125rem; color: var(--tw-text-muted); }
 .chip-none { background: var(--tw-unknown-100); color: var(--tw-unknown); border-color: var(--tw-slate-100); }
 .chip-demo { background: var(--tw-demo-100); color: var(--tw-demo); border-color: #d6bdee; }
 .chip-ok { background: var(--tw-success-100); color: var(--tw-success); }
@@ -568,6 +577,7 @@ body[data-page='home']:not(.is-results) .tw-footer-shore { display: none; }
 .tw-pin-num { transform: rotate(45deg); color: #fff; font-weight: 700; font-size: 14px; font-family: var(--tw-font-body); }
 .tw-pin.is-demo { background: var(--tw-demo); }
 .tw-pin.is-closed { background: var(--tw-starfish); }
+.tw-pin.is-approx { background: var(--tw-slate-700); border-style: dashed; }
 .is-selected > .tw-pin, .tw-pin.is-selected { background: var(--tw-navy-900); transform: rotate(-45deg) scale(1.22); box-shadow: 0 0 0 4px var(--tw-sand-300), 0 6px 14px rgba(10, 26, 51, 0.35); }
 .tw-area-badge {
   display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px 3px 3px; transform: translate(-50%, -50%);

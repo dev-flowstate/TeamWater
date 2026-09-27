@@ -25,6 +25,7 @@ const sms = require('../lib/sms');
 const risk = require('../lib/risk');
 const reporters = require('../lib/reporters');
 const moderation = require('../lib/moderation');
+const { isPublicPlant } = require('../lib/plant-view');
 
 const router = express.Router();
 
@@ -62,7 +63,7 @@ function requireConsent(value) {
 
 function findPlant(code) {
   const p = getDb().prepare('SELECT * FROM plants WHERE plant_code = ? COLLATE NOCASE').get(String(code || '').trim());
-  if (!p || (p.is_demo && !config.demoData)) {
+  if (!isPublicPlant(p)) {
     throw bad('plantCode', 'We could not find that plant. Please choose it again from the map or list.', 'unknown_plant', 422);
   }
   return p;

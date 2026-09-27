@@ -70,6 +70,15 @@ UPLOAD_MAX_IMPORT_MB=20
 RETENTION_REPORT_DAYS=730
 RETENTION_CONTACT_DAYS=180
 
+# ── Public data ──────────────────────────────────────────────────────────
+# 1 = show a made-up TDS value and green/yellow/red dot on every plant card (hackathon demo; always labelled as
+# demo, never stored or counted as a water test). 0 = off.
+DEMO_WATER_QUALITY=1
+
+# Source files whose plants are kept for administrators but hidden from the public site (comma-separated).
+# Default: the original 1,000-row file (no names, addresses or coordinates). Leave empty to show every plant.
+PUBLIC_HIDDEN_SOURCE_FILES=Filter_palnts_in_Faisalabad_1000_1.xlsx
+
 # ── Demonstration data ───────────────────────────────────────────────────
 # 1 = load clearly labelled DEMO plants (never real). Keep 0 in production.
 DEMO_DATA=0
