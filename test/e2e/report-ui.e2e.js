@@ -147,6 +147,8 @@ async function run({ browser, baseUrl, screenshotDir, log = console.log }) {
   // ───────── Status lookup ─────────
   await page.goto(`${baseUrl}/status.html?ref=${reference}&lang=en`);
   await page.waitForSelector('#lookup-form');
+  // The page fills the box after it boots (translations load first), so wait for it rather than read at once.
+  await page.waitForFunction((r) => document.querySelector('#lookup-ref').value === r, reference, { timeout: 10000 }).catch(() => {});
   assert(await page.inputValue('#lookup-ref') === reference, 'reference prefilled from ?ref=');
   await page.fill('#lookup-last4', wrongLast4);
   await page.click('#lookup-submit');
