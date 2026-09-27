@@ -11,8 +11,10 @@
 // via the text list). temporarily_closed stays (flagged) unless hideTemporarilyClosed. Demo plants only when
 // config.demoData. Every ordering ends with a plantCode tie-break, so the same inputs give the same order.
 //
-// Recommended score (0–1): proximity 0.45 · verified operational status 0.20 · dated test evidence 0.15 ·
-// no confirmed unresolved issues 0.10 · adjusted rating 0.10 (only with ≥3 accepted ratings, else neutral).
+// Recommended score (0–1): proximity 0.50 · water quality 0.30 · verified operational status 0.10 ·
+// no confirmed unresolved issues 0.05 · adjusted rating 0.05 (only with ≥3 accepted ratings, else neutral).
+// Water quality: a dated, published water test when there is one; otherwise, while the hackathon demo is on
+// (DEMO_WATER_QUALITY), the plant's demo TDS band (good 1 · okay 0.5 · bad 0), named as demo in the reason text.
 // Missing test data is NEUTRAL (0.5) — never treated as "safe". Ratings never speak to water safety.
 //
 // Privacy: the origin is used for this computation only. It is not logged and not stored.
@@ -20,7 +22,7 @@ const config = require('../config');
 const { getDb } = require('./db');
 const { haversineM, bboxAround, inBounds } = require('./geo');
 const routing = require('./routing');
-const { toSummary, loadAggregates, isAreaUsable, publicPlantSql } = require('./plant-view');
+const { toSummary, loadAggregates, isAreaUsable, publicPlantSql, demoWaterQuality } = require('./plant-view');
 const { openingHoursView } = require('./hours');
 
 const EXACT_RADIUS_M = 30_000;
@@ -34,7 +36,9 @@ const DIST_SCALE_M = 5000; // proximity = exp(-d / 5 km)
 // Same 5 km expressed as typical urban travel time per mode, so time- and distance-based scores agree.
 const TIME_SCALE_S = { driving: 720, two_wheeler: 720, cycling: 1500, walking: 4000 };
 
-const WEIGHTS = { proximity: 0.45, status: 0.2, tests: 0.15, issues: 0.1, rating: 0.1 };
+const WEIGHTS = { proximity: 0.5, tests: 0.3, status: 0.1, issues: 0.05, rating: 0.05 };
+const DEMO_BAND_SCORE = { good: 1, okay: 0.5, bad: 0 };
+const DEMO_BAND_TEXT = { good: 'best water quality', okay: 'okay water quality', bad: 'bad water quality' };
 
 const LABELS = {
   straight_line: 'Approximate straight-line distance',
@@ -95,7 +99,12 @@ function recommend(c, agg, { mode, now, group }) {
   // Water-test evidence (dated, published tests only)
   const wq = agg.waterQuality(row.id);
   let tests;
-  if (wq.state === 'unknown') { tests = 0.5; reasons.push('no_test_data'); text.push('no verified water-test data'); }
+  const demo = wq.state === 'unknown' ? demoWaterQuality(row.plant_code) : null;
+  if (demo) {
+    tests = DEMO_BAND_SCORE[demo.band];
+    reasons.push(`demo_quality_${demo.band}`);
+    text.push(`${DEMO_BAND_TEXT[demo.band]} (demo TDS ${demo.tds} mg/L)`);
+  } else if (wq.state === 'unknown') { tests = 0.5; reasons.push('no_test_data'); text.push('no verified water-test data'); }
   else if (wq.state === 'issue_detected') { tests = 0; reasons.push('test_issue_detected'); text.push(`the latest water test (${wq.latestSampleDate}) detected an issue`); }
   else if (wq.state === 'met_limits') {
     const recent = daysBetween(wq.latestSampleDate, now) <= 365;

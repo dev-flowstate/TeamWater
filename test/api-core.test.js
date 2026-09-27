@@ -964,3 +964,20 @@ test('demo facts: blanks filled and listed in demoFields, real values win, switc
   require('../server/config').demoFacts = false;
   assert.equal((await get(blank.plant_code)).demoFields, undefined);
 });
+
+test('recommended weighs water quality with distance (demo TDS band when there is no real test)', async (t) => {
+  const s = await startTestServer({ env: { DEMO_WATER_QUALITY: '1' } });
+  t.after(() => s.close());
+  const { demoWaterQuality } = require('../server/lib/plant-view');
+  const codeWith = (band) => { for (let i = 0; ; i++) if (demoWaterQuality(`REC-${i}`).band === band) return `REC-${i}`; };
+  const at = (m) => ({ latitude: O.lat + m / 111_320, longitude: O.lng, coord_status: 'verified' });
+  const bad = s.insertPlant({ plant_code: codeWith('bad'), ...at(300) });
+  const good = s.insertPlant({ plant_code: codeWith('good'), ...at(1000) });
+  const search = async (sort) => (await (await s.fetch(`/api/search?lat=${O.lat}&lng=${O.lng}&sort=${sort}`)).json()).exact;
+
+  assert.deepEqual((await search('nearest')).map((p) => p.code), [bad.plant_code, good.plant_code]);
+  const rec = await search('recommended');
+  assert.deepEqual(rec.map((p) => p.code), [good.plant_code, bad.plant_code]);
+  assert.ok(rec[0].recommendation.reasons.includes('demo_quality_good'));
+  assert.match(rec[0].recommendation.text, /best water quality \(demo TDS \d+ mg\/L\)/);
+});
