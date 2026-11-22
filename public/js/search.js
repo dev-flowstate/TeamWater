@@ -228,7 +228,8 @@ export function initSearch({ config, onSubmit, onAreaList }) {
 
   function locStatusMsg(kind, text, actions) {
     locStatus.className = `status-msg is-${kind}`;
-    locStatus.replaceChildren(icon(kind === 'error' ? 'alert' : kind === 'ok' ? 'check' : 'locate'), h('span', {}, text), actions || null);
+    // replaceChildren() turns null into the text "null", so pass actions only when there are some.
+    locStatus.replaceChildren(icon(kind === 'error' ? 'alert' : kind === 'ok' ? 'check' : 'locate'), h('span', {}, text), ...(actions ? [actions] : []));
   }
 
   btnLocate.addEventListener('click', () => {

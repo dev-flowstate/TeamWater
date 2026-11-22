@@ -58,6 +58,26 @@ Vercel's disk is temporary. On each cold start the database is rebuilt from the 
 
 The database and uploaded photos are then saved to Firebase after every change and restored on each start (`server/lib/persist.js`). If two instances save at the same moment, the later save wins; fine for demo traffic.
 
+## Android app
+
+`android-app/` is a Capacitor 8 app that opens the hosted site (`server.url` in `android-app/capacitor.config.json`) inside a native Android shell. It adds the app icon and splash, location permission for "Use my location", camera permission for report photos, the Android back button, and a bilingual offline page (`android-app/www/offline.html`). "Get directions" opens the Google Maps app. Site changes reach the app on the next deploy, without a new app release.
+
+Requirements: Node 22+, JDK 21, Android SDK with platform 36.
+
+```bash
+cd android-app
+npm install
+npx cap sync android                 # after changing capacitor.config.json or plugins
+cd android
+./gradlew assembleDebug              # test build: app/build/outputs/apk/debug/app-debug.apk
+./gradlew bundleRelease              # Play Store build (.aab); needs a signing key, see below
+```
+
+- **New web address:** change `server.url` and `allowNavigation` in `capacitor.config.json`, and `SITE` in `www/offline.html`, then `npx cap sync android` and rebuild.
+- **App ID:** `org.teamwater.app` can never change after the first Play release. Set it to the NGO's reversed domain before publishing (`appId` in `capacitor.config.json`, plus `namespace` and `applicationId` in `android/app/build.gradle`).
+- **Icons and splash:** replace `assets/logo.png` (1024×1024, transparent) and run `npm run assets`.
+- **Release signing:** create an upload key once (`keytool -genkeypair -v -keystore upload.jks -alias upload -keyalg RSA -keysize 2048 -validity 10000`). Keep it in the NGO's password manager, never in the repo, and turn on Play App Signing. Raise `versionCode` in `android/app/build.gradle` for every upload.
+
 **Durable hosting:** any Node 22 host with a persistent disk, e.g. Render (`render.yaml` included; paid plan plus disk), Railway, Fly.io, or a VPS. Run `npm ci && npm run setup && npm start`, with `DATA_DIR` on the persistent disk.
 
 ## What the supplied data supports
